@@ -8,7 +8,7 @@ if (typeof exports !== 'undefined') {
   jsondiffpatch = require('jsondiffpatch');
 }
 
-module('users.cschuster.sync.shared').requires().toRun(function() {
+module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpatch').toRun(function() {
     Object.subclass('users.cschuster.sync.Snapshot', {
         initialize: function(json) {
             if (typeof json == 'string') json = JSON.parse(json);
