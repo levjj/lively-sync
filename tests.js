@@ -26,6 +26,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
 });
 }) // end of module
+
 odule('users.cschuster.sync.tests').requires('lively.TestFramework').toRun(function() {
 
 TestCase.subclass('users.cschuster.sync.tests.DiffTest',
