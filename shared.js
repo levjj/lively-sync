@@ -37,6 +37,7 @@ module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpat
         },
         toPatch: function() {
             var patch = new users.cschsuter.sync.Patch();
+            var redundantDeletes = this.findRedundandDeletes();
             return patch;
         },
         toJSON: function() {
