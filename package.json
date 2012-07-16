@@ -1,0 +1,12 @@
+{
+  "name": "syncproto-server",
+  "version": "0.1.0",
+  "description": "A really simple  server with nodejs and socket.io which acts as an version control system.",
+  "author": "Christopher Schuster <cs@livoris.de>",
+  "dependencies": {
+    "socket.io": "0.9.6",
+    "pg": "0.7.2",
+    "seq": "0.3.5",
+    "jsondiffpatch": "0.0.1"
+  },
+}
