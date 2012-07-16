@@ -1,3 +1,5 @@
+module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
+
 /*
 *   Json Diff Patch
 *   ---------------
@@ -565,3 +567,5 @@
     }
 
 })();
+
+});
