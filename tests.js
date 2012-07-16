@@ -10,8 +10,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     serialize: function(object) {
         var snapshot = new users.cschuster.sync.Snapshot();
-        snapshot.create(object);
-        return snapshot;
+        return snapshot.create(object);
     }
 },
 'testing', {
