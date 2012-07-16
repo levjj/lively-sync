@@ -28,16 +28,6 @@ users.cschuster.sync.diff.Patch.addMethods({
     }
 });
 
-cop.create("SyncNewMorphs").refineObject(this.world(), {
-    addMorph: function(morph, optMorphBefore) {
-        that.morphSyncTable[morph.id] = morph;
-        return cop.proceed(morph, optMorphBefore);
-    },
-    removeMorph: function(morph) {
-        delete that.morphSyncTable[morph.id]
-        return cop.proceed(morph);
-    }
-});
 
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
     newId: function() {
