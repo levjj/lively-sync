@@ -1,35 +1,14 @@
 var io = require('socket.io').listen(6700);
 var Seq = require('seq');
-var EventEmitter = require('events').EventEmitter;
 var jsondiffpatch = require('jsondiffpatch');
 var pg = require('pg');
-var sync = require('./lk');
-var sync = require('./sync');
+require('./lk');
+require('./mutex');
+require('./sync');
 
 var CONNECTION_STRING = "tcp://syncproto:steam@localhost/syncproto";
 var DIFFS_PER_SNAPSHOT = 20;
 var DEMO = 'demo';
-
-Object.subclass('Mutex', {
-    initialize: function() {
-        var queue = new EventEmitter();
-        var locked = false;
-    },
-    lock: function lock(fn) {
-        if (locked) {
-            queue.once('ready',function() {
-                lock(fn);
-            });
-        } else {
-            locked = true;
-            fn();
-        }
-    },
-    release: function release() {
-        locked = false;
-        queue.emit('ready');
-    }
-});
 
 var Repository = {
     init: function(cb) {
