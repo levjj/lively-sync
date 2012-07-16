@@ -8,24 +8,22 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table = {};
         this.table[this.rect.id] = this.rect;
     },
-    serialize: function(morph) {
-        try {
-            SyncNewMorphs.beGlobal();
-            var serializer = syncMorph.getSerializer();
-            return serializer.serializeToJso(morph);
-        } finally {
-            SyncNewMorphs.beNotGlobal();
-        }
+    serialize: function(object) {
+        var snapshot = new users.cschuster.sync.Snapshot();
+        snapshot.create(object);
+        return snapshot;
     }
 },
 'testing', {
-    testInitial: function() {
-        this.assertEquals(this.tracker.getLife(), 20);
-        this.assert(this.tracker.isAlive());
-        this.assert(!this.tracker.isDead());
-    },
+    testIdenticalRectangle: function() {
+        var snapshotA = this.serialize(this.table);
+        var snapshotB = this.serialize(this.table);
+        var diff = snapshotA.diff(snapshotB);
+        this.assertEquals(diff, undefined, 'no diff for identical morphs');
+    }
 });
 }) // end of module
+
 
 odule('users.cschuster.sync.tests').requires('lively.TestFramework').toRun(function() {
 
