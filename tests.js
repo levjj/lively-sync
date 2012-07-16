@@ -19,6 +19,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var diff = snapshotA.diff(snapshotB);
         this.assertEquals(diff, undefined, 'no diff for identical morphs');
+    },
+    testResizedRectangle: function() {
+        var snapshotA = this.serialize(this.table);
+        this.rect.setExtent(pt(400,20));
+        var snapshotB = this.serialize(this.table);
+        var diff = snapshotA.diff(snapshotB);
+        var expected = {};
+        expected[this.rect.id + "/shape/_Extent"] = {x: [400], y: [20]};
+        this.assertMatches(expected, diff);
+        this.assertMatches(diff, expected);
     }
 });
 }) // end of module
