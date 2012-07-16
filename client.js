@@ -17,8 +17,10 @@ users.cschuster.sync.diff.Snapshot.addMethods({
         serializer.showLog = false;
         return serializer;
     },
-    createFromMorphs: function(morphs) {
-
+    create: function(object) {
+        var serializer = this.getSerializer();
+        this.data = serializer.serializeToJso(object);
+        return this;
     }
 });
 
