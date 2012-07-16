@@ -27,8 +27,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var diff = snapshotA.diff(snapshotB);
         var expected = {};
         expected[this.rect.id + "/shape/_Extent"] = {x: [400], y: [20]};
-        this.assertMatches(expected, diff);
-        this.assertMatches(diff, expected);
+        this.assertMatches(expected, diff.data);
+        this.assertMatches(diff.data, expected);
     }
 });
 }) // end of module
