@@ -37,7 +37,7 @@ module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpat
         },
         toPatch: function() {
             var patch = new users.cschsuter.sync.Patch();
-        
+            return patch;
         },
         toJSON: function() {
             return JSON.stringify(this.data);
