@@ -5,7 +5,7 @@
 
 module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').toRun(function() {
 
-users.cschuster.sync.diff.Snapshot.addMethods({
+users.cschuster.sync.Snapshot.addMethods({
      getSerializer: function(data) {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
         serializer.addPlugins(lively.persistence.getPluginsForLively());
@@ -24,12 +24,11 @@ users.cschuster.sync.diff.Snapshot.addMethods({
     }
 });
 
-users.cschuster.sync.diff.Patch.addMethods({
+users.cschuster.sync.Patch.addMethods({
     applyToMorphs: function(morphs) {
     
     }
 });
-
 
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
     newId: function() {
