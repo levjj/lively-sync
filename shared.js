@@ -67,7 +67,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         // returns true if that part of the diff is empty
         // after removing the smartrefs.
         if (!Object.isObject(obj)) return false; // primitive
-        if (Object.isObject(value) && value.__isSmartRef__ && value.id == id) { // smartref
+        if (Object.isObject(obj) && obj.__isSmartRef__ && obj.id == id) { // smartref
             return true;
         }
         if (!rawMode && Array.isArray(obj) && obj.length === 1) { // instruction
