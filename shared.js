@@ -63,23 +63,20 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     removeSmartRefs: function(obj, rawMode, id) {
-        // discards SmartRefs
-        // returns true if the diff is empty after
-        // removing the smartrefs on this "path".
-        if (!Object.isObject(obj)) return false;
+        // discards smartrefs
+        // returns true if that part of the diff is empty
+        // after removing the smartrefs.
+        if (!Object.isObject(obj)) return false; // primitive
+        if (Object.isObject(value) && value.__isSmartRef__ && value.id == id) { // smartref
+            return true;
+        }
+        if (!rawMode && Array.isArray(obj) && obj.length === 1) { // instruction
+            return this.removeSmartRefs(obj[0], true, id);
+        }
+        // object or array
         Properties.forEachOwn(obj, function(key, value) {
             var subId = id + "/" + key;
-            var isRawMode = rawMode;
-            if (!rawMode && Array.isArray(value) && value.length === 1) {
-                // instruction
-                isRawMode = true;
-                value = value[0];
-            }
-            var isForwardRef =
-                Object.isObject(value) &&
-                value.__isSmartRef__ &&
-                value.id == subId;
-            if (isForwardRef || this.removeSmartRefs(value, isRawMode, subId)) {
+            if (this.removeSmartRefs(value, id + "/" + key, rawMode)) {
                 delete obj[key];
             }
         }, this);
