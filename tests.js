@@ -11,6 +11,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     serialize: function(object) {
         var snapshot = new users.cschuster.sync.Snapshot();
         return snapshot.create(object);
+    },
+    assertPatch: function(expected, snapshotA, snapshotB) {
+        var patch = snapshotA.diff(snapshotB).toPatch();
+        this.assertMatches(expected, patch.data);
+        this.assertMatches(patch.data, expected);
+        patch.apply(snapshotA);
+        this.assertMatches(snapshotA, snapshotB);
+        this.assertMatches(snapshotB, snapshotA);
     }
 },
 'testing', {
@@ -24,11 +32,9 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         this.rect.setExtent(pt(400,20));
         var snapshotB = this.serialize(this.table);
-        var patch = snapshotA.diff(snapshotB).toPatch();
         var expected = {};
         expected[this.rect.id + "/shape/_Extent"] = {x: [400], y: [20]};
-        this.assertMatches(expected, patch.data);
-        this.assertMatches(patch.data, expected);
+        this.assertPatch(expected, snapshotA, snapshotB);
     },
     testMovedRectangle: function () {
         var snapshotA = this.serialize(this.table);
@@ -36,20 +42,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var oldY = this.rect._Position.y;
         this.rect.moveBy(pt(10,20));
         var snapshotB = this.serialize(this.table);
-        var patch = snapshotA.diff(snapshotB).toPatch();
         var expected = {};
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
-        this.assertMatches(expected, patch.data);
-        this.assertMatches(patch.data, expected);
+        this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveMorph: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize({});
-        var patch = snapshotA.diff(snapshotB).toPatch();
         var expected = {};
         expected[this.rect.id] = [0,0];
-        this.assertMatches(expected, patch.data);
-        this.assertMatches(patch.data, expected);
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 }) // end of module
