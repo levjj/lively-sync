@@ -69,7 +69,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (!Object.isObject(obj)) return false;
         Properties.forEachOwn(obj, function(key, value) {
             var subId = id + "/" + key;
-            var isRawMode = rawmode;
+            var isRawMode = rawMode;
             if (!rawMode && Array.isArray(value) && value.length === 1) {
                 // instruction
                 isRawMode = true;
