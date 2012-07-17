@@ -64,31 +64,27 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     removeSmartRefs: function(obj, rawMode, id) {
         // discards SmartRefs
-        if (Object.isObject(obj)) {
-            if (!rawMode && Array.isArray(obj)) { // instruction
-                if (obj.length === 1) {
-                    if (this.removeSmartRefs(obj[0], true, id)) {
-                        return true;
-                    }
-                }
-            } else { // raw object or array
-                Properties.forEachOwn(obj, function(key, value) {
-                    var subId = id + "/" + key;
-                    var isForwardRef =
-                        Object.isObject(value) &&
-                        value.__isSmartRef__ &&
-                        value.id == subId;
-                    if (isForwardRef || this.removeSmartRefs(value, rawMode, subId)) {
-                        delete obj[key];
-                    }
-                }, this)
-                if (Object.isEmpty(obj) && !rawMode) {
-                    // always keep empty objects and arrays in raw mode
-                    return true;
-                }
+        // returns true if the diff is empty after
+        // removing the smartrefs on this "path".
+        if (!Object.isObject(obj)) return false;
+        Properties.forEachOwn(obj, function(key, value) {
+            var subId = id + "/" + key;
+            var isRawMode = rawmode;
+            if (!rawMode && Array.isArray(value) && value.length === 1) {
+                // instruction
+                isRawMode = true;
+                value = value[0];
             }
-        }
-        return false;
+            var isForwardRef =
+                Object.isObject(value) &&
+                value.__isSmartRef__ &&
+                value.id == subId;
+            if (isForwardRef || this.removeSmartRefs(value, isRawMode, subId)) {
+                delete obj[key];
+            }
+        }, this);
+        // always keep empty objects and arrays in raw mode
+        return Object.isEmpty(obj) && !rawMode;
     },
     toPatch: function() {
         var patch = new users.cschuster.sync.Patch();
