@@ -110,14 +110,21 @@ Object.subclass('users.cschuster.sync.Patch', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
+    createSmartRef: function(id) {
+        return {__isSmartRef__: true, id: id};
+    },
+    toDiff: function() {
+        var morphs = {};
+        var raw = {id:"",registry:{isSimplifiedRegistry: true,"":morphs}};
+        for (var key in this.data) {
+            raw.registry[key] = this.data[key];
+            morphs[key] = this.createSmartRef(key);
+        }
+        return new users.cschuster.sync.Diff(raw);
+    },
     apply: function(snapshot) {
         var diff = this.toDiff();
         diff.apply(snapshot);
-    },
-    toDiff: function() {
-        var raw = {};
-        // ...
-        return new users.cschuster.sync.Diff(raw);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
