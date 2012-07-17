@@ -39,7 +39,7 @@ module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpat
             var toDelete = [];
             Properties.forEachOwn(this.data.registry, function(key, value) {
                 if (Array.isArray(value) && value.length == 3) {
-                    for (var i = 0; i < toDelete.length; i++) {
+                    for (var i = 0; i < toDelete.length; i++)
                         if (toDelete[i].startsWith(key))
                             toDelete.removeAt(i--);
                     toDelete.push(key + "/");
