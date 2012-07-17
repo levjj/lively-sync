@@ -77,7 +77,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        var copy = this.serialize(this.addRectPatch());
+        var copy = this.addRectPatch();
         expected[this.rect.id] = [copy[""]];
         Properties.own(copy).each(function(key) {
             expected[this.rect.id + "/" + key] = [copy[key]];
