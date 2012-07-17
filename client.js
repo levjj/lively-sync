@@ -6,7 +6,7 @@
 module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').toRun(function() {
 
 users.cschuster.sync.Snapshot.addMethods({
-     getSerializer: function(data) {
+    getSerializer: function(data) {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
         serializer.addPlugins(lively.persistence.getPluginsForLively());
         var p = new GenericFilter();
@@ -26,7 +26,7 @@ users.cschuster.sync.Snapshot.addMethods({
 
 users.cschuster.sync.Patch.addMethods({
     applyToMorphs: function(morphs) {
-    
+        return true;
     }
 });
 
