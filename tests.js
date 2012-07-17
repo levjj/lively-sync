@@ -50,8 +50,12 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        inspect(snapshotA.diff(snapshotB));
-        //expected[this.rect.id] = [0,0];
+        var copy = this.serialize(this.rect).data.registry;
+        expected[this.rect.id] = copy[""];
+        for (var key in copy) {
+            if (key)
+                expected[this.rect.id + "/" + key] = copy[key];
+        }
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveMorph: function() {
