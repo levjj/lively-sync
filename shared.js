@@ -42,8 +42,7 @@ module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpat
                     for (var i = 0; i < toDelete.length; i++) {
                         if (toDelete[i].startsWith(key))
                             toDelete.removeAt(i--);
-                        toDelete.push(key + "/");
-                    }
+                    toDelete.push(key + "/");
                 }
             });
             return toDelete;
