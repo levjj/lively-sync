@@ -62,7 +62,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    removeSmartRefs: function(obj, rawMode, id) {
+    removeSmartRefs: function(obj, id, rawMode) {
         // discards smartrefs
         // returns true if that part of the diff is empty
         // after removing the smartrefs.
@@ -71,7 +71,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             return true;
         }
         if (!rawMode && Array.isArray(obj) && obj.length === 1) { // instruction
-            return this.removeSmartRefs(obj[0], true, id);
+            return this.removeSmartRefs(obj[0], id, true);
         }
         // object or array
         Properties.forEachOwn(obj, function(key, value) {
@@ -91,7 +91,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                    && !toDelete.any(function(s) {return id.startsWith(s)})) {
                 var obj = this.data.registry[id];
                 this.convertToForwardPatch(obj);
-                if (!this.removeSmartRefs(obj, false, id)) {
+                if (!this.removeSmartRefs(obj, id, false)) {
                     patch.data[id] = obj;
                 }
             }
