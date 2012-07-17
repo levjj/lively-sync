@@ -78,7 +78,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.setFill(Color.black);
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape/_Fill"] = [this.serialize(Color.black).toJSON()];
+        var serializedBlack = this.serialize(Color.black).data.registry[""];
+        expected[this.rect.id + "/shape/_Fill"] = [serializedBlack];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testAddMorph: function() {
