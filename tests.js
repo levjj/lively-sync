@@ -46,6 +46,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testAddMorph: function() {
+        var snapshotA = this.serialize({});
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        inspect(snapshotA.diff(snapshotB));
+        //expected[this.rect.id] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testRemoveMorph: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize({});
