@@ -70,8 +70,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (Object.isObject(obj) && obj.__isSmartRef__ && obj.id == id) { // smartref
             return true;
         }
-        if (!rawMode && Array.isArray(obj) && obj.length === 1) { // instruction
-            return this.removeSmartRefs(obj[0], id, true);
+        if (!rawMode && Array.isArray(obj)) { // instruction
+            switch(obj.length) {
+                case 1: return this.removeSmartRefs(obj[0], id, true); //add
+                case 2: return this.removeSmartRefs(obj[1], id, true); //set
+                case 3: return this.removeSmartRefs(obj[0], id, true); //del
+            }
         }
         // object or array
         Properties.forEachOwn(obj, function(key, value) {
@@ -90,8 +94,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (id && !id.startsWith("#")
                    && !toDelete.any(function(s) {return id.startsWith(s)})) {
                 var obj = this.data.registry[id];
-                this.convertToForwardPatch(obj);
                 if (!this.removeSmartRefs(obj, id, false)) {
+                    this.convertToForwardPatch(obj);
                     patch.data[id] = obj;
                 }
             }
