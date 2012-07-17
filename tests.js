@@ -40,8 +40,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var patch = snapshotA.diff(snapshotB).toPatch();
         var expected = {};
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
-        this.assertMatches(expected, patch);
-        this.assertMatches(patch, expected);
+        this.assertMatches(expected, patch.data);
+        this.assertMatches(patch.data, expected);
     }
 });
 }) // end of module
