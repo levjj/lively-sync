@@ -51,10 +51,10 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         var copy = this.serialize(this.rect).data.registry;
-        expected[this.rect.id] = copy[""];
+        expected[this.rect.id] = [copy[""]];
         for (var key in copy) {
             if (key)
-                expected[this.rect.id + "/" + key] = copy[key];
+                expected[this.rect.id + "/" + key] = [copy[key]];
         }
         this.assertPatch(expected, snapshotA, snapshotB);
     },
