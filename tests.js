@@ -33,7 +33,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "eventHandler": {morph:{__isSmartRef__:true,id:this.rect.id},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
-            "renderContextTable": lively.morphic.Morph.htmlDispatchTable,
+            "renderContextTable": lively.morphic.Morph.prototype.htmlDispatchTable,
             "shape": {_NodeClass:["Morph","Box"],
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
@@ -44,7 +44,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
                 __LivelyClassName__:"Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "shape/renderContextTable": lively.morphic.Shapes.Shape.htmlDispatchTable
+            "shape/renderContextTable": lively.morphic.Shapes.Shape.prototype.htmlDispatchTable
         };
     }
 },
