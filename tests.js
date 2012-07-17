@@ -36,6 +36,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var oldY = this.rect._Position.y;
         this.rect.moveBy(pt(10,20));
         var snapshotB = this.serialize(this.table);
+        debugger;
         var patch = snapshotA.diff(snapshotB).toPatch();
         var expected = {};
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
