@@ -53,8 +53,12 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var copy = this.serialize(this.rect).data.registry;
         expected[this.rect.id] = [copy[""]];
         for (var key in copy) {
-            if (key)
-                expected[this.rect.id + "/" + key] = [copy[key]];
+            if (!key) continue;
+            if (["submorphs", "shape", "eventhandler", "renderContextTable"].include(key))
+                continue;
+            if (["_Position", "_Extent", "_Fill"].include(key))
+                continue;
+            expected[this.rect.id + "/" + key] = [copy[key]];
         }
         this.assertPatch(expected, snapshotA, snapshotB);
     },
