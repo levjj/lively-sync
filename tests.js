@@ -24,6 +24,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         this.rect.setExtent(pt(400,20));
         var snapshotB = this.serialize(this.table);
+        debugger;
         var diff = snapshotA.diff(snapshotB);
         var expected = {};
         expected[this.rect.id + "/shape/_Extent"] = {x: [400], y: [20]};
