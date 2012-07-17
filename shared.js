@@ -62,25 +62,30 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    removeSmartRefs: function(obj, rawMode) {
+    removeSmartRefs: function(obj, rawMode, id) {
         // discards SmartRefs
         if (Object.isObject(obj)) {
-            if (obj.__isSmartRef__) return true;
             if (!rawMode && Array.isArray(obj)) { // instruction
                 if (obj.length === 1) {
-                    if (this.removeSmartRefs(obj[0], true)) {
+                    if (this.removeSmartRefs(obj[0], true, id)) {
                         return true;
                     }
                 }
             } else { // raw object or array
                 Properties.forEachOwn(obj, function(key, value) {
-                    if (Object.isObject(value) &&
-                        value.__isSmartRef__ ||
-                        this.removeSmartRefs(value, rawMode)) {
+                    var subId = id + "/" + key;
+                    var isForwardRef =
+                        Object.isObject(value) &&
+                        value.__isSmartRef__ &&
+                        value.id == subId;
+                    if (isForwardRef || this.removeSmartRefs(value, rawMode, subId)) {
                         delete obj[key];
                     }
                 }, this)
-                if (Object.isEmpty(obj)) return true;
+                if (Object.isEmpty(obj) && !rawMode) {
+                    // always keep empty objects and arrays in raw mode
+                    return true;
+                }
             }
         }
         return false;
@@ -93,7 +98,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                    && !toDelete.any(function(s) {return id.startsWith(s)})) {
                 var obj = this.data.registry[id];
                 this.convertToForwardPatch(obj);
-                if (!this.removeSmartRefs(obj)) {
+                if (!this.removeSmartRefs(obj, false, id)) {
                     patch.data[id] = obj;
                 }
             }
