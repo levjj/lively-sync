@@ -80,7 +80,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         var serializedBlack = this.serialize(Color.black).data.registry[""];
         expected[this.rect.id + "/shape/_Fill"] = [serializedBlack];
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testAddMorph: function() {
