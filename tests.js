@@ -80,7 +80,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var copy = this.addRectPatch();
         expected[this.rect.id] = [copy[""]];
         Properties.own(copy).each(function(key) {
-            expected[this.rect.id + "/" + key] = [copy[key]];
+            if (key)
+                expected[this.rect.id + "/" + key] = [copy[key]];
         }.bind(this));
         this.assertPatch(expected, snapshotA, snapshotB);
     },
