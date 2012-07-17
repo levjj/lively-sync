@@ -41,6 +41,15 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
         this.assertMatches(expected, patch.data);
         this.assertMatches(patch.data, expected);
+    },
+    testRemoveMorph: function() {
+        var snapshotA = this.serialize(this.table);
+        var snapshotB = this.serialize({});
+        var patch = snapshotA.diff(snapshotB);
+        var expected = {};
+        expected[this.rect.id] = [0,0];
+        this.assertMatches(expected, patch.data);
+        this.assertMatches(patch.data, expected);
     }
 });
 }) // end of module
