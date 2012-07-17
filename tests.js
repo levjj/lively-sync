@@ -21,6 +21,33 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         //this.assertMatches(snapshotB, snapshotA);
     }
 },
+'specs', {
+    addRectPatch: function() {
+        return {
+            "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
+                 id:this.rect.id, droppingEnabled:true,halosEnabled:true,
+                 __LivelyClassName__:"lively.morphic.Box",
+                 __SourceModuleName__:"Global.lively.morphic.Core"},
+            "_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
+                __SourceModuleName__:"Global.lively.morphic.Graphics"},
+            "eventHandler": {morph:{__isSmartRef__:true,id:""},
+                __LivelyClassName__:"lively.morphic.EventHandler",
+                __SourceModuleName__:"Global.lively.morphic.Events"},
+            "renderContextTable": lively.morphic.Morph.htmlDispatchTable,
+            "shape": {_NodeClass:["Morph","Box"],
+                __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
+                __SourceModuleName__:"Global.lively.morphic.Shapes"},
+            "shape/_Extent": {"x":100,"y":100,__LivelyClassName__:"Point",
+                __SourceModuleName__:"Global.lively.morphic.Graphics"},
+            "shape/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
+                __SourceModuleName__:"Global.lively.morphic.Graphics"},
+            "shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
+                __LivelyClassName__:"Rectangle",
+                __SourceModuleName__:"Global.lively.morphic.Graphics"},
+            "shape/renderContextTable": lively.morphic.Shapes.Shape.htmlDispatchTable
+        };
+    }
+},
 'testing', {
     testIdenticalRectangle: function() {
         var snapshotA = this.serialize(this.table);
@@ -50,14 +77,9 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        var copy = this.serialize(this.rect).data.registry;
+        var copy = this.serialize(this.addRectPatch());
         expected[this.rect.id] = [copy[""]];
         for (var key in copy) {
-            if (!key) continue;
-            if (["submorphs", "shape", "eventhandler", "renderContextTable"].include(key))
-                continue;
-            if (["_Position", "_Extent", "_Fill"].include(key))
-                continue;
             expected[this.rect.id + "/" + key] = [copy[key]];
         }
         this.assertPatch(expected, snapshotA, snapshotB);
