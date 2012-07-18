@@ -120,7 +120,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         if (Object.isObject(obj)) {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 2) {
-                    obj.unshift(0);
+                    obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
                 } else if (optSnapshotObj !== undefined) {
                     obj.unshift(optSnapshotObj);
                 }
@@ -138,7 +138,7 @@ Object.subclass('users.cschuster.sync.Patch', {
             var diffVal = this.data[key];
             var origVal = optSnapshot && optSnapshot.data.registry[key];
             raw.registry[key] = diffVal ;
-            this.convertToDiffInstruction(diffVal , origVal);
+            this.convertToDiffInstruction(diffVal, origVal);
         }
         return new users.cschuster.sync.Diff(raw);
     },
