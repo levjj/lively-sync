@@ -133,7 +133,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     toDiff: function(optSnapshot) {
         var morphs = {};
-        var raw = {id:"",registry:{isSimplifiedRegistry: true,"":[]}};
+        var raw = {registry:{}};
         for (var key in this.data) {
             var diffVal = this.data[key];
             var origVal = optSnapshot && optSnapshot.data.registry[key];
