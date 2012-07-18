@@ -22,7 +22,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     }
 },
 'specs', {
-    addRectPatch: function(rect) {
+    addRectPatch: function(rect, path) {
         var width = rect.getExtent().x, height = rect.getExtent().y;
         return {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
@@ -31,7 +31,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
                  __SourceModuleName__:"Global.lively.morphic.Core"},
             "_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "eventHandler": {morph:{__isSmartRef__:true,id:rect.id},
+            "eventHandler": {morph:{__isSmartRef__:true,id:path},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
             "renderContextTable": rect.htmlDispatchTable,
@@ -106,7 +106,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        var copy = this.addRectPatch(this.rect);
+        var copy = this.addRectPatch(this.rect, this.rect.id);
         expected[this.rect.id] = [copy[""]];
         Properties.forEachOwn(copy, function(key) {
             if (key)
@@ -119,6 +119,21 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize({});
         var expected = {};
         expected[this.rect.id] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testAddSubmorph: function() {
+        var snapshotA = this.serialize(this.table);
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorph = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph);
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        var prefix = this.rect.id + "/submorphs/0";
+        var copy = this.addRectPatch(submorph, prefix);
+        Properties.forEachOwn(copy, function(key) {
+            if (key)
+                expected[prefix + "/" + key] = [copy[key]];
+        }, this);
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveSubmorph: function() {
