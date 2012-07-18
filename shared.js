@@ -62,7 +62,6 @@ Object.subclass('users.cschuster.sync.Diff', {
                     obj.splice(0, 1);
                 }
             } else { // raw object or array
-                delete obj._t;
                 Properties.forEachOwn(obj, this.convertToForwardPatch, this)
             }
         }
@@ -83,6 +82,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
         // object or array
+        delete obj._t;
         Properties.forEachOwn(obj, function(key, value) {
             var subId = id + "/" + key;
             if (this.removeSmartRefs(value, id + "/" + key, rawMode)) {
