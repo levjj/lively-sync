@@ -142,8 +142,24 @@ Object.subclass('users.cschuster.sync.Patch', {
         }
         return new users.cschuster.sync.Diff(raw);
     },
+    addMissingSmartRefs: function(registry) {
+        for (var key in registry) {
+            if (Array.isArray(registry[key]) && key.lindexOf('/')) {
+                if (registry[key].length == 2) continue;
+                var parent = key.substring(0, key.lastIndexOf('/'));
+                var thisKey = key.substring(key.lastIndexOf('/') + 1);
+                if (!registry.hasOwnProperty(parent)) {
+                    registry[parent] = {};
+                }
+                var op = [this.createSmartRef(key)];
+                if (registry[key].length == 3) op.push(0,0);
+                registry[parent][thisKey] = op;
+            }
+        }
+    },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
+        this.addMissingSmartRefs(diff.data.registry);
         diff.apply(snapshot);
     },
     toJSON: function() {
