@@ -157,9 +157,14 @@ Object.subclass('users.cschuster.sync.Patch', {
             }
         }
     },
-    propagateDeletions: function(diff) {
+    propagateDeletions: function(diff, snapshot) {
         var toDelete = diff.aggregateDeletions();
-        
+        for (var id in snapshot.data.registry) {
+            if (toDelete.any(function(s) {return id.startsWith(s)})) {
+                
+            }
+        }
+
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
