@@ -137,8 +137,8 @@ Object.subclass('users.cschuster.sync.Patch', {
         for (var key in this.data) {
             var diffVal = this.data[key];
             var origVal = optSnapshot && optSnapshot.data.registry[key];
-            raw.registry[key] = val;
-            this.convertToDiffInstruction(val, origVal);
+            raw.registry[key] = diffVal ;
+            this.convertToDiffInstruction(diffVal , origVal);
         }
         return new users.cschuster.sync.Diff(raw);
     },
