@@ -157,9 +157,14 @@ Object.subclass('users.cschuster.sync.Patch', {
             }
         }
     },
+    propagateDeletions: function(diff) {
+        var toDelete = diff.aggregateDeletions();
+        
+    },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
         this.addMissingSmartRefs(diff.data.registry);
+        this.propagateDeletions(diff);
         diff.apply(snapshot);
     },
     toJSON: function() {
