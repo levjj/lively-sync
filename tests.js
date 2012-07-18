@@ -22,18 +22,18 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     }
 },
 'specs', {
-    addRectPatch: function() {
+    addRectPatch: function(rect) {
         return {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
-                 id:this.rect.id, droppingEnabled:true,halosEnabled:true,
+                 id:rect.id, droppingEnabled:true,halosEnabled:true,
                  __LivelyClassName__:"lively.morphic.Box",
                  __SourceModuleName__:"Global.lively.morphic.Core"},
             "_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "eventHandler": {morph:{__isSmartRef__:true,id:this.rect.id},
+            "eventHandler": {morph:{__isSmartRef__:true,id:rect.id},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
-            "renderContextTable": lively.morphic.Morph.prototype.htmlDispatchTable,
+            "renderContextTable": rect.htmlDispatchTable,
             "shape": {_NodeClass:["Morph","Box"],
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
@@ -44,7 +44,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
                 __LivelyClassName__:"Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "shape/renderContextTable": lively.morphic.Shapes.Shape.prototype.htmlDispatchTable
+            "shape/renderContextTable": rect.shape.htmlDispatchTable
         };
     }
 },
@@ -105,7 +105,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        var copy = this.addRectPatch();
+        var copy = this.addRectPatch(this.rect);
         expected[this.rect.id] = [copy[""]];
         Properties.forEachOwn(copy, function(key) {
             if (key)
