@@ -129,7 +129,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.removeMorph(submorph);
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id] = {submorphs: [[]]};
         expected[this.rect.id + "/submorphs/0"] = [0,0];
         debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
