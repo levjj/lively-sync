@@ -23,6 +23,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 },
 'specs', {
     addRectPatch: function(rect) {
+        var width = rect.getExtent().x, height = rect.getExtent().y;
         return {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
                  id:rect.id, droppingEnabled:true,halosEnabled:true,
@@ -37,7 +38,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "shape": {_NodeClass:["Morph","Box"],
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
-            "shape/_Extent": {"x":100,"y":100,__LivelyClassName__:"Point",
+            "shape/_Extent": {"x":width,"y":height,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
             "shape/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
@@ -114,6 +115,13 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveMorph: function() {
+        var snapshotA = this.serialize(this.table);
+        var snapshotB = this.serialize({});
+        var expected = {};
+        expected[this.rect.id] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testRemoveSubmorph: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize({});
         var expected = {};
