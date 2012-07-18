@@ -40,9 +40,14 @@ Object.subclass('users.cschuster.sync.Diff', {
         var toDelete = [];
         Properties.forEachOwn(this.data.registry, function(key, value) {
             if (Array.isArray(value) && value.length == 3) {
-                for (var i = 0; i < toDelete.length; i++)
-                    if (toDelete[i].startsWith(key))
+                for (var i = 0; i < toDelete.length; i++) {
+                    if (key.startsWith(toDelete[i])) {
+                        return;
+                    }
+                    if (toDelete[i].startsWith(key)) {
                         toDelete.removeAt(i--);
+                    }
+                }
                 toDelete.push(key + "/");
             }
         });
@@ -169,7 +174,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
         this.addMissingSmartRefs(diff.data.registry);
-        this.propagateDeletions(diff);
+        this.propagateDeletions(diff, snapshot);
         diff.apply(snapshot);
     },
     toJSON: function() {
