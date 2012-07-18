@@ -117,10 +117,9 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     toDiff: function() {
         var morphs = {};
-        var raw = {id:"",registry:{isSimplifiedRegistry: true,"":morphs}};
+        var raw = {id:"",registry:{isSimplifiedRegistry: true,"":[]}};
         for (var key in this.data) {
             raw.registry[key] = this.data[key];
-            morphs[key] = this.createSmartRef(key);
         }
         return new users.cschuster.sync.Diff(raw);
     },
