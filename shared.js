@@ -162,7 +162,7 @@ Object.subclass('users.cschuster.sync.Patch', {
                         registry[parent] = {};
                     }
                     if (!registry[parent].hasOwnProperty(thisKey)) {
-                        registry[parent][thisKey] = {};
+                        registry[parent][thisKey] = {_t:"a"};
                     }
                     registry[parent][thisKey][oldKey] = op;
                 } else {
