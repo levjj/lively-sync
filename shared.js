@@ -161,10 +161,10 @@ Object.subclass('users.cschuster.sync.Patch', {
         var toDelete = diff.aggregateDeletions();
         for (var id in snapshot.data.registry) {
             if (toDelete.any(function(s) {return id.startsWith(s)})) {
-                
+                var op = [snapshot.data.registry[id], 0, 0];
+                diff.data.registry[id] = op;
             }
         }
-
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
