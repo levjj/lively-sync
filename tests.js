@@ -18,7 +18,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertMatches(patch.data, expected);
         patch.apply(snapshotA);
         this.assertMatches(snapshotA.data, snapshotB.data);
-        //this.assertMatches(snapshotB.data, snapshotA.data);
+        this.assertMatches(snapshotB.data, snapshotA.data);
     }
 },
 'specs', {
