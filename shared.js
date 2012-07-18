@@ -115,16 +115,35 @@ Object.subclass('users.cschuster.sync.Patch', {
     createSmartRef: function(id) {
         return {__isSmartRef__: true, id: id};
     },
-    toDiff: function() {
+    convertToDiffInstruction: function(obj, optSnapshotObj) {
+        // recreates diff instructions from patch
+        if (Object.isObject(obj)) {
+            if (Array.isArray(obj)) { // instruction
+                if (obj.length == 2) {
+                    obj.unshift(0);
+                } else if (optSnapshotObj !== undefined) {
+                    obj.unshift(optSnapshotObj);
+                }
+            } else { // raw object or array
+                Properties.forEachOwn(obj, function(name, val) {
+                    this.convertToDiffInstruction(val, optSnapshotObj[name]);
+                }, this)
+            }
+        }
+    },
+    toDiff: function(optSnapshot) {
         var morphs = {};
         var raw = {id:"",registry:{isSimplifiedRegistry: true,"":[]}};
         for (var key in this.data) {
-            raw.registry[key] = this.data[key];
+            var diffVal = this.data[key];
+            var origVal = optSnapshot && optSnapshot.data.registry[key];
+            raw.registry[key] = val;
+            this.convertToDiffInstruction(val, origVal);
         }
         return new users.cschuster.sync.Diff(raw);
     },
     apply: function(snapshot) {
-        var diff = this.toDiff();
+        var diff = this.toDiff(snapshot);
         diff.apply(snapshot);
     },
     toJSON: function() {
