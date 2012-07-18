@@ -131,6 +131,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var prefix = this.rect.id + "/submorphs/0";
         var copy = this.addRectPatch(submorph, prefix);
         expected[prefix] = [copy[""]];
+        expected[prefix][0].owner = this.createSmartRef(this.rect.id);
         Properties.forEachOwn(copy, function(key) {
             if (key)
                 expected[prefix + "/" + key] = [copy[key]];
