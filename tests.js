@@ -122,10 +122,15 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveSubmorph: function() {
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorph = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph);
         var snapshotA = this.serialize(this.table);
+        this.rect.removeMorph(submorph);
         var snapshotB = this.serialize({});
         var expected = {};
-        expected[this.rect.id] = [0,0];
+        expected[this.rect.id] = {submorphs: [[]]};
+        expected[this.submorph.id] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
