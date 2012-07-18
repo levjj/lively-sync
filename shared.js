@@ -149,15 +149,28 @@ Object.subclass('users.cschuster.sync.Patch', {
     addMissingSmartRefs: function(registry) {
         for (var key in registry) {
             if (Array.isArray(registry[key]) && key.indexOf('/')) {
+                var op = [this.createSmartRef(key)];
                 if (registry[key].length == 2) continue;
+                if (registry[key].length == 3) op.push(0,0);
                 var parent = key.substring(0, key.lastIndexOf('/'));
                 var thisKey = key.substring(key.lastIndexOf('/') + 1);
-                if (!registry.hasOwnProperty(parent)) {
-                    registry[parent] = {};
+                if (!isNaN(thisKey) && parent.indexOf('/')) {
+                    var oldKey = thisKey;
+                    thisKey = parent.substring(parent.lastIndexOf('/') + 1);
+                    parent = parent.substring(0, parent.lastIndexOf('/'));
+                    if (!registry.hasOwnProperty(parent)) {
+                        registry[parent] = {};
+                    }
+                    if (!registry[parent].hasOwnProperty(thisKey)) {
+                        registry[parent][thisKey] = {};
+                    }
+                    registry[parent][thisKey][oldKey] = op;
+                } else {
+                    if (!registry.hasOwnProperty(parent)) {
+                        registry[parent] = {};
+                    }
+                    registry[parent][thisKey] = op;
                 }
-                var op = [this.createSmartRef(key)];
-                if (registry[key].length == 3) op.push(0,0);
-                registry[parent][thisKey] = op;
             }
         }
     },
