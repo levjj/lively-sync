@@ -131,7 +131,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected[this.rect.id] = {submorphs: [[]]};
         expected[this.rect.id + "/submorphs/0"] = [0,0];
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
