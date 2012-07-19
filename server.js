@@ -224,7 +224,6 @@ Object.subclass('users.cschuster.sync.Server', {
             }.bind(this));
         }.bind(this));
     }
-};
 });
 
 new users.cschuster.sync.Repository(function(repo) {
