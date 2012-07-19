@@ -7,7 +7,7 @@ var io = require('socket.io').listen(8114);
 var EventEmitter = require('events').EventEmitter;
 var Seq = require('seq');
 var pg = require('pg');
-require('./lk');
+var module = require('./lk').module;
 require('./shared');
 
 var CONNECTION_STRING = "tcp://syncproto:steam@localhost/syncproto";
