@@ -3,7 +3,7 @@
  * (socket.io, postgresql)
  */
 
-var io = require('socket.io').listen(6700);
+var io = require('socket.io').listen(8114);
 var EventEmitter = require('events').EventEmitter;
 var Seq = require('seq');
 var pg = require('pg');
@@ -233,6 +233,4 @@ new users.cschuster.sync.Repository(function(repo) {
 io.set('log level', 2);
 io.sockets.on('connection', function (socket) {
     new users.cschuster.sync.Server(socket);
-});
-
 });
