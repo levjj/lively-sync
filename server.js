@@ -234,3 +234,5 @@ io.set('log level', 2);
 io.sockets.on('connection', function (socket) {
     new users.cschuster.sync.Server(socket);
 });
+
+});
