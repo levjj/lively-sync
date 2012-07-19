@@ -72,7 +72,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected[this.rect.id + "/_Position"] = {x: [oldX+10], y: [oldY+20]};
-        inspect(expected);
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testColorRectangle: function () {
