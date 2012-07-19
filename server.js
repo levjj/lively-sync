@@ -16,7 +16,7 @@ var DEMO = 'demo';
 
 module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
 
-Object.subclass('user.cschuster.sync.Mutex', {
+Object.subclass('users.cschuster.sync.Mutex', {
     initialize: function() {
         var queue = new EventEmitter();
         var locked = false;
@@ -37,8 +37,8 @@ Object.subclass('user.cschuster.sync.Mutex', {
     }
 });
 
-Object.subclass('user.cschuster.sync.Repository', {
-    mutex: new user.cschuster.sync.Mutex(),
+Object.subclass('users.cschuster.sync.Repository', {
+    mutex: new users.cschuster.sync.Mutex(),
     
     initialize: function(exclusive, cb) {
         pg.connect(CONNECTION_STRING, function(err, db) {
