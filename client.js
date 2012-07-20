@@ -103,6 +103,7 @@ Object.subclass('users.cschuster.sync.Control',
             }, this);
         },
         loadRev: function(rev) {
+            debugger;
             if (!this.socket) return;
             if (this.rev == rev) return;
             this.rev = rev;
