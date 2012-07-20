@@ -105,7 +105,6 @@ Object.subclass('users.cschuster.sync.Control',
         loadRev: function(rev) {
             if (!this.socket) return;
             if (this.rev == rev) return;
-            debugger;
             this.rev = rev;
             if (!this.snapshots[rev]) {
                 this.socket.emit('checkout', this.rev);
