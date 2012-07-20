@@ -46,8 +46,8 @@ Function.prototype.addMethods = function(source) {
             value.declaredClass = this.prototype.constructor.type;
             value.methodName = property;
         }
-        return this;
     }
+    return this;
 };
 
 Function.prototype.subclass = function(className, sourceObj) {
