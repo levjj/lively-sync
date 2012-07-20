@@ -178,7 +178,7 @@ users.cschuster.sync.Snapshot.addMethods({
         return this;
     },
     recreateObjects: function() {
-        this.getSerializer().deserializeJso(this.data);
+        return this.getSerializer().deserializeJso(this.data);
     }
 });
 
