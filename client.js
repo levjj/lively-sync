@@ -77,6 +77,8 @@ Object.subclass('users.cschuster.sync.Control',
             if (this.rev == oldMax) {
                 this.rev = rev;
                 this.loadSnapshot(this.snapshots[rev]);
+            } else {
+                signal(this, "rev", this.rev);
             }
         },
         receivePatch: function(rev, patch) {
