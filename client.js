@@ -72,7 +72,7 @@ Object.subclass('users.cschuster.sync.Control',
         },
         receiveSnapshot: function(rev, snapshot) {
             var oldMax = this.maxRevision();
-            this.snapshots[rev] = new users.cschuster.Snapshot(snapshot);
+            this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
             console.log('received snapshot for rev ' + rev);
             if (this.rev == oldMax) {
                 this.rev = rev;
