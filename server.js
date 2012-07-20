@@ -41,6 +41,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     mutex: new users.cschuster.sync.Mutex(),
     
     initialize: function(exclusive, cb) {
+        if ('undefined' == typeof cb) { cb = exclusive; exclusive = false; }
         pg.connect(CONNECTION_STRING, function(err, db) {
             if (err) return console.error(err);
             this.db = db;
