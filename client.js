@@ -141,7 +141,6 @@ Object.subclass('users.cschuster.sync.Control',
             try {
                 var current = new users.cschuster.sync.Snapshot();
                 current.createFromObjects(this.syncTable);
-                debugger;
                 var last = this.snapshots[this.rev];
                 var diff = last.diff(current);
                 if (!diff) return;
