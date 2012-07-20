@@ -134,7 +134,7 @@ Object.subclass('users.cschuster.sync.Control',
         stopSyncing: function() {
             clearTimeout(this.commitTimeout);
             this.commitTimeout = null;
-            console.log("stopeed syncing");
+            console.log("stopped syncing");
         },
         commit: function() {
             var start = Date.now();
