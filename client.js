@@ -142,11 +142,8 @@ Object.subclass('users.cschuster.sync.Control',
                 var current = new users.cschuster.sync.Snapshot();
                 current.createFromObjects(this.syncTable);
                 var last = this.snapshots[this.rev];
-                var diff = last.diff(current);
-                if (!diff) return;
-                if (!this.diffs) this.diffs = {};
-                this.diffs[this.rev + 1] = diff;
-                var patch = diff.toPatch();
+                var patch = last.diff(current).toPatch();
+                if (patch.isEmpty()) return;
                 //TODO: send patches instead of snapshots
                 this.socket.emit('commit', this.rev, current);
                 this.snapshots[this.rev + 1] = current;
