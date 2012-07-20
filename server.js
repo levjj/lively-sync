@@ -231,7 +231,7 @@ new users.cschuster.sync.Repository(function(repo) {
     repo.reset(); // delete old data
 });
 
-//io.set('log level', 2);
+io.set('log level', 2);
 io.sockets.on('connection', function (socket) {
     new users.cschuster.sync.Server(socket);
 });
