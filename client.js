@@ -54,7 +54,7 @@ Object.subclass('users.cschuster.sync.Control',
     },
     'updating', {
         connect: function() {
-            this.socket = io.connect(null, {resource: 'nodejs/SyncServer'});
+            this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
             if (this.maxRevision() > 0) this.loadRev(this.maxRevision());
