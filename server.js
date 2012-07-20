@@ -18,8 +18,8 @@ module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').to
 
 Object.subclass('users.cschuster.sync.Mutex', {
     initialize: function() {
-        var queue = new EventEmitter();
-        var locked = false;
+        this.queue = new EventEmitter();
+        this.locked = false;
     },
     lock: function (fn) {
         if (this.locked) {
