@@ -45,7 +45,7 @@ Object.subclass('users.cschuster.sync.Repository', {
         pg.connect(CONNECTION_STRING, function(err, db) {
             if (err) return console.error(err);
             this.db = db;
-            if (exclusive) return this.mutex.lock(cb.bind(this));
+            if (exclusive) return this.mutex.lock(cb.bind(this, this));
             cb(this);
         }.bind(this));
     },
