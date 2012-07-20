@@ -189,7 +189,7 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(true, function(repo) {
             repo.head(function (head) {
                 this.socket.broadcast.emit('snapshot', head + 1, snapshot);
-                repo.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "snapshot", snapshot.toJSON()], function() {
+                repo.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "snapshot", snapshot], function() {
                     repo.release();
                 });
             }.bind(this));
