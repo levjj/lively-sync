@@ -266,8 +266,6 @@ Object.subclass('users.cschuster.sync.Control',
 
             this.commitTimeout = null;
 
-            SyncNewMorphs.beNotGlobal();
-
             console.log("stopeed syncing");
 
         },
