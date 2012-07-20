@@ -142,6 +142,7 @@ Object.subclass('users.cschuster.sync.Control',
                 var current = new users.cschuster.sync.Snapshot();
                 current.createFromObjects(this.syncTable);
                 var last = this.snapshots[this.rev];
+                debugger;
                 var patch = last.diff(current).toPatch();
                 if (patch.isEmpty()) return;
                 //TODO: send patches instead of snapshots
