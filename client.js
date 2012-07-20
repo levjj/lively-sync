@@ -58,7 +58,7 @@ Object.subclass('users.cschuster.sync.Control',
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
             if (this.maxRevision() > 0) this.loadRev(this.maxRevision());
-            this.socket.emit('update', this.rev);
+            (function(){this.socket.emit('update', this.rev)}).bind(this).delay(1);
             console.log("connected");
         },
         disconnect: function() {
