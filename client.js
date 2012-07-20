@@ -144,6 +144,7 @@ Object.subclass('users.cschuster.sync.Control',
                 var last = this.snapshots[this.rev];
                 var diff = last.diff(current);
                 if (!diff) return;
+                if (!this.diffs) this.diffs = {};
                 this.diffs[this.rev + 1] = diff;
                 var patch = diff.toPatch();
                 //TODO: send patches instead of snapshots
