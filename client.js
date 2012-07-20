@@ -54,7 +54,8 @@ Object.subclass('users.cschuster.sync.Control',
     },
     'updating', {
         connect: function() {
-            this.socket = io.connect('http://lively-kernel.org/nodejs/SyncServer');
+            var options = {resource: '/nodejs/SyncServer'};
+            this.socket = io.connect('http://lively-kernel.org/', options);
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
             if (this.maxRevision() > 0) this.loadRev(this.maxRevision());
