@@ -190,6 +190,9 @@ Object.subclass('users.cschuster.sync.Patch', {
         this.propagateDeletions(diff, snapshot);
         diff.apply(snapshot);
     },
+    isEmpty: function() {
+        return !this.data || Object.isEmpty(this.data);
+    },
     toJSON: function() {
         return JSON.stringify(this.data);
     }
