@@ -10,7 +10,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     serialize: function(object) {
         var snapshot = new users.cschuster.sync.Snapshot();
-        return snapshot.create(object);
+        return snapshot.createFromObjects(object);
     },
     assertPatch: function(expected, snapshotA, snapshotB) {
                 inspect(expected);
