@@ -180,10 +180,16 @@ Object.subclass('users.cschuster.sync.Patch', {
                     }
                     registry[parent][thisKey][oldKey] = op;
                 } else {
-                    if (!registry.hasOwnProperty(parent)) {
-                        registry[parent] = {};
+                    if (Array.isArray(registry[parent])) {
+                        // there is already an add or set instruction
+                        // so just append our raw data
+                        registry[parent].last()[thisKey] = op.last();
+                    } else {
+                        if (!registry.hasOwnProperty(parent)) {
+                            registry[parent] = {};
+                        }
+                        registry[parent][thisKey] = op;
                     }
-                    registry[parent][thisKey] = op;
                 }
             }
         }
