@@ -13,8 +13,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         return snapshot.createFromObjects(object);
     },
     assertPatch: function(expected, snapshotA, snapshotB) {
-                inspect(expected);
-
         var patch = snapshotA.diff(snapshotB).toPatch();
         this.assertMatches(expected, patch.data);
         this.assertMatches(patch.data, expected);
