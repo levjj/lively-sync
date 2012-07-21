@@ -100,7 +100,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected[this.rect.id + "/shape/_Fill"] = [0,0];
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testAddMorph: function() {
