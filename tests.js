@@ -54,7 +54,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize(this.table);
         var diff = snapshotA.diff(snapshotB);
-        this.assert(difft.toPatch().isEmpty(), 'no diff for identical morphs');
+        this.assert(diff.toPatch().isEmpty(), 'no diff for identical morphs');
     },
     testResizedRectangle: function() {
         var snapshotA = this.serialize(this.table);
