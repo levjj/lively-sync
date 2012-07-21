@@ -114,7 +114,6 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (id && !id.startsWith("#")
                    && !toDelete.any(function(s) {return id.startsWith(s+"/")})) {
                 var obj = this.data.registry[id];
-                this.convertToForwardPatch(obj);
                 if (!this.removeSmartRefs(obj, id, false)) {
                     patch.data[id] = obj;
                 }
