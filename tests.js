@@ -91,6 +91,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected[this.rect.id + "/shape"] = {_Fill: [null]};
         expected[this.rect.id + "/shape/_Fill"] = [0,0];
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testUnColorRectangle: function () {
