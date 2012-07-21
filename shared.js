@@ -52,29 +52,60 @@ Object.subclass('users.cschuster.sync.Diff', {
         });
         return toDelete;
     },
-
-    removeSmartRefs: function(obj, id, rawMode) {
+    isSmartRef: function(obj, id) {
+        if (!obj) return false;
+        if (!Object.isObject(obj)) return false;
+        if (!obj.__isSmartRef__) return false;
+        return obj.id == id;
+    },
+    removeSmartRefs: function(obj, id) {
         // discards smartrefs
-        // returns true if that part of the diff is empty
-        // after removing the smartrefs.
+        // returns true if smartref can be removed, but
+        // do not coalesce this part of the diff
         if (!obj || !Object.isObject(obj)) return false; // primitive
-        if (Object.isObject(obj) && obj.__isSmartRef__ && obj.id == id) { // smartref
+        if (this.isSmartRef(obj, id)) { // smartref
             return true;
         }
-        if (!rawMode && Array.isArray(obj)) { // instruction
-             //add or set have raw data as first element
-            return this.removeSmartRefs(obj[0], id, true);
-        }
         // object or array
-        delete obj._t;
         Properties.forEachOwn(obj, function(key, value) {
-            var subId = id + "/" + key;
-            if (this.removeSmartRefs(value, id + "/" + key, rawMode)) {
+            if (this.removeSmartRefs(value, id + "/" + key)) {
                 delete obj[key];
             }
         }, this);
         // always keep empty objects and arrays in raw mode
-        return Object.isEmpty(obj) && !rawMode;
+        return false;
+    },
+    coalesceDiff: function(obj, id) {
+        // discards smartrefs
+        // returns true if that part of the diff is empty
+        // after removing the smartrefs.
+        if (Array.isArray(obj)) { // instruction
+            if (obj.length == 3) {
+                // discard old value of delete instruction
+                // and remove whole instruction if it was a
+                // smartref
+                return this.isSmartRef(obj.splice(0,1)[0], id);
+             }
+            // discard old value of set instruction
+            if (obj.length == 2) obj.splice(0,1);
+            // if the added or modified value is a smartref, remove it
+            if (this.isSmartRef(obj.splice(0,1)[0], id)) return true;
+            // else recursively remove smartref (and copy this
+            // part of the tree as not to manipulate the snapshot)
+            obj[0] = Object.deepCopy(obj[0]);
+            this.removeSmartRefs(obj[0], id);
+            // but keep the instruction itself
+            return false;
+        }
+        // object or array
+        delete obj._t;
+        Properties.forEachOwn(obj, function(key, value) {
+            if (this.coalesceDiff(value, id + "/" + key)) {
+                delete obj[key];
+            }
+        }, this);
+        // remove this part of the diff if there are no children
+        return Object.isEmpty(obj);
     },
     toPatch: function() {
         var patch = new users.cschuster.sync.Patch();
