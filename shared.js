@@ -75,11 +75,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             return true;
         }
         if (!rawMode && Array.isArray(obj)) { // instruction
-            switch(obj.length) {
-                case 1: return this.removeSmartRefs(obj[0], id, true); //add
-                case 2: return this.removeSmartRefs(obj[1], id, true); //set
-                case 3: return this.removeSmartRefs(obj[0], id, true); //del
-            }
+             //add or set have raw data as first element
+            return this.removeSmartRefs(obj[0], id, true);
         }
         // object or array
         delete obj._t;
