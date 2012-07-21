@@ -112,7 +112,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             if (key)
                 expected[this.rect.id + "/" + key] = [copy[key]];
         }, this);
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveMorph: function() {
