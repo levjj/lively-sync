@@ -152,9 +152,9 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     testDiffingDoesNotAffectSnapshot: function() {
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
-        this.assert(snapshotB.data.registy[this.rect.id].shape.__isSmartRef__);
+        this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
         var patch = snapshotB.diff(snapshotA).toPatch();
-        this.assert(snapshotB.data.registy[this.rect.id].shape.__isSmartRef__);
+        this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
     }
 });
 }) // end of module
