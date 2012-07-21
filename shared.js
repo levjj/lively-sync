@@ -60,6 +60,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                 if (obj.length !== 1) {
                     obj.splice(0, 1);
                 }
+                obj[0] = Object.deepCopy(obj[0]); // copy raw object
             } else { // raw object or array
                 Properties.forEachOwn(obj, this.convertToForwardPatch, this)
             }
