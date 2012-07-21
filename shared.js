@@ -89,7 +89,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             // discard old value of set instruction
             if (obj.length == 2) obj.splice(0,1);
             // if the added or modified value is a smartref, remove it
-            if (this.isSmartRef(obj.splice(0,1)[0], id)) return true;
+            if (this.isSmartRef(obj[0], id)) return true;
             // else recursively remove smartref (and copy this
             // part of the tree as not to manipulate the snapshot)
             obj[0] = Object.deepCopy(obj[0]);
