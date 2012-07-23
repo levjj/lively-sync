@@ -178,51 +178,6 @@ users.cschuster.sync.Snapshot.addMethods({
     }
 });
 
-users.cschuster.sync.Patch.addMethods({
-    objectAtPath: function(path, morphs) {
-        var parts = path.split('/');
-        var parent = null;
-        var current = morphs;
-        for (var i = 0; current && (i < parts.length); i++) {
-            parent = current;
-            current = current && current[parts[i]];
-        }
-        return {obj: current, parent: parent};
-    },
-    applyObjectPatch: function(obj, patch) {
-        Properties.forEachOwn(patch, function(key, value) {
-            if (Array.isArray(patch)) { // instruction
-                if (obj.length == 2) { // delete
-                    delete obj[key];
-                } else { // add or set
-                    obj[key] = value;
-                }
-            } else {
-                this.applyObjectPatch(obj[key], value);
-            }
-        }, this);
-    },
-    applySetInstruction: function(path, patch, morphs) {
-        var current = this.objectAtPath(path, morphs).obj;
-        this.applyObjectPatch(current, path);
-    },
-    applyToMorphs: function(morphs) {
-        for (var key in this.data) {
-            var val = this.data[key];
-            if (Array.isArray(val)) { // instruction
-                if (val.length == 1) {
-                    throw Error('"add" not supported yet');
-                    this.applyAddInstruction(key, val[0], morphs);
-                } else {
-                    throw Error('"delete" not supported yet');
-                    this.applyDeleteInstruction(key, morphs);
-                }
-            } else {
-                this.applySetInsturction(key, val, morphs);
-            }
-        }
-    }
-});
 
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
     newId: function() {
