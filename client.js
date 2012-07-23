@@ -184,21 +184,22 @@ users.cschuster.sync.Snapshot.addMethods({
 });
 
 users.cschuster.sync.Patch.addMethods({
-    applyToObject: function() {
-        
-    },
-    applyToMorph: function() {
-        
-    },
-    applyAddInstruction: function(path, patch, morphs, world) {
-        var parent = world;
+    objectAtPath: function(path, morphs) {
         var parts = path.split('/');
+        var parent = null;
         var current = morphs;
         for (var i = 0; current && (i < parts.length); i++) {
-            if (current.isMorph) parent = current;
-            current = current[parts[i]];
+            parent = current;
+            current = current && current[parts[i]];
         }
+        return {obj: current, parent: parent};
+    },
+    applyObjectPatch: function(obj, patch) {
         
+    },
+    applySetInstruction: function(path, patch, morphs) {
+        var current = this.objectAtPath(path, morphs).obj;
+        this.applyObjectPatch(current, path);
     },
     applyToMorphs: function(morphs) {
         for (var key in this.data) {
