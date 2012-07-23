@@ -125,10 +125,13 @@ Object.subclass('users.cschuster.sync.Control',
             throw Error('diff/patches not implemented yet');
             if (this.rev !== rev + 1) {
                 console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
-                this.socket.emit('update', this.rev);
+                //this.socket.emit('update', this.rev);
             } else {
+                var last = this.snapshots[this.rev];
                 this.rev = rev;
-                jsondiffpatch.patch(this.morphSyncTable, patch);
+                patch = new users.cschuster.sync.Patch(patch);
+                patch.apply(last);
+                this.loadPatch(patch);
             }
         },
         loadSnapshot: function(snapshot) {
