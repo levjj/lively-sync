@@ -13,13 +13,12 @@ Object.subclass('users.cschuster.sync.Plugin', {
 });
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin', {
-    addedObj: function(morph) {
-        morph.openInWorld();
+    addedObj: function(key, obj) {
+        
     },
-    updatedObj: function(key, value, patch) {
+    updatedObj: function(key, obj, patch) {
     },
-    removedObj: function(morph) {
-        morph.remove();
+    removedObj: function(key) {
     }
 });
 
