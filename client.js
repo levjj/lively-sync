@@ -7,7 +7,7 @@ module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').to
 
 Object.subclass('users.cschuster.sync.Plugin', {
     addedObj: function(obj) {},
-    updatedObj: function(key, value, patch) {},
+    updatedObj: function(obj, key, patch) {},
     removedObj: function(obj) {}
 });
 
