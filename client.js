@@ -32,13 +32,23 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'setting', {
+    set: function(obj, prop, val) {
+        if (obj.isMorph) {
+            var setter = obj['set' + prop.capitalize()];
+            if (Object.isFunction(setter)) {
+                return setter.call(obj, val);
+            }
+        }
+        return obj[prop] = val;
+    },
     applyObjectPatch: function(obj, patch) {
         Properties.forEachOwn(patch, function(key, value) {
             if (Array.isArray(patch)) { // instruction
                 if (obj.length == 2) { // delete
+                    this.set(obj, key, undefined);
                     delete obj[key];
                 } else { // add or set
-                    obj[key] = value;
+                    this.set(obj, key, value);
                 }
             } else {
                 this.applyObjectPatch(obj[key], value);
