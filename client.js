@@ -184,12 +184,36 @@ users.cschuster.sync.Snapshot.addMethods({
 });
 
 users.cschuster.sync.Patch.addMethods({
+    applyToObject: function() {
+        
+    },
     applyToMorph: function() {
         
     },
+    applyAddInstruction: function(path, patch, morphs, world) {
+        var parent = world;
+        var parts = path.split('/');
+        var current = morphs;
+        for (var i = 0; current && (i < parts.length); i++) {
+            if (current.isMorph) parent = current;
+            current = current[parts[i]];
+        }
+        
+    },
     applyToMorphs: function(morphs) {
-        for (var key in value) {
-            doSomethingElse();
+        for (var key in this.data) {
+            var val = this.data[key];
+            if (Array.isArray(val)) { // instruction
+                if (val.length == 1) {
+                    throw Error('"add" not supported yet');
+                    this.applyAddInstruction(key, val[0], morphs);
+                } else {
+                    throw Error('"delete" not supported yet');
+                    this.applyDeleteInstruction(key, morphs);
+                }
+            } else {
+                this.applySetInsturction(key, val, morphs);
+            }
         }
     }
 });
