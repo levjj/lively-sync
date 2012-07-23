@@ -15,13 +15,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin', {
     addedObj: function(morph) {
         morph.openInWorld();
     },
-    updatedObj: function(morph, prop, val) {
-        var setter = morph['set' + prop.capitalize()];
-        if (Object.isFunction(setter)) {
-            setter.call(morph, val);
-        } else {
-            morph[prop] = val;
-        }
+    updatedObj: function(key, value, patch) {
     },
     removedObj: function(morph) {
         morph.remove();
