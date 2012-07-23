@@ -160,27 +160,33 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
     setUp: function() {
-        this.table = {};
-        var bounds = pt(0,0).extent(pt(20,20));
+        var bounds = pt(0,0).extent(pt(4,4));
         this.rect = new lively.morphic.Box(bounds);
-        this.table.A43F = this.serialize(this.rect);
+        this.rect.id = "X";
+        this.rect.openInWorld();
+        this.table = {};
+        this.table.X = this.rect;
     },
+    tearDown: function() {
+        Object.values(this.table).invoke('remove');
+    }
 },
 'helping', {
-    serialize: function(object) {
-        var serializer = bla;
-        return serializer.serializeToJso(object);
+    assertCSS: function(morph, prop, value) {
+        this.assertEquals(morph.jQuery().parent().css(prop), value);
     }
 },
 'specs', {
     movePatch: {
-        "A43F/_Position": {x: [20], y: [30]}
+        "X/_Position": {x: [5], y: [3]}
     }
 },
 'testing', {
     testMove: function() {
         var patch = new users.cschuster.sync.Patch(this.movePatch);
         patch.applyToMorphs(this.table);
+        this.assertCSS(this.rect, "left", "5px");
+        this.assertCSS(this.rect, "top", "3px");
     }
 });
 }) // end of module
