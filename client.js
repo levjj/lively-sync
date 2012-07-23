@@ -184,8 +184,13 @@ users.cschuster.sync.Snapshot.addMethods({
 });
 
 users.cschuster.sync.Patch.addMethods({
+    applyToMorph: function() {
+        
+    },
     applyToMorphs: function(morphs) {
-        return true;
+        for (var key in value) {
+            doSomething();
+        }
     }
 });
 
