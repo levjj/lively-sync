@@ -44,6 +44,7 @@ Object.subclass('users.cschuster.sync.Control',
         },
         addPlugin: function(plugin) {
             this.plugins.push(plugin);
+            plugin.setControl(this);
         }
     },
     'updating', {
