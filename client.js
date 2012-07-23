@@ -138,14 +138,28 @@ Object.subclass('users.cschuster.sync.Control',
         },
         loadSnapshot: function(snapshot) {
             Properties.forEachOwn(this.syncTable, function(key, val) {
-                this.plugins.invoke('removedObj', val);
+                this.plugins.invoke('removedObj', val.id);
                 this.removeObject(val);
             }, this);
             var objects = snapshot.recreateObjects();
             Properties.forEachOwn(objects, function(key, val) {
                 this.addObject(val);
-                this.plugins.invoke('addedObj', val);
+                this.plugins.invoke('addedObj', val.id);
             }, this);
+        },
+        loadPatch: function(patch) {
+            for (var key in patch.data) {
+                var val = patch.data[key];
+                if (Array.isArray(val)) { // instruction
+                    if (val.length == 1) {
+                        this.plugins.invoke('addedObj', key);
+                    } else {
+                        this.plugins.invoke('removedObj', key);
+                    }
+                } else {
+                    this.plugins.invoke('updatedObj', key);
+                }
+            }
         },
         loadRev: function(rev) {
             if (!this.socket) return;
