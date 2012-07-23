@@ -159,9 +159,28 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 });
 TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
-    setUp: function() {},
+    setUp: function() {
+        this.table = {};
+        var bounds = pt(0,0).extent(pt(20,20));
+        this.rect = new lively.morphic.Box(bounds);
+        this.table.A43F = this.serialize(this.rect);
+    },
+},
+'helping', {
+    serialize: function(object) {
+        var serializer = bla;
+        return serializer.serializeToJso(object);
+    }
+},
+'specs', {
+    movePatch: {
+        "A43F/_Position": {x: [20], y: [30]}
+    }
 },
 'testing', {
-    testSomething: function() {}
+    testMove: function() {
+        var patch = new users.cschuster.sync.Patch(this.movePatch);
+        patch.applyToMorphs(this.table);
+    }
 });
 }) // end of module
