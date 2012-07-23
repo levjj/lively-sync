@@ -157,8 +157,11 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
     }
 });
-Object.subclass('MyClass',
-'default category', {
-    m1: function() {},
+TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
+'running', {
+    setUp: function() {},
+},
+'testing', {
+    testSomething: function() {}
 });
 }) // end of module
