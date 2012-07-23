@@ -189,7 +189,7 @@ users.cschuster.sync.Patch.addMethods({
     },
     applyToMorphs: function(morphs) {
         for (var key in value) {
-            doSomething();
+            doSomethingElse();
         }
     }
 });
