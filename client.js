@@ -195,7 +195,17 @@ users.cschuster.sync.Patch.addMethods({
         return {obj: current, parent: parent};
     },
     applyObjectPatch: function(obj, patch) {
-        
+        Properties.forEachOwn(patch, function(key, value) {
+            if (Array.isArray(patch)) { // instruction
+                if (obj.length == 2) { // delete
+                    delete obj[key];
+                } else { // add or set
+                    obj[key] = value;
+                }
+            } else {
+                this.applyObjectPatch(obj[key], value);
+            }
+        }, this);
     },
     applySetInstruction: function(path, patch, morphs) {
         var current = this.objectAtPath(path, morphs).obj;
