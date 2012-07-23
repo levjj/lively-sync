@@ -122,15 +122,17 @@ Object.subclass('users.cschuster.sync.Control',
             }
         },
         receivePatch: function(rev, patch) {
-            throw Error('diff/patches not implemented yet');
-            if (this.rev !== rev + 1) {
+            this.patches[rev] = patch;
+            if (this.rev + 1 !== rev) {
                 console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
                 //this.socket.emit('update', this.rev);
             } else {
                 var last = this.snapshots[this.rev];
+                delete this.snapshots[this.rev];
                 this.rev = rev;
                 patch = new users.cschuster.sync.Patch(patch);
                 patch.apply(last);
+                this.snapshots[this.rev] = last;
                 this.loadPatch(patch);
             }
         },
