@@ -12,13 +12,48 @@ Object.subclass('users.cschuster.sync.Plugin', {
     removedObj: function(key) {}
 });
 
-users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin', {
+users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
+'helping', {
+    objectAtPath: function(path, morphs) {
+        var parts = path.split('/');
+        var parent = null;
+        var current = morphs;
+        for (var i = 0; current && (i < parts.length); i++) {
+            parent = current;
+            current = current && current[parts[i]];
+        }
+        return {obj: current, parent: parent};
+    }
+},
+'adding', {
     addedObj: function(key, obj) {
-        
+        throw new Error('not implemented yet');
+        //if (obj.isMorph) obj.openInWorld();
+    }
+},
+'setting', {
+    applyObjectPatch: function(obj, patch) {
+        Properties.forEachOwn(patch, function(key, value) {
+            if (Array.isArray(patch)) { // instruction
+                if (obj.length == 2) { // delete
+                    delete obj[key];
+                } else { // add or set
+                    obj[key] = value;
+                }
+            } else {
+                this.applyObjectPatch(obj[key], value);
+            }
+        }, this);
     },
     updatedObj: function(key, obj, patch) {
+        var current = this.objectAtPath(key, this.control.table).obj;
+        this.applyObjectPatch(current, patch);
     },
+},
+'deleting', {
     removedObj: function(key) {
+        throw new Error('Not implemented yet');
+        //this.control.table[key].remove();
     }
 });
 
