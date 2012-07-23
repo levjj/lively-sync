@@ -157,4 +157,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
     }
 });
+Object.subclass('MyClass',
+'default category', {
+    m1: function() {},
+});
 }) // end of module
