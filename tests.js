@@ -207,6 +207,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertShapeNode({tagName: 'div', style: {width: '13px', height: '7px'}});
     },
     testColor: function() {
+        debugger;
         this.patch(this.colorPatch);
         this.assertShapeNode({tagName: 'div', style: {background: '#F000FF'}});
     }
