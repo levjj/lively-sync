@@ -49,6 +49,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.set(obj, key, undefined);
                     delete obj[key];
                 } else { // add or set
+                    //TODO: value isSmartRef?
                     this.set(obj, key, value);
                 }
             } else {
