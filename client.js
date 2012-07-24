@@ -19,11 +19,11 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'setting', {
-    updatedObj: function(key, obj, patch) {}
+    updatedObj: function(key, obj) {}
 },
 'deleting', {
-    removedObj: function(key) {
-        this.control.syncTable[key].remove();
+    removedObj: function(key, obj) {
+        obj.remove();
     }
 });
 
