@@ -188,6 +188,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
 'specs', {
     moveXPatch: { "X/_Position": {x: [5]} },
     moveXYPatch: { "X/_Position": {x: [5], y: [3]} },
+    resizePatch: { "X/shape/_Extent": {x: [13], y: [7]} }
 },
 'testing', {
     testMoveX: function() {
@@ -197,6 +198,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     testMoveXY: function() {
         this.patch(this.moveXYPatch);
         this.assertMorphNode({tagName: 'div', style: {left: '5px', top: '3px'}});
+    },
+    testResize: function() {
+        this.patch(this.resizePatch);
+        this.assertMorphNode({tagName: 'div', style: {width: '13px', height: '7px'}});
     }
 });
 }) // end of module
