@@ -67,6 +67,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     removedObj: function(key) {
         throw new Error('Not implemented yet');
         //this.control.table[key].remove();
+        //if key == 'aa/bc' then delete table[aa].bc
     }
 });
 
