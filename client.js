@@ -123,7 +123,17 @@ Object.subclass('users.cschuster.sync.Control',
         }
     },
     'serialization', {
-        
+        objectAtPath: function(path) {
+            var parts = path.split('/');
+            var parent = null;
+            var current = this.syncTable;
+            for (var i = 0; current && (i < parts.length); i++) {
+                parent = current;
+                current = current && current[parts[i]];
+            }
+            return current;
+        },
+
     },
     'updating', {
         connect: function() {
