@@ -73,7 +73,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.set(obj, key, value);
                 }
             } else {
-                var recreatedValue = this.tryRecreate(value);
+                var recreatedValue = this.tryRecreate(obj[key], value);
                 if (recreatedValue) {
                     this.set(obj, key, recreatedValue);
                 } else {
