@@ -8,8 +8,8 @@ module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').to
 Object.subclass('users.cschuster.sync.Plugin', {
     setControl: function(control) { this.control = control; },
     addedObj: function(key, obj) {},
-    updatedObj: function(key, obj, patch) {},
-    removedObj: function(key) {}
+    updatedObj: function(key, obj) {},
+    removedObj: function(key, obj) {}
 });
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
