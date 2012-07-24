@@ -47,7 +47,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                         toDelete.removeAt(i--);
                     }
                 }
-                toDelete.push(key);
+                toDelete.push(key + "/");
             }
         });
         return toDelete;
