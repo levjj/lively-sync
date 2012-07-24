@@ -28,7 +28,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 'adding', {
     addedObj: function(key, obj) {
         throw new Error('not implemented yet');
-        //if (obj.isMorph) obj.openInWorld();
+        //var realObj = this.control.syncTable[key];
+        //if (realObj) realObj.openInWorld();
     }
 },
 'setting', {
