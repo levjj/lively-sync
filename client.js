@@ -83,8 +83,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }, this);
     },
     updatedObj: function(key, obj, patch) {
-        var current = this.objectAtPath(key, this.control.syncTable).obj;
-        this.applyObjectPatch(current, patch);
+        //this.applyObjectPatch(current, patch);
     },
 },
 'deleting', {
