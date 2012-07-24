@@ -81,7 +81,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         var serializedBlack = this.serialize(Color.black).data.registry[""];
         expected[this.rect.id + "/shape/_Fill"] = [serializedBlack];
-        inspect(expected);
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testTransparentRectangle: function () {
