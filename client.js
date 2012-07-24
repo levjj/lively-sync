@@ -83,14 +83,23 @@ Object.subclass('users.cschuster.sync.Control',
             });
         },
         recreateObject: function(object) {
-            if (!object || !Object.isObject(object)) return object;
-            if (object.__isSmartRef__) {
+            if (!object || !Object.isObject(object) || object.__isSmartRef__) {
                 return object;
             }
             var serializer = ObjectGraphLinearizer.forNewLively();
             var recreated = serializer.somePlugin('deserializeObj', [object]);
-            this.restoreRefs(recreated);
-            this.deserializeQueue.push(recreated);
+            for (var key in object) {
+                var val = object[key];
+                if (val.__isSmartRef__) {
+                    this.patchRef(recreated, prop, val);
+                } else {
+                    recreated[key] = this.recreateObject(val);
+                }
+            }
+            this.deserializeQueue.push(function() {
+                serializer.letAllPlugins('afterDeserializeObj', [recreated]);
+            });
+            return recreated;
         },
         tryPatchValueObject: function(existing, patch) {
             function newVal(prop) {
@@ -112,7 +121,8 @@ Object.subclass('users.cschuster.sync.Control',
             }
         },
         applyObjectPatch: function(obj, patch) {
-            Properties.forEachOwn(patch, function(key, value) {
+            for (var key in patch) {
+                var value = patch[key];
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 2) { // delete
                         this.set(obj, key, undefined);
@@ -128,7 +138,7 @@ Object.subclass('users.cschuster.sync.Control',
                         this.applyObjectPatch(obj[key], value);
                     }
                 }
-            }, this);
+            }
         }
     },
     'updating', {
