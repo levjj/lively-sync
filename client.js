@@ -171,7 +171,7 @@ Object.subclass('users.cschuster.sync.Control',
             var objects = snapshot.recreateObjects();
             Properties.forEachOwn(objects, function(key, val) {
                 this.addObject(val);
-                this.plugins.invoke('addedObj', val.id, snapshot.data.registry[val.id]);
+                this.plugins.invoke('addedObj', val.id, val);
             }, this);
         },
         loadPatch: function(patch) {
