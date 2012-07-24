@@ -152,8 +152,7 @@ Object.subclass('users.cschuster.sync.Control',
                 var val = patch.data[key];
                 if (Array.isArray(val)) { // instruction
                     if (val.length == 1) {
-                        var newVal = 23;
-                        this.plugins.invoke('addedObj', key, newVal);
+                        this.plugins.invoke('addedObj', key, val[0]);
                     } else {
                         this.plugins.invoke('removedObj', key);
                     }
