@@ -59,7 +59,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         var serializer = ObjectGraphLinearizer.forNewLively();
         var recreated = serializer.somePlugin('deserializeObj', [object]);
         this.restoreRefs(recreated);
-        this.letAllPlugins('afterDeserializeObj', [recreated]);
+        serializer.letAllPlugins('afterDeserializeObj', [recreated]);
     },
     tryPatchValueObject: function(existing, patch) {
         function newVal(prop) {
