@@ -164,10 +164,9 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
         this.rect = new lively.morphic.Box(bounds);
         this.rect.id = "X";
         this.rect.openInWorld();
-        this.table = {};
-        this.table.X = this.rect;
-        this.plugin = new users.cschuster.sync.MorphPlugin();
-        this.plugin.setControl({syncTable:this.table});
+        this.control = new users.cschuster.sync.Control();
+        this.control.addPlugin(new users.cschuster.sync.MorphPlugin());
+        this.control.addMorph(this.rect);{syncTable:this.table}
     },
     tearDown: function() {
         Object.values(this.table).invoke('remove');
