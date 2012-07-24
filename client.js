@@ -23,7 +23,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             current = current && current[parts[i]];
         }
         return {obj: current, parent: parent};
-    }
+    },
 },
 'adding', {
     addedObj: function(key, obj) {
@@ -43,10 +43,27 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
         return obj[prop] = val;
     },
+    tryRecreate: function(value) {
+        function newVal(prop) {
+            return Array.isArray(value[prop]) ? value[prop][0] : value[prop];
+        }
+        if (value.__isSmartRef__) {
+            return this.objectAtPath(value.id);
+        } else if (value instanceof lively.Point) {
+            return new lively.Point(newVal("x"), newVal("y"));
+        } else if (value instanceof lively.Rectangle) {
+            return new lively.Rectangle(newVal("x"), newVal("y"),
+                                        newVal("height"), newVal("width"));
+        } else if (value instanceof Color) {
+            return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
+        } else {
+            return false;
+        }
+    },
     applyObjectPatch: function(obj, patch) {
         Properties.forEachOwn(patch, function(key, value) {
-            if (Array.isArray(patch)) { // instruction
-                if (obj.length == 2) { // delete
+            if (Array.isArray(value)) { // instruction
+                if (value.length == 2) { // delete
                     this.set(obj, key, undefined);
                     delete obj[key];
                 } else { // add or set
