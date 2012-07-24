@@ -189,6 +189,8 @@ Object.subclass('users.cschuster.sync.Control',
         },
         loadPatch: function(patch) {
             var rawPatch = patch.toHierachicalPatch().data;
+            this.recreateObjects(rawPatch);
+            this.patchObjects(rawPatch);
             for (var key in rawPatch) {
                 this.plugins.invoke('updatedObj', key, this.syncTable[key]);
             }
