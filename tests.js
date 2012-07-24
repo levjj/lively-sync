@@ -188,6 +188,7 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 },
 'testing', {
     testMove: function() {
+        debugger;
         this.patch(this.movePatch);
         this.assertCSS(this.rect, "left", "5px");
         this.assertCSS(this.rect, "top", "3px");
