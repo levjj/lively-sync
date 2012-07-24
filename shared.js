@@ -214,7 +214,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     toHierachicalPatch: function() {
         var newPatch = {};
-        for (var key in patch.data) {
+        for (var key in this.data) {
             var parts = key.split('/');
             var current = newPatch;
             for (var i = 0; i < parts.length - 1; i++) {
@@ -223,7 +223,7 @@ Object.subclass('users.cschuster.sync.Patch', {
                 }
                 current = current[parts[i]];
             }
-            current[parts.last()] = patch.data[key];
+            current[parts.last()] = this.data[key];
         }
         return new users.cschuster.sync.Patch(newPatch);
     },
