@@ -201,7 +201,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testResize: function() {
         this.patch(this.resizePatch);
-        this.assertMorphNode({tagName: 'div', style: {width: '13px', height: '7px'}});
+        this.assertShapeNode({tagName: 'div', style: {width: '13px', height: '7px'}});
     }
 });
 }) // end of module
