@@ -175,6 +175,10 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'helping', {
     assertCSS: function(morph, prop, value) {
         this.assertEquals(morph.jQuery().parent().css(prop), value);
+    },
+    patch: function(patchData) {
+        var patch = new users.cschuster.sync.Patch(patchData);
+        this.control.loadPatch(patch);
     }
 },
 'specs', {
@@ -184,8 +188,7 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 },
 'testing', {
     testMove: function() {
-        var patch = new users.cschuster.sync.Patch(this.movePatch);
-        patch.applyToMorphs(this.table);
+        this.patch(this.movePatch);
         this.assertCSS(this.rect, "left", "5px");
         this.assertCSS(this.rect, "top", "3px");
     }
