@@ -30,6 +30,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         throw new Error('not implemented yet');
         //var realObj = this.control.syncTable[key];
         //if (realObj) realObj.openInWorld();
+        //if key == 'aa/bc' then table[aa].bc = obj
     }
 },
 'setting', {
