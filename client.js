@@ -42,7 +42,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
         return obj[prop] = val;
     },
-    tryRecreate: function(existing, patch) {
+    tryPatchValueObject: function(existing, patch) {
         function newVal(prop) {
             return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
         }
