@@ -43,18 +43,20 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
         return obj[prop] = val;
     },
-    tryRecreate: function(value) {
+    tryRecreate: function(existing, patch) {
         function newVal(prop) {
-            return Array.isArray(value[prop]) ? value[prop][0] : value[prop];
+            return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
         }
-        if (value.__isSmartRef__) {
-            return this.objectAtPath(value.id);
-        } else if (value instanceof lively.Point) {
+        if (patch.__isSmartRef__) {
+            return this.objectAtPath(patch.id);
+        } else if (patch.hasOwnProperty("__LivelyClassName__")) {
+            return false; // unable to recreate if class was changed
+        } else if (existing instanceof lively.Point) {
             return new lively.Point(newVal("x"), newVal("y"));
-        } else if (value instanceof lively.Rectangle) {
+        } else if (existing instanceof lively.Rectangle) {
             return new lively.Rectangle(newVal("x"), newVal("y"),
                                         newVal("height"), newVal("width"));
-        } else if (value instanceof Color) {
+        } else if (existing instanceof Color) {
             return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
         } else {
             return false;
