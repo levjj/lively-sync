@@ -64,6 +64,9 @@ Object.subclass('users.cschuster.sync.Control',
             return current;
         },
         set: function(obj, prop, val) {
+            if (val.__isSmartRef__) {
+                return this.patchRef(obj, prop, val);
+            }
             if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
                 var propName = prop.capitalize();
                 if (propName.startsWith('_')) propName = propName.substring(1);
@@ -74,14 +77,10 @@ Object.subclass('users.cschuster.sync.Control',
             }
             return obj[prop] = val;
         },
-        restoreRefs: function(object) {
-            if (!object || !Object.isObject(object)) return false;
-            if (object.__isSmartRef__) return this.objectAtPath(object.id);
-            for (var key in object) {
-                var patchedRef = this.restoreRefs(object[key]);
-                if (patchedRef) object[key] = patchedRef;
-            }
-            return false;
+        patchRef: function(object, prop, smartRef) {
+            this.refPatchQueue.push(function() {
+                this.set(object, prop, this.objectAtPath(smartRef.id));
+            });
         },
         recreateObject: function(object) {
             if (!object || !Object.isObject(object)) return object;
@@ -192,10 +191,7 @@ Object.subclass('users.cschuster.sync.Control',
             var rawPatch = patch.toHierachicalPatch().data;
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
-            this.refPatchQueue.each(function(ref) {
-                var path = this.objectAt(ref);
-                path.parent[ref.split('/').last()] = this.objectAt(path.obj.id);
-            }.bind(this));
+            this.refPatchQueue.invoke('call', this);
             for (var key in rawPatch) {
                 var obj = this.objectAtPath(key);
                 var patch = rawPatch[key];
