@@ -240,6 +240,12 @@ users.cschuster.sync.Snapshot.addMethods({
     },
     recreateObjects: function() {
         return this.getSerializer().deserializeJso(this.data);
+    },
+    recreateObject: function(id) {
+        var serializer = this.getSerializer();
+        serializer.addPlugin(/* only restore stuff with prefix / with id*/);
+        var obj = serializer.recreateFromId(id);
+        return obj;
     }
 });
 
