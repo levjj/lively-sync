@@ -190,7 +190,12 @@ Object.subclass('users.cschuster.sync.Control',
         loadPatch: function(patch) {
             var oldTable = Object.extend({}, this.syncTable);
             var rawPatch = patch.toHierachicalPatch().data;
+            this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
+            this.refPatchQueue.each(function(ref) {
+                var path = this.objectAt(ref);
+                path.parent[ref.split('/').last()] = this.objectAt(path.obj.id);
+            }.bind(this));
             for (var key in rawPatch) {
                 var obj = this.objectAtPath(key);
                 var patch = rawPatch[key];
