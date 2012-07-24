@@ -13,18 +13,6 @@ Object.subclass('users.cschuster.sync.Plugin', {
 });
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
-'helping', {
-    objectAtPath: function(path, morphs) {
-        var parts = path.split('/');
-        var parent = null;
-        var current = morphs;
-        for (var i = 0; current && (i < parts.length); i++) {
-            parent = current;
-            current = current && current[parts[i]];
-        }
-        return {obj: current, parent: parent};
-    },
-},
 'adding', {
     addedObj: function(key, obj) {
         obj.openInWorld();
