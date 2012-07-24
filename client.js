@@ -49,7 +49,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         if (patch.__isSmartRef__) {
             return this.objectAtPath(patch.id);
         } else if (patch.hasOwnProperty("__LivelyClassName__")) {
-            return false; // unable to recreate if class was changed
+            return false; // do not recreate value object if class was changed
         } else if (existing instanceof lively.Point) {
             return new lively.Point(newVal("x"), newVal("y"));
         } else if (existing instanceof lively.Rectangle) {
