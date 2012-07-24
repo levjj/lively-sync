@@ -42,12 +42,30 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
         return obj[prop] = val;
     },
+    restoreRefs: function(object) {
+        if (!object || !Object.isObject(object)) return false;
+        if (object.__isSmartRef__) return this.objectAtPath(object.id);
+        for (var key in object) {
+            var patchedRef = this.restoreRefs(object[key]);
+            if (patchedRef) object[key] = patchedRef;
+        }
+        return false;
+    },
+    recreateObject: function(object) {
+        if (object.__isSmartRef__) {
+            return this.objectAtPath(object.id);
+        }
+        var serializer = ObjectGraphLinearizer.forNewLively();
+        var recreated = serializer.somePlugin('deserializeObj', [object]);
+        this.restoreRefs(recreated);
+        this.letAllPlugins('afterDeserializeObj', [recreated]);
+    },
     tryPatchValueObject: function(existing, patch) {
         function newVal(prop) {
             return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
         }
         if (patch.__isSmartRef__) {
-            return this.objectAtPath(patch.id);
+            return this.objectAtPath(patch.id[0]);
         } else if (patch.hasOwnProperty("__LivelyClassName__")) {
             return false; // do not recreate value object if class was changed
         } else if (existing instanceof lively.Point) {
