@@ -175,17 +175,20 @@ Object.subclass('users.cschuster.sync.Control',
             }, this);
         },
         loadPatch: function(patch) {
+            var newPatch = {};
             for (var key in patch.data) {
-                var val = patch.data[key];
-                if (Array.isArray(val)) { // instruction
-                    if (val.length == 1) {
-                        this.plugins.invoke('addedObj', key, val[0]);
-                    } else {
-                        this.plugins.invoke('removedObj', key);
+                var parts = key.split('/');
+                var current = newPatch;
+                for (var i = 0; i < parts.length - 1; i++) {
+                    if (!current[parts[i]]) {
+                        current[parts[i]] = {};
                     }
-                } else {
-                    this.plugins.invoke('updatedObj', key);
+                    current = current[parts[i]];
                 }
+                current[parts.last()] = patch.data[key];
+            }
+            for (var key in newPatch) {
+                this.plugins.invoke('updatedObj', key, this.syncTable[key], newPatch[key]);
             }
         },
         loadRev: function(rev) {
