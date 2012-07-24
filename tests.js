@@ -1,4 +1,4 @@
-module('users.cschuster.sync.tests').requires('lively.TestFramework', 'users.cschuster.sync.client').toRun(function() {
+module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
 TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 'helper', {
@@ -157,28 +157,29 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
     }
 });
-TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
+lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
-    setUp: function() {
+    setUp: function($super) {
+        $super();
+        this.createWorld();
         var bounds = pt(0,0).extent(pt(4,4));
-        this.rect = new lively.morphic.Box(bounds);
-        this.rect.id = "X";
-        this.rect.openInWorld();
+        this.morph = new lively.morphic.Box(bounds);
+        this.morph.id = "X";
+        this.world.addMorph(this.morph);
         this.control = new users.cschuster.sync.Control();
         this.control.addPlugin(new users.cschuster.sync.MorphPlugin());
-        this.control.addObject(this.rect);
-    },
-    tearDown: function() {
-        Object.values(this.control.syncTable).invoke('remove');
+        this.control.addObject(this.morph);
     }
 },
 'helping', {
-    assertCSS: function(morph, prop, value) {
-        this.assertEquals(morph.jQuery().parent().css(prop), value);
-    },
     patch: function(patchData) {
         var patch = new users.cschuster.sync.Patch(patchData);
         this.control.loadPatch(patch);
+    }
+},
+'assertion', {
+    assertShapeNode: function(expected) {
+        this.assertNodeMatches(expected, this.morph.renderContext().getShapeNode());   
     }
 },
 'specs', {
@@ -188,12 +189,11 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'testing', {
     testMoveX: function() {
         this.patch(this.moveXPatch);
-        this.assertCSS(this.rect, "left", "5px");
+        this.assertShapeNode({style: {left: '5px'}});
     },
     testMoveXY: function() {
         this.patch(this.moveXYPatch);
-        this.assertCSS(this.rect, "left", "5px");
-        this.assertCSS(this.rect, "top", "3px");
+        this.assertShapeNode({style: {left: '5px', top: '3px'}});
     }
 });
 }) // end of module
