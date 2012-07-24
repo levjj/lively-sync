@@ -90,7 +90,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected[this.rect.id + "/shape"] = {_Fill: [null]};
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testUnColorRectangle: function () {
