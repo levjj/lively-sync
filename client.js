@@ -87,7 +87,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.set(obj, key, undefined);
                     delete obj[key];
                 } else { // add or set
-                    this.set(obj, key, this.recreateObject(value));
+                    this.set(obj, key, this.recreateObject(value[0]));
                 }
             } else {
                 var patchedValueObject = this.tryPatchValueObject(obj[key], value);
