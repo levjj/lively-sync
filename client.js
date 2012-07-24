@@ -33,7 +33,9 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 'setting', {
     set: function(obj, prop, val) {
         if (obj.isMorph) {
-            var setter = obj['set' + prop.capitalize()];
+            var propName = prop.capitalize();
+            if (propName.startsWith('_')) propName = propName.substring(1);
+            var setter = obj['set' + propName];
             if (Object.isFunction(setter)) {
                 return setter.call(obj, val);
             }
