@@ -63,7 +63,74 @@ Object.subclass('users.cschuster.sync.Control',
             }
             return current;
         },
-
+        set: function(obj, prop, val) {
+            if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
+                var propName = prop.capitalize();
+                if (propName.startsWith('_')) propName = propName.substring(1);
+                var setter = obj['set' + propName];
+                if (Object.isFunction(setter)) {
+                    return setter.call(obj, val);
+                }
+            }
+            return obj[prop] = val;
+        },
+        restoreRefs: function(object) {
+            if (!object || !Object.isObject(object)) return false;
+            if (object.__isSmartRef__) return this.objectAtPath(object.id);
+            for (var key in object) {
+                var patchedRef = this.restoreRefs(object[key]);
+                if (patchedRef) object[key] = patchedRef;
+            }
+            return false;
+        },
+        recreateObject: function(object) {
+            if (!object || !Object.isObject(object)) return object;
+            if (object.__isSmartRef__) {
+                return this.objectAtPath(object.id);
+            }
+            var serializer = ObjectGraphLinearizer.forNewLively();
+            var recreated = serializer.somePlugin('deserializeObj', [object]);
+            this.restoreRefs(recreated);
+            serializer.letAllPlugins('afterDeserializeObj', [recreated]);
+        },
+        tryPatchValueObject: function(existing, patch) {
+            function newVal(prop) {
+                return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
+            }
+            if (patch.__isSmartRef__) {
+                return this.objectAtPath(patch.id[0]);
+            } else if (patch.hasOwnProperty("__LivelyClassName__")) {
+                return false; // do not recreate value object if class was changed
+            } else if (existing instanceof lively.Point) {
+                return new lively.Point(newVal("x"), newVal("y"));
+            } else if (existing instanceof lively.Rectangle) {
+                return new lively.Rectangle(newVal("x"), newVal("y"),
+                                            newVal("height"), newVal("width"));
+            } else if (existing instanceof Color) {
+                return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
+            } else {
+                return false;
+            }
+        },
+        applyObjectPatch: function(obj, patch) {
+            Properties.forEachOwn(patch, function(key, value) {
+                if (Array.isArray(value)) { // instruction
+                    if (value.length == 2) { // delete
+                        this.set(obj, key, undefined);
+                        delete obj[key];
+                    } else { // add or set
+                        this.set(obj, key, this.recreateObject(value[0]));
+                    }
+                } else {
+                    var patchedValueObject = this.tryPatchValueObject(obj[key], value);
+                    if (patchedValueObject) {
+                        this.set(obj, key, patchedValueObject);
+                    } else {
+                        this.applyObjectPatch(obj[key], value);
+                    }
+                }
+            }, this);
+        }
     },
     'updating', {
         connect: function() {
@@ -111,7 +178,7 @@ Object.subclass('users.cschuster.sync.Control',
         },
         loadSnapshot: function(snapshot) {
             Properties.forEachOwn(this.syncTable, function(key, val) {
-                this.plugins.invoke('removedObj', val.id);
+                this.plugins.invoke('removedObj', val.id, val);
                 this.removeObject(val);
             }, this);
             var objects = snapshot.recreateObjects();
@@ -123,7 +190,7 @@ Object.subclass('users.cschuster.sync.Control',
         loadPatch: function(patch) {
             var rawPatch = patch.toHierachicalPatch().data;
             for (var key in rawPatch) {
-                this.plugins.invoke('updatedObj', key, this.syncTable[key], newPatch[key]);
+                this.plugins.invoke('updatedObj', key, this.syncTable[key]);
             }
         },
         loadRev: function(rev) {
