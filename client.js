@@ -85,19 +85,19 @@ Object.subclass('users.cschuster.sync.Control',
         recreateObject: function(object) {
             if (!object || !Object.isObject(object)) return object;
             if (object.__isSmartRef__) {
-                return this.objectAtPath(object.id);
+                return object;
             }
             var serializer = ObjectGraphLinearizer.forNewLively();
             var recreated = serializer.somePlugin('deserializeObj', [object]);
             this.restoreRefs(recreated);
-            serializer.letAllPlugins('afterDeserializeObj', [recreated]);
+            this.deserializeQueue.push(recreated);
         },
         tryPatchValueObject: function(existing, patch) {
             function newVal(prop) {
                 return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
             }
             if (patch.__isSmartRef__) {
-                return this.objectAtPath(patch.id[0]);
+                return patch;
             } else if (patch.hasOwnProperty("__LivelyClassName__")) {
                 return false; // do not recreate value object if class was changed
             } else if (existing instanceof lively.Point) {
@@ -189,9 +189,11 @@ Object.subclass('users.cschuster.sync.Control',
         loadPatch: function(patch) {
             var oldTable = Object.extend({}, this.syncTable);
             var rawPatch = patch.toHierachicalPatch().data;
+            this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
             this.refPatchQueue.invoke('call', this);
+            this.deserializeQueue.invoke('call', this);
             for (var key in rawPatch) {
                 var obj = this.objectAtPath(key);
                 var patch = rawPatch[key];
