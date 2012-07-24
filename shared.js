@@ -37,17 +37,28 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     aggregateDeletions: function() {
         var toDelete = [];
-        Properties.forEachOwn(this.data.registry, function(key, value) {
-            if (Array.isArray(value) && value.length == 3) {
-                for (var i = 0; i < toDelete.length; i++) {
-                    if (key.startsWith(toDelete[i])) {
-                        return;
-                    }
-                    if (toDelete[i].startsWith(key)) {
-                        toDelete.removeAt(i--);
-                    }
+        function addDel(key) {
+            for (var i = 0; i < toDelete.length; i++) {
+                if (key.startsWith(toDelete[i])) return;
+                if (toDelete[i].startsWith(key)) {
+                    toDelete.removeAt(i--);
                 }
-                toDelete.push(key + "/");
+            }
+            toDelete.push(key);
+        }
+        Properties.forEachOwn(this.data.registry, function(key, value) {
+            if (Array.isArray(value)) {
+                if (value.length == 3) addDel(key + "/"); // delete instruction
+            } else {
+                Properties.forEachOwn(value, function(subk, subv) {
+                    // Settting a previously implicit smartref to
+                    // something else is also treated as a delete instruction
+                    if (Array.isArray(subv) && subv.length == 2 &&
+                        this.isSmartRef(subv[0], key + "/" + subk) &&
+                        !this.isSmartRef(subv[1], key + "/" + subk)) {
+                        addDel(key + "/" + subk);
+                    }
+                });
             }
         });
         return toDelete;
