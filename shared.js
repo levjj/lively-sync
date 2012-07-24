@@ -58,9 +58,9 @@ Object.subclass('users.cschuster.sync.Diff', {
                         !this.isSmartRef(subv[1], key + "/" + subk)) {
                         addDel(key + "/" + subk);
                     }
-                });
+                }, this);
             }
-        });
+        }, this);
         return toDelete;
     },
     isSmartRef: function(obj, id) {
