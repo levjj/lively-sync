@@ -52,6 +52,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         return false;
     },
     recreateObject: function(object) {
+        if (!object || !Object.isObject(object)) return object;
         if (object.__isSmartRef__) {
             return this.objectAtPath(object.id);
         }
