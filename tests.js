@@ -178,6 +178,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     }
 },
 'assertion', {
+    assertMorphNode: function(expected) {
+        this.assertNodeMatches(expected, this.morph.renderContext().getMorphNode());   
+    },
     assertShapeNode: function(expected) {
         this.assertNodeMatches(expected, this.morph.renderContext().getShapeNode());   
     }
