@@ -134,6 +134,9 @@ Object.subclass('users.cschuster.sync.Control',
             plugin.setControl(this);
         }
     },
+    'serialization', {
+        
+    },
     'updating', {
         connect: function() {
             this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
