@@ -193,7 +193,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testMoveXY: function() {
         this.patch(this.moveXYPatch);
-        this.assertShapeNode({style: {left: '5px', top: '3px'}});
+        this.assertShapeNode({style: {tagName: 'div', left: '5px', top: '3px'}});
     }
 });
 }) // end of module
