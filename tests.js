@@ -182,14 +182,16 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
     }
 },
 'specs', {
-    movePatch: {
-        "X/_Position": {x: [5], y: [3]}
-    }
+    moveXPatch: { "X/_Position": {x: [5]} },
+    moveXYPatch: { "X/_Position": {x: [5], y: [3]} },
 },
 'testing', {
-    testMove: function() {
-        debugger;
-        this.patch(this.movePatch);
+    testMoveX: function() {
+        this.patch(this.moveXPatch);
+        this.assertCSS(this.rect, "left", "5px");
+    },
+    testMoveXY: function() {
+        this.patch(this.moveXYPatch);
         this.assertCSS(this.rect, "left", "5px");
         this.assertCSS(this.rect, "top", "3px");
     }
