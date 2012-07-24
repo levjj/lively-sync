@@ -54,7 +54,12 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.set(obj, key, value);
                 }
             } else {
-                this.applyObjectPatch(obj[key], value);
+                var recreatedValue = this.tryRecreate(value);
+                if (recreatedValue) {
+                    this.set(obj, key, recreatedValue);
+                } else {
+                    this.applyObjectPatch(obj[key], value);
+                }
             }
         }, this);
     },
