@@ -166,6 +166,8 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
         this.rect.openInWorld();
         this.table = {};
         this.table.X = this.rect;
+        this.plugin = new users.cschuster.sync.MorphPlugin();
+        this.plugin.setControl({syncTable:this.table});
     },
     tearDown: function() {
         Object.values(this.table).invoke('remove');
