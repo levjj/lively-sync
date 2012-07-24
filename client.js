@@ -27,10 +27,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'adding', {
     addedObj: function(key, obj) {
-        throw new Error('not implemented yet');
-        //var realObj = this.control.syncTable[key];
-        //if (realObj) realObj.openInWorld();
-        //if key == 'aa/bc' then table[aa].bc = obj
+        obj.openInWorld();
     }
 },
 'setting', {
@@ -69,7 +66,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.set(obj, key, undefined);
                     delete obj[key];
                 } else { // add or set
-                    //TODO: value isSmartRef?
                     this.set(obj, key, value);
                 }
             } else {
@@ -83,14 +79,12 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }, this);
     },
     updatedObj: function(key, obj, patch) {
-        //this.applyObjectPatch(current, patch);
+        this.applyObjectPatch(obj, patch);
     },
 },
 'deleting', {
     removedObj: function(key) {
-        throw new Error('Not implemented yet');
-        //this.control.table[key].remove();
-        //if key == 'aa/bc' then delete table[aa].bc
+        this.control.syncTable[key].remove();
     }
 });
 
