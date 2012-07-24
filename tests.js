@@ -191,7 +191,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     resizePatch: { "X/shape/_Extent": {x: [13], y: [7]} },
     colorPatch: { "X/shape/_Fill": [{r: 0.5, g: 0.0, b: 1.0, a:1,
                                     __LivelyClassName__:"Color",
-                                    __SourceModuleName__:"Global.lively.morphic.Graphics"}]}
+                                    __SourceModuleName__:"Global.lively.morphic.Graphics"}]},
+    transparentPatch: { "X/shape": {_Fill: [null]},
+                        "X/shape/_Fill": [0,0]}
 },
 'testing', {
     testMoveX: function() {
@@ -208,6 +210,11 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testColor: function() {
         this.patch(this.colorPatch);
+        this.assertShapeNode({tagName: 'div', style: {background: 'rgb(127,0,255)'}});
+    },
+    testTransparent: function() {
+        this.morph.setFill(Color.red);
+        this.patch(this.transparentPatch);
         this.assertShapeNode({tagName: 'div', style: {background: 'rgb(127,0,255)'}});
     }
 });
