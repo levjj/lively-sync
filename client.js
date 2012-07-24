@@ -32,7 +32,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'setting', {
     set: function(obj, prop, val) {
-        if (obj.isMorph) {
+        if (obj.isMorph || obj.isShape) {
             var propName = prop.capitalize();
             if (propName.startsWith('_')) propName = propName.substring(1);
             var setter = obj['set' + propName];
