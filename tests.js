@@ -169,7 +169,7 @@ TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
         this.control.addMorph(this.rect);
     },
     tearDown: function() {
-        Object.values(this.table).invoke('remove');
+        Object.values(this.control.syncTable).invoke('remove');
     }
 },
 'helping', {
