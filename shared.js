@@ -212,6 +212,21 @@ Object.subclass('users.cschuster.sync.Patch', {
     isEmpty: function() {
         return !this.data || Object.isEmpty(this.data);
     },
+    toHierachicalPatch: function() {
+        var newPatch = {};
+        for (var key in patch.data) {
+            var parts = key.split('/');
+            var current = newPatch;
+            for (var i = 0; i < parts.length - 1; i++) {
+                if (!current[parts[i]]) {
+                    current[parts[i]] = {};
+                }
+                current = current[parts[i]];
+            }
+            current[parts.last()] = patch.data[key];
+        }
+        return new users.cschuster.sync.Patch(newPatch);
+    },
     toJSON: function() {
         return JSON.stringify(this.data);
     }
