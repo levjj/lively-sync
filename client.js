@@ -239,7 +239,7 @@ Object.subclass('users.cschuster.sync.Control',
                 var obj = this.objectAtPath(key);
                 var patch = rawPatch[key];
                 if (Array.isArray(patch)) { // instruction
-                    if (patch.length == 2) { // delete
+                    if (patch.length == 3) { // delete
                         this.plugins.invoke('removedObj', key, oldTable[key]);
                     } else { // add
                         this.plugins.invoke('addedObj', key, this.syncTable[key]);
