@@ -22,8 +22,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     }
 },
 'specs', {
-    addRectPatch: function(rect, path) {
-        path = path || rect.id;
+    addRectPatch: function(rect, optOwner) {
+        var path = optOwner ? (optOwner.id + "/submorphs/0") : rect.id;
         var width = rect.getExtent().x, height = rect.getExtent().y;
         var raw = {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
@@ -50,6 +50,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         };
         var result = {};
         Properties.forEachOwn(raw, function(k,v) { result[path + k] = [v]; });
+        if (optOwner) result[path][0].owner = {__isSmartRef__:true,id:optOwner.id};
         return result;
     }
 },
