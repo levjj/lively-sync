@@ -26,10 +26,10 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         path = path || rect.id;
         var width = rect.getExtent().x, height = rect.getExtent().y;
         var raw = {
-            "": [{submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
+            "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
                  id:rect.id, droppingEnabled:true,halosEnabled:true,
                  __LivelyClassName__:"lively.morphic.Box",
-                 __SourceModuleName__:"Global.lively.morphic.Core"}],
+                 __SourceModuleName__:"Global.lively.morphic.Core"},
             "/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
             "/eventHandler": {morph:{__isSmartRef__:true,id:path},
@@ -49,7 +49,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "/shape/renderContextTable": rect.shape.htmlDispatchTable
         };
         var result = {};
-        Properties.forEachOwn(raw, function(k,v) { result[path + k] = v; });
+        Properties.forEachOwn(raw, function(k,v) { result[path + k] = [v]; });
         return result;
     }
 },
