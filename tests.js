@@ -168,6 +168,13 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         var patch = new users.cschuster.sync.Patch(patchData);
         this.control.loadPatch(patch);
     },
+    div: function() {
+        var result = {tagName: 'div', childNodes: []};
+        for (var i = 0; i < arguments.length; i++) {
+            result.childNodes.push(arguments[i]);
+        }
+        return result;
+    },
     hand: {tagName: 'div', childNodes: [
         {tagName: 'div', attributes: {class: 'Morph HandMorph'}}
     ]}
