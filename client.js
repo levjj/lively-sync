@@ -14,9 +14,8 @@ Object.subclass('users.cschuster.sync.Plugin', {
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 'initializing', {
-    initialize: function($super, world) {
+    initialize: function(world) {
         this.world = world || lively.morphic.World.current();
-        $super();
     }
 },
 'adding', {
