@@ -233,6 +233,7 @@ Object.subclass('users.cschuster.sync.Patch', {
                     current[parts[i]] = {};
                 }
                 current = current[parts[i]];
+                if (Array.isArray(current)) current = current[0];
             }
             current[parts.last()] = this.data[key];
         }
