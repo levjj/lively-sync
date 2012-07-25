@@ -153,6 +153,7 @@ Object.subclass('users.cschuster.sync.Control',
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 2) { // delete
                         if (this.set(obj, key, undefined)) {
+                            debugger;
                             value.unshift(obj[key]);
                         };
                         delete obj[key];
