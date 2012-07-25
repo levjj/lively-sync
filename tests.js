@@ -23,6 +23,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 },
 'specs', {
     addRectPatch: function(rect, path) {
+        path = path || rect.id;
         var width = rect.getExtent().x, height = rect.getExtent().y;
         return {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
