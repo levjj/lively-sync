@@ -175,6 +175,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     assertShapeNode: function(expected) {
         this.assertNodeMatches(expected, this.morph.renderContext().getShapeNode());
+    },
+    assertWorldNode: function(expected) {
+        this.assertNodeMatches(expected, this.world.renderContext().getShapeNode());
     }
 },
 'specs', {
@@ -208,6 +211,17 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.morph.setFill(Color.red);
         this.patch(this.transparentPatch);
         this.assertShapeNode({tagName: 'div', style: {background: ''}});
+    },
+    testAddMorph: function() {
+        var bounds = pt(0,0).extent(pt(5,5));
+        var morph2 = new lively.morphic.Box(bounds);
+        morph2.id = "Y";
+        this.control.addObject(morph2);
+        this.patch(this.addRectPatch(morph2));
+        this.assertWorldNode({tagName: 'div', childNodes: [
+            {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '4px', height: '4px'}}]},
+            {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '5px', height: '5px'}}]}
+        ]});
     }
 });
 }) // end of module
