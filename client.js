@@ -24,7 +24,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'setting', {
-    updatedObj: function(key, obj) {}
+    updatedObj: function(key, obj, patch) {
+    }
 },
 'deleting', {
     removedObj: function(key, obj) {
