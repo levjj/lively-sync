@@ -229,10 +229,15 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         morph2.id = "Y";
         this.control.addObject(morph2);
         this.patch(this.addRectPatch(morph2));
-        this.assertWorldNode({tagName: 'div', childNodes: [{tagName: 'div', childNodes: [
-            {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '4px', height: '4px'}}]},
-            {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '5px', height: '5px'}}]}
-        ]}]});
+        this.assertWorldNode(
+            this.div(
+                this.div(
+                    this.div({style: {width: '4px', height: '4px'}}),
+                    this.div({style: {width: '5px', height: '5px'}})
+                ),
+                this.hand
+            )
+        );
     },
     testRemoveMorph: function() {
         this.patch(this.removeMorphPatch);
