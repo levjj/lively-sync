@@ -24,7 +24,14 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'setting', {
+    isSubmorphInstruction: function(patch) {
+        
+    },
+    fixSceneGraph: function(orig, patch) {
+        
+    },
     updatedObj: function(key, obj, patch) {
+        this.fixSceneGraph(obj, patch);
     }
 },
 'deleting', {
