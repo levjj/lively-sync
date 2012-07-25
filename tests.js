@@ -217,6 +217,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         var morph2 = new lively.morphic.Box(bounds);
         morph2.id = "Y";
         this.control.addObject(morph2);
+        debugger;
         this.patch(this.addRectPatch(morph2));
         this.assertWorldNode({tagName: 'div', childNodes: [
             {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '4px', height: '4px'}}]},
