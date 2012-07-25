@@ -125,15 +125,9 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var submorph = new lively.morphic.Box(bounds);
         this.rect.addMorph(submorph);
         var snapshotB = this.serialize(this.table);
-        var expected = {};
         var prefix = this.rect.id + "/submorphs/0";
-        var copy = this.addRectPatch(submorph, prefix);
-        expected[prefix] = [copy[""]];
+        var expected = this.addRectPatch(submorph, prefix);
         expected[prefix][0].owner = {__isSmartRef__:true,id:this.rect.id};
-        Properties.forEachOwn(copy, function(key) {
-            if (key)
-                expected[prefix + "/" + key] = [copy[key]];
-        }, this);
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveSubmorph: function() {
