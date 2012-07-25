@@ -225,7 +225,16 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     toHierachicalPatch: function() {
         var newPatch = {};
+        function removeAdds(obj) {
+            if (!obj || !Object.isObject(obj)) return obj;
+            if (Array.isArray(obj) && obj.length == 1) return removeAdds(obj[0]);
+            for (var key in obj) {
+                obj[key] = removeAdds(obj[key]);
+            }
+            return obj;
+        }
         for (var key in this.data) {
+            var val = this.data[key];
             var parts = key.split('/');
             var current = newPatch;
             for (var i = 0; i < parts.length - 1; i++) {
@@ -233,9 +242,12 @@ Object.subclass('users.cschuster.sync.Patch', {
                     current[parts[i]] = {};
                 }
                 current = current[parts[i]];
-                if (Array.isArray(current)) current = current[0];
+                if (Array.isArray(current)) {
+                    current = current[0];
+                    val = removeAdds(val);
+                }
             }
-            current[parts.last()] = this.data[key];
+            current[parts.last()] = val;
         }
         return new users.cschuster.sync.Patch(newPatch);
     },
