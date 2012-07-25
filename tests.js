@@ -171,7 +171,12 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     div: function(/*args*/) {
         var result = {tagName: 'div', childNodes: []};
         for (var i = 0; i < arguments.length; i++) {
-            result.childNodes.push(arguments[i]);
+            var arg = arguments[i];
+            if (arg.tagName) {
+                result.childNodes.push(arg);
+            } else {
+                Object.extend(result, arg);
+            }
         }
         return result;
     },
@@ -204,24 +209,24 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
 'testing', {
     testMoveX: function() {
         this.patch(this.moveXPatch);
-        this.assertMorphNode({tagName: 'div', style: {left: '5px'}});
+        this.assertMorphNode(this.div({style: {left: '5px'}}));
     },
     testMoveXY: function() {
         this.patch(this.moveXYPatch);
-        this.assertMorphNode({tagName: 'div', style: {left: '5px', top: '3px'}});
+        this.assertMorphNode(this.div({style: {left: '5px', top: '3px'}}));
     },
     testResize: function() {
         this.patch(this.resizePatch);
-        this.assertShapeNode({tagName: 'div', style: {width: '13px', height: '7px'}});
+        this.assertShapeNode(this.div({style: {width: '13px', height: '7px'}}));
     },
     testColor: function() {
         this.patch(this.colorPatch);
-        this.assertShapeNode({tagName: 'div', style: {background: 'rgb(127,0,255)'}});
+        this.assertShapeNode(this.div({style: {background: 'rgb(127,0,255)'}}));
     },
     testTransparent: function() {
         this.morph.setFill(Color.red);
         this.patch(this.transparentPatch);
-        this.assertShapeNode({tagName: 'div', style: {background: ''}});
+        this.assertShapeNode(this.div({style: {background: ''}}));
     },
     testAddMorph: function() {
         var bounds = pt(0,0).extent(pt(5,5));
@@ -233,17 +238,15 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
             this.div(
                 this.div(
                     this.div({style: {width: '4px', height: '4px'}}),
-                    this.div({style: {width: '5px', height: '5px'}})
-                ),
-                this.hand
+                    this.div({style: {width: '5px', height: '5px'}}),
+                    this.hand()
+                )
             )
         );
     },
     testRemoveMorph: function() {
         this.patch(this.removeMorphPatch);
-        this.assertWorldNode({tagName: 'div', childNodes: [{tagName: 'div', childNodes: [
-            this.hand
-        ]}]});
+        this.assertWorldNode(this.div(this.div(this.hand())));
     }
 });
 }) // end of module
