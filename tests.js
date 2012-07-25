@@ -169,10 +169,11 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.control.loadPatch(patch);
     },
     div: function(/*args*/) {
-        var result = {tagName: 'div', childNodes: []};
+        var result = {tagName: 'div'};
         for (var i = 0; i < arguments.length; i++) {
             var arg = arguments[i];
             if (arg.tagName) {
+                if (!result.childNodes) result.childNodes = [];
                 result.childNodes.push(arg);
             } else {
                 Object.extend(result, arg);
