@@ -77,18 +77,22 @@ Object.subclass('users.cschuster.sync.Control',
             return current;
         },
         set: function(obj, prop, val) {
+            var hasOldVal = obj.hasOwnProperty(prop);
             if (val && Object.isObject(val) && val.__isSmartRef__) {
-                return this.patchRef(obj, prop, val);
+                this.patchRef(obj, prop, val);
+                return hasOldVal;
             }
             if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
                 var propName = prop.capitalize();
                 if (propName.startsWith('_')) propName = propName.substring(1);
                 var setter = obj['set' + propName];
                 if (Object.isFunction(setter)) {
-                    return setter.call(obj, val);
+                    setter.call(obj, val);
+                    return hasOldVal;
                 }
             }
-            return obj[prop] = val;
+            obj[prop] = val;
+            return hasOldVal;
         },
         patchRef: function(object, prop, smartRef) {
             this.refPatchQueue.push(function() {
