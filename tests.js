@@ -175,9 +175,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         }
         return result;
     },
-    hand: {tagName: 'div', childNodes: [
-        {tagName: 'div', attributes: {class: 'Morph HandMorph'}}
-    ]}
+    hand: function() {
+        return this.div(this.div({attributes: {class: 'Morph HandMorph'}}));
+    }
 },
 'assertion', {
     assertMorphNode: function(expected) {
