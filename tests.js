@@ -212,6 +212,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testTransparent: function() {
         this.morph.setFill(Color.red);
+        debugger;
         this.patch(this.transparentPatch);
         this.assertShapeNode({tagName: 'div', style: {background: 'rgb(127,0,255)'}});
     }
