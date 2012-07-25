@@ -21,7 +21,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'adding', {
     addedObj: function(key, obj) {
-        debugger;
         this.world.addMorph(obj);
     }
 },
