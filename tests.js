@@ -25,29 +25,32 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     addRectPatch: function(rect, path) {
         path = path || rect.id;
         var width = rect.getExtent().x, height = rect.getExtent().y;
-        return {
+        var raw = {
             "": {submorphs:[],scripts:[],_ClipMode:"visible",derivationIds:[],
                  id:rect.id, droppingEnabled:true,halosEnabled:true,
                  __LivelyClassName__:"lively.morphic.Box",
                  __SourceModuleName__:"Global.lively.morphic.Core"},
-            "_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
+            "/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "eventHandler": {morph:{__isSmartRef__:true,id:path},
+            "/eventHandler": {morph:{__isSmartRef__:true,id:path},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
-            "renderContextTable": rect.htmlDispatchTable,
-            "shape": {_NodeClass:["Morph","Box"],
+            "/renderContextTable": rect.htmlDispatchTable,
+            "/shape": {_NodeClass:["Morph","Box"],
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
-            "shape/_Extent": {"x":width,"y":height,__LivelyClassName__:"Point",
+            "/shape/_Extent": {"x":width,"y":height,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "shape/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
+            "/shape/_Position": {"x":0,"y":0,__LivelyClassName__:"Point",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
+            "/shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
                 __LivelyClassName__:"Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "shape/renderContextTable": rect.shape.htmlDispatchTable
+            "/shape/renderContextTable": rect.shape.htmlDispatchTable
         };
+        var result = {};
+        Properties.forEachOwn(raw, function(k,v) { result[path + k] = v; });
+        return result;
     }
 },
 'testing', {
