@@ -166,7 +166,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.morph.id = "X";
         this.world.addMorph(this.morph);
         this.control = new users.cschuster.sync.Control();
-        this.control.addPlugin(new users.cschuster.sync.MorphPlugin());
+        this.control.addPlugin(new users.cschuster.sync.MorphPlugin(this.world));
         this.control.addObject(this.morph);
     }
 },
