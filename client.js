@@ -105,6 +105,7 @@ Object.subclass('users.cschuster.sync.Control',
             }
             this.deserializeQueue.push(function() {
                 serializer.letAllPlugins('afterDeserializeObj', [recreated]);
+                serializer.letAllPlugins('deserializationDone', [recreated]);
             });
             return recreated;
         },
