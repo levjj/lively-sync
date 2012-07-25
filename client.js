@@ -220,7 +220,7 @@ Object.subclass('users.cschuster.sync.Control',
                         this.plugins.invoke('addedObj', key, this.syncTable[key]);
                     }
                 } else { // set
-                    this.plugins.invoke('updatedObj', key, this.syncTable[key]);
+                    this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
                 }
             }
         },
