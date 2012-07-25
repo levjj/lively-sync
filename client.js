@@ -30,7 +30,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (Array.isArray(value)) { // instruction
                 if (!parentMorph) return;
                 if (value.length > 1) { // delete
-                    value[0].shift().remove();
+                    value.shift().remove();
                 }
                 if (value.length == 1) { // add or set
                     parentMorph.addMorph(obj[key]);
