@@ -227,7 +227,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         var newPatch = {};
         function removeAdds(obj) {
             if (!obj || !Object.isObject(obj)) return obj;
-            if (Array.isArray(obj) && obj.length == 1) return removeAdds(obj[0]);
+            if (Array.isArray(obj) && obj.length == 1) return obj[0];
             for (var key in obj) {
                 obj[key] = removeAdds(obj[key]);
             }
