@@ -227,7 +227,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     testRemoveMorph: function() {
         this.patch(this.removeMorphPatch);
         this.assertWorldNode({tagName: 'div', childNodes: [{tagName: 'div', childNodes: [
-            {tagName: 'div', childNodes: [{tagName: 'div', attributes: {class: 'Morph HandMorph'}}]}
+            this.hand
         ]}]});
     }
 });
