@@ -113,9 +113,7 @@ Object.subclass('users.cschuster.sync.Control',
             function newVal(prop) {
                 return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
             }
-            if (patch.__isSmartRef__) {
-                return patch;
-            } else if (patch.hasOwnProperty("__LivelyClassName__")) {
+            if (patch.hasOwnProperty("__LivelyClassName__")) {
                 return false; // do not recreate value object if class was changed
             } else if (existing instanceof lively.Point) {
                 return new lively.Point(newVal("x"), newVal("y"));
