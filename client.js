@@ -24,9 +24,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'setting', {
-    isSubmorphInstruction: function(patch) {
-        
-    },
     fixSceneGraph: function(obj, patch, parentMorph) {
         for (var key in patch) {
             var value = patch[key];
@@ -44,6 +41,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
     },
     updatedObj: function(key, obj, patch) {
+        debugger;
         this.fixSceneGraph(obj, patch);
     }
 },
