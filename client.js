@@ -159,7 +159,7 @@ Object.subclass('users.cschuster.sync.Control',
                         delete obj[key];
                     } else { // add or set
                         if (this.set(obj, key, this.recreateObject(value[0]))) {
-                            patch.unshift(obj[key]);
+                            value.unshift(obj[key]);
                         }
                     }
                 } else {
