@@ -41,7 +41,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }
     },
     updatedObj: function(key, obj, patch) {
-        debugger;
         this.fixSceneGraph(obj, patch);
     }
 },
