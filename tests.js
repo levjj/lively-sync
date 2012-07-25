@@ -181,14 +181,15 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     }
 },
 'specs', {
-    moveXPatch: { "X/_Position": {x: [5]} },
-    moveXYPatch: { "X/_Position": {x: [5], y: [3]} },
-    resizePatch: { "X/shape/_Extent": {x: [13], y: [7]} },
-    colorPatch: { "X/shape/_Fill": [{r: 0.5, g: 0.0, b: 1.0, a:1,
+    moveXPatch: {"X/_Position": {x: [5]} },
+    moveXYPatch: {"X/_Position": {x: [5], y: [3]} },
+    resizePatch: {"X/shape/_Extent": {x: [13], y: [7]} },
+    colorPatch: {"X/shape/_Fill": [{r: 0.5, g: 0.0, b: 1.0, a:1,
                                     __LivelyClassName__:"Color",
                                     __SourceModuleName__:"Global.lively.morphic.Graphics"}]},
-    transparentPatch: { "X/shape": {_Fill: [null]}},
-    addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch
+    transparentPatch: {"X/shape": {_Fill: [null]}},
+    addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch,
+    removeMorphPatch: {"X": [0,0]}
 },
 'testing', {
     testMoveX: function() {
@@ -222,6 +223,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
             {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '4px', height: '4px'}}]},
             {tagName: 'div', childNodes: [{tagName: 'div', style: {width: '5px', height: '5px'}}]}
         ]}]});
+    },
+    testRemoveMorph: function() {
+        this.patch(this.removeMorphPatch);
+        this.assertWorldNode({tagName: 'div', childNodes: [{tagName: 'div', childNodes: []}]});
     }
 });
 }) // end of module
