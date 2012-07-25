@@ -125,8 +125,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var submorph = new lively.morphic.Box(bounds);
         this.rect.addMorph(submorph);
         var snapshotB = this.serialize(this.table);
-        var prefix = this.rect.id + "/submorphs/0";
-        var expected = this.addRectPatch(submorph, prefix);
+        var expected = this.addRectPatch(submorph, this.rect);
         expected[prefix][0].owner = {__isSmartRef__:true,id:this.rect.id};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
