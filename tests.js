@@ -127,7 +127,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.addMorph(submorph);
         var snapshotB = this.serialize(this.table);
         var expected = this.addRectPatch(submorph, this.rect);
-        expected[prefix][0].owner = {__isSmartRef__:true,id:this.rect.id};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveSubmorph: function() {
