@@ -154,7 +154,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     setUp: function($super) {
         $super();
         this.createWorld();
-        this.morph = newBox("X", 4, 4);
+        this.morph = this.newBox("X", 4, 4);
         this.world.addMorph(this.morph);
         this.control = new users.cschuster.sync.Control();
         this.control.addPlugin(new users.cschuster.sync.MorphPlugin(this.world));
@@ -235,7 +235,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertShapeNode(this.div({style: {background: ''}}));
     },
     testAddMorph: function() {
-        var morph2 = new Box("Y", 5, 5);
+        var morph2 = this.newBox("Y", 5, 5);
         this.control.addObject(morph2);
         this.patch(this.addRectPatch(morph2));
         this.assertWorldNode(
@@ -253,14 +253,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertWorldNode(this.div(this.div(this.hand())));
     },
     testAddSubmorph: function() {
-        var submorph = new Box("Z", 2, 2);
+        var submorph = this.newBox("Z", 2, 2);
         this.patch(this.addRectPatch(submorph, "X/submorphs/0"));
         this.assertShapeNode(this.div(this.div(
             this.div({style: {width: '2px', height: '2px'}})
         )));
     },
     testRemoveSubmorph: function() {
-        var submorph = new Box("Z", 2, 2);
+        var submorph = this.newBox("Z", 2, 2);
         this.morph.addMorph(submorph);
         this.patch(this.removeSubmorphPatch);
         this.assertShapeNode(this.div(this.div({childNodes: []})));
