@@ -98,7 +98,7 @@ Object.subclass('users.cschuster.sync.Control',
             for (var key in object) {
                 var val = object[key];
                 if (val.__isSmartRef__) {
-                    this.patchRef(recreated, prop, val);
+                    this.patchRef(recreated, key, val);
                 } else {
                     recreated[key] = this.recreateObject(val);
                 }
