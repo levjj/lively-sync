@@ -168,7 +168,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         return morph;
     },
     patch: function(patchData) {
-        var patch = new users.cschuster.sync.Patch(patchData);
+        var patch = new users.cschuster.sync.Patch(Object.deepCopy(patchData));
         this.control.loadPatch(patch);
     },
     div: function(/*args*/) {
