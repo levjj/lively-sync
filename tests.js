@@ -248,6 +248,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         );
     },
     testRemoveMorph: function() {
+        debugger;
         this.patch(this.removeMorphPatch);
         this.assertWorldNode(this.div(this.div(this.hand())));
     },
