@@ -33,7 +33,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     value[0].shift().remove();
                 }
                 if (value.length == 1) { // add or set
-                    parentMorph.addMorph(value[0]);
+                    parentMorph.addMorph(obj[key]);
                 }
             } else {
                 this.fixSceneGraph(obj[key], value, obj.isMorph && key == "submorphs" && obj);
