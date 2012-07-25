@@ -152,7 +152,9 @@ Object.subclass('users.cschuster.sync.Control',
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 2) { // delete
-                        this.set(obj, key, undefined);
+                        if (this.set(obj, key, undefined)) {
+                            value.unshift(obj[key]);
+                        };
                         delete obj[key];
                     } else { // add or set
                         if (this.set(obj, key, this.recreateObject(value[0]))) {
