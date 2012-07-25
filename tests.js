@@ -192,7 +192,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     colorPatch: { "X/shape/_Fill": [{r: 0.5, g: 0.0, b: 1.0, a:1,
                                     __LivelyClassName__:"Color",
                                     __SourceModuleName__:"Global.lively.morphic.Graphics"}]},
-    transparentPatch: { "X/shape": {_Fill: [null]}}
+    transparentPatch: { "X/shape": {_Fill: [null]}},
+    addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch
 },
 'testing', {
     testMoveX: function() {
