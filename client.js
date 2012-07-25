@@ -64,7 +64,7 @@ Object.subclass('users.cschuster.sync.Control',
             return current;
         },
         set: function(obj, prop, val) {
-            if (val.__isSmartRef__) {
+            if (val && Object.isObject(val) && val.__isSmartRef__) {
                 return this.patchRef(obj, prop, val);
             }
             if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
