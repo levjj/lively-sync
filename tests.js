@@ -238,8 +238,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertWorldNode(
             this.div(
                 this.div(
-                    this.div({style: {width: '4px', height: '4px'}}),
-                    this.div({style: {width: '5px', height: '5px'}}),
+                    this.div(this.div({style: {width: '4px', height: '4px'}})),
+                    this.div(this.div({style: {width: '5px', height: '5px'}})),
                     this.hand()
                 )
             )
