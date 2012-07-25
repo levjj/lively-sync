@@ -89,7 +89,8 @@ Object.subclass('users.cschuster.sync.Control',
             });
         },
         recreateObject: function(object) {
-            if (!object || !Object.isObject(object) || object.__isSmartRef__) {
+            if (!object || !Object.isObject(object) || Array.isArray(object)
+                        || !object.__LivelyClassName__ || object.__isSmartRef__) {
                 return object;
             }
             var serializer = ObjectGraphLinearizer.forNewLively();
