@@ -162,7 +162,9 @@ Object.subclass('users.cschuster.sync.Server', {
     checkout: function (rev) {
         console.log("checking out rev " + rev);
         this.withRepo(false, function(repo) {
-            repo.checkout(rev, this.socket.emit.bind(this.socket, 'snapshot', rev));
+            repo.checkout(rev, function(snapshot) {
+                this.socket.emit('snapshot', rev, snapshot.data);
+            }.bind(this));
         }.bind(this));
     },
     
