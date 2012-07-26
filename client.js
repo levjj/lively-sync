@@ -294,6 +294,7 @@ Object.subclass('users.cschuster.sync.Control',
                 if (patch.isEmpty()) return;
                 this.snapshotsize += current.toJSON().length;
                 this.patchsize += patch.toJSON().length;
+                this.rev++;
                 return;
                 //TODO: send patches instead of snapshots
                 this.socket.emit('commit', this.rev, current);
