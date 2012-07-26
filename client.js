@@ -130,11 +130,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             delete this.syncTable[obj.id];
         },
 
-        stopSyncing: function() {
-            clearTimeout(this.commitTimeout);
-            this.commitTimeout = null;
-            console.log("stopeed syncing");
-        },
+
         commit: function() {
             var start = Date.now();
             try {
