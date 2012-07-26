@@ -178,12 +178,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
     },
     'updating', {
-        connect: function() {
+        connect: function(autoupdate) {
             this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
             if (this.maxRevision() > 0) this.loadRev(this.maxRevision());
-            (function(){this.socket.emit('update', this.rev)}).bind(this).delay(1);
+            this.autoupdate = autoupdate;
+            if (this.autoupdate) {
+                this.socket.emit('update', this.rev);
+            }
             console.log("connected");
         },
         disconnect: function() {
