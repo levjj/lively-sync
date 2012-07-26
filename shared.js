@@ -26,9 +26,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
 
 Object.extend(users.cschuster.sync.Snapshot, {
     empty: function() {
-        var s = new users.cschuster.sync.Snapshot(
-            {id:"",registry:{"":{},isSimplifiedRegistry:true}}
-        );
+        return new this({id:"",registry:{"":{},isSimplifiedRegistry:true}});
     }
 });
 
