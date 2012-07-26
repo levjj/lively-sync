@@ -140,8 +140,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var patch = diff.toPatch();
             //TODO: send patches instead of snapshots
             this.socket.emit('commit', this.rev, current);
-            this.snapshots[this.rev + 1] = current;
-            this.patches[this.rev + 1] = patch;
+            if (this.snapshots) {
+                this.snapshots[this.rev + 1] = current;
+                this.patches[this.rev + 1] = patch;
+            }
             this.rev++;
             console.log('commited snapshot for rev ' + this.rev);
         }    }
