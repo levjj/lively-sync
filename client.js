@@ -30,12 +30,14 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin', {
 
 Object.subclass('users.cschuster.sync.WorkingCopy',
     'initializing', {
-        initialize: function() {
+        initialize: function(keepHistory) {
             this.plugins = [];
-            this.snapshots = {};
-            this.patches = {};
-            this.syncTable = {};
             this.rev = 0;
+            this.syncTable = {};
+            if (keepHistory) {
+                this.snapshots = {};
+                this.patches = {};
+            }
             this.loadSocketIO();
         },
         loadSocketIO: function() {
