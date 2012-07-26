@@ -285,8 +285,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             delete this.syncTable[obj.id];
         },
         commit: function() {
-            var current = new users.cschuster.sync.Snapshot();
-            current.createFromObjects(this.syncTable);
+            var current = users.cschuster.sync.Snapshot.createFromObjects(this.syncTable);
             var last = this.last || this.snapshots[this.rev];
             var patch = last.diff(current).toPatch();
             if (patch.isEmpty()) return;
