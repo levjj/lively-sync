@@ -9,8 +9,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[this.rect.id] = this.rect;
     },
     serialize: function(object) {
-        var snapshot = new users.cschuster.sync.Snapshot();
-        return snapshot.createFromObjects(object);
+        return users.cschuster.sync.Snapshot.createFromObjects(object);
     },
     assertPatch: function(expected, snapshotA, snapshotB) {
         var patch = snapshotA.diff(snapshotB).toPatch();
