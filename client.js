@@ -6,25 +6,47 @@
 module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').toRun(function() {
 
 Object.subclass('users.cschuster.sync.Plugin', {
-    addedObj: function(obj) {},
-    updatedObj: function(obj, prop, val) {},
-    removedObj: function(obj) {}
+    setControl: function(control) { this.control = control; },
+    addedObj: function(key, obj) {},
+    updatedObj: function(key, obj, patch) {},
+    removedObj: function(key, obj) {}
 });
 
-users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin', {
-    addedObj: function(morph) {
-        morph.openInWorld();
-    },
-    updatedObj: function(morph, prop, val) {
-        var setter = morph['set' + prop.capitalize()];
-        if (Object.isFunction(setter)) {
-            setter.call(morph, val);
-        } else {
-            morph[prop] = val;
+users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
+'initializing', {
+    initialize: function(world) {
+        this.world = world || lively.morphic.World.current();
+    }
+},
+'adding', {
+    addedObj: function(key, obj) {
+        this.world.addMorph(obj);
+    }
+},
+'setting', {
+    fixSceneGraph: function(obj, patch, parentMorph) {
+        for (var key in patch) {
+            var value = patch[key];
+            if (Array.isArray(value)) { // instruction
+                if (!parentMorph) return;
+                if (value.length > 1) { // delete
+                    value.shift().remove();
+                }
+                if (value.length == 1) { // add or set
+                    parentMorph.addMorph(obj[key]);
+                }
+            } else {
+                this.fixSceneGraph(obj[key], value, obj.isMorph && key == "submorphs" && obj);
+            }
         }
     },
-    removedObj: function(morph) {
-        morph.remove();
+    updatedObj: function(key, obj, patch) {
+        this.fixSceneGraph(obj, patch);
+    }
+},
+'deleting', {
+    removedObj: function(key, obj) {
+        obj.remove();
     }
 });
 
@@ -32,13 +54,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     'initializing', {
         initialize: function(keepHistory) {
             this.plugins = [];
-            this.rev = 0;
             this.syncTable = {};
+            this.rev = 0;
+            this.loadSocketIO();
             if (keepHistory) {
                 this.snapshots = {};
                 this.patches = {};
+            } else {
+                this.last = users.cschuster.sync.Snapshot.empty();
             }
-            this.loadSocketIO();
         },
         loadSocketIO: function() {
             if (!Global['io']) {
@@ -52,6 +76,101 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         addPlugin: function(plugin) {
             this.plugins.push(plugin);
+            plugin.setControl(this);
+        }
+    },
+    'serialization', {
+        objectAtPath: function(path) {
+            var parts = path.split('/');
+            var parent = null;
+            var current = this.syncTable;
+            for (var i = 0; current && (i < parts.length); i++) {
+                parent = current;
+                current = current && current[parts[i]];
+            }
+            return current;
+        },
+        set: function(obj, prop, val) {
+            if (val && Object.isObject(val) && val.__isSmartRef__) {
+                return this.patchRef(obj, prop, val);
+            }
+            if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
+                var propName = prop.capitalize();
+                if (propName.startsWith('_')) propName = propName.substring(1);
+                var setter = obj['set' + propName];
+                if (Object.isFunction(setter)) {
+                    return setter.call(obj, val);
+                }
+            }
+            return obj[prop] = val;
+        },
+        patchRef: function(object, prop, smartRef) {
+            this.refPatchQueue.push(function() {
+                this.set(object, prop, this.objectAtPath(smartRef.id));
+            });
+        },
+        recreateObject: function(object) {
+            if (!object || !Object.isObject(object) || Array.isArray(object)
+                        || !object.__LivelyClassName__ || object.__isSmartRef__) {
+                return object;
+            }
+            var serializer = ObjectGraphLinearizer.forNewLively();
+            var recreated = serializer.somePlugin('deserializeObj', [object]);
+            for (var key in object) {
+                var val = object[key];
+                if (val.__isSmartRef__) {
+                    this.patchRef(recreated, key, val);
+                } else {
+                    recreated[key] = this.recreateObject(val);
+                }
+            }
+            this.deserializeQueue.push(function() {
+                serializer.letAllPlugins('afterDeserializeObj', [recreated]);
+                serializer.letAllPlugins('deserializationDone', [recreated]);
+            });
+            return recreated;
+        },
+        tryPatchValueObject: function(existing, patch) {
+            function newVal(prop) {
+                return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
+            }
+            if (patch.hasOwnProperty("__LivelyClassName__")) {
+                return false; // do not recreate value object if class was changed
+            } else if (existing instanceof lively.Point) {
+                return new lively.Point(newVal("x"), newVal("y"));
+            } else if (existing instanceof lively.Rectangle) {
+                return new lively.Rectangle(newVal("x"), newVal("y"),
+                                            newVal("height"), newVal("width"));
+            } else if (existing instanceof Color) {
+                return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
+            } else {
+                return false;
+            }
+        },
+        applyObjectPatch: function(obj, patch) {
+            for (var key in patch) {
+                var value = patch[key];
+                if (Array.isArray(value)) { // instruction
+                    if (value.length == 2) { // delete
+                        value.unshift(obj[key]);
+                        this.set(obj, key, undefined);
+                        delete obj[key];
+                    } else { // add or set
+                        if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
+                        this.set(obj, key, this.recreateObject(value.last()));
+                    }
+                } else {
+                    var patchedValueObject = this.tryPatchValueObject(obj[key], value);
+                    if (patchedValueObject) {
+                        var newPatch = [patchedValueObject];
+                        if (obj.hasOwnProperty(key)) newPatch.unshift(obj[key]);
+                        patch[key] = newPatch;
+                        this.set(obj, key, patchedValueObject);
+                    } else {
+                        this.applyObjectPatch(obj[key], value);
+                    }
+                }
+            }
         }
     },
     'updating', {
@@ -66,9 +185,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         disconnect: function() {
             this.socket.disconnect();
             delete this.socket;
-            var snapshot = new users.cschuster.sync.Snapshot();
-            snapshot.createFromObjects()
-            this.loadSnapshot(snapshot);
+            this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
             this.rev = 0;
             console.log("disconnected");
         },
@@ -84,31 +201,62 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         },
         receivePatch: function(rev, patch) {
-            throw Error('diff/patches not implemented yet');
-            if (this.rev !== rev + 1) {
+            this.patches[rev] = patch;
+            if (this.rev + 1 !== rev) {
                 console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
-                this.socket.emit('update', this.rev);
+                //this.socket.emit('update', this.rev);
             } else {
+                var last = this.last || this.snapshots[this.rev];
+                delete this.snapshots[this.rev];
                 this.rev = rev;
-                jsondiffpatch.patch(this.morphSyncTable, patch);
+                patch = new users.cschuster.sync.Patch(patch);
+                patch.apply(last);
+                if (this.snapshots) {
+                    this.snapshots[this.rev] = last;
+                } else {
+                    this.last = last;
+                }
+                this.loadPatch(patch);
             }
         },
         loadSnapshot: function(snapshot) {
             Properties.forEachOwn(this.syncTable, function(key, val) {
-                this.plugins.invoke('removedObj', val);
+                this.plugins.invoke('removedObj', val.id, val);
                 this.removeObject(val);
             }, this);
             var objects = snapshot.recreateObjects();
             Properties.forEachOwn(objects, function(key, val) {
-                this.addObj(val);
-                this.plugins.invoke('addedObj', val);
+                this.addObject(val);
+                this.plugins.invoke('addedObj', val.id, val);
             }, this);
+        },
+        loadPatch: function(patch) {
+            var oldTable = Object.extend({}, this.syncTable);
+            var rawPatch = patch.toHierachicalPatch().data;
+            this.deserializeQueue = [];
+            this.refPatchQueue = [];
+            this.applyObjectPatch(this.syncTable, rawPatch);
+            this.refPatchQueue.invoke('call', this);
+            this.deserializeQueue.invoke('call', this);
+            for (var key in rawPatch) {
+                var obj = this.objectAtPath(key);
+                var patch = rawPatch[key];
+                if (Array.isArray(patch)) { // instruction
+                    if (patch.length == 3) { // delete
+                        this.plugins.invoke('removedObj', key, oldTable[key]);
+                    } else { // add
+                        this.plugins.invoke('addedObj', key, this.syncTable[key]);
+                    }
+                } else { // set
+                    this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
+                }
+            }
         },
         loadRev: function(rev) {
             if (!this.socket) return;
             if (this.rev == rev) return;
             this.rev = rev;
-            if (!this.snapshots[rev]) {
+            if (!this.snapshots || !this.snapshots[rev]) {
                 this.socket.emit('checkout', this.rev);
             } else {
                 this.loadSnapshot(this.snapshots[rev]);
@@ -129,25 +277,38 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         removeObject: function(obj) {
             delete this.syncTable[obj.id];
         },
-
-
         commit: function() {
             var current = new users.cschuster.sync.Snapshot();
             current.createFromObjects(this.syncTable);
-            var last = this.snapshots[this.rev];
-            var diff = current.diff(last);
-            if (!diff) return;
-            var patch = diff.toPatch();
+            var last = this.last || this.snapshots[this.rev];
+            var patch = last.diff(current).toPatch();
+            if (patch.isEmpty()) return;
+            this.snapshotsize += current.toJSON().length;
+            this.patchsize += patch.toJSON().length;
+            this.rev++;
+            return;
             //TODO: send patches instead of snapshots
-            this.socket.emit('commit', this.rev, current);
-            if (this.snapshots) {
+            if (this.socket) this.socket.emit('commit', this.rev, current);
+            if (keepHistory) {
                 this.snapshots[this.rev + 1] = current;
                 this.patches[this.rev + 1] = patch;
+            } else {
+                this.last = current;
             }
             this.rev++;
             console.log('commited snapshot for rev ' + this.rev);
-        }    }
+        }
+    }
 );
+
+Object.extend(users.cschuster.sync.Snapshot, {
+    createFromObjects: function(object) {
+        var s = new this();
+        var serializer = s.getSerializer();
+        s.data = serializer.serializeToJso(object);
+        return s;
+    }
+});
 
 users.cschuster.sync.Snapshot.addMethods({
     getSerializer: function(data) {
@@ -161,19 +322,8 @@ users.cschuster.sync.Snapshot.addMethods({
         serializer.showLog = false;
         return serializer;
     },
-    createFromObjects: function(object) {
-        var serializer = this.getSerializer();
-        this.data = serializer.serializeToJso(object);
-        return this;
-    },
     recreateObjects: function() {
-        this.getSerializer().deserializeJso(this.data);
-    }
-});
-
-users.cschuster.sync.Patch.addMethods({
-    applyToMorphs: function(morphs) {
-        return true;
+        return this.getSerializer().deserializeJso(this.data);
     }
 });
 

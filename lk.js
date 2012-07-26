@@ -37,36 +37,46 @@ var Class = {
     }
 };
 
-Function.prototype.addMethods = function(source) {
+Object.extend = function (destination, source) {
     for (var property in source) {
-        if (property == 'constructor') continue;
-        var value = source[property];
-        this.prototype[property] = value;
-        if (typeof value == 'function') {
-            value.declaredClass = this.prototype.constructor.type;
-            value.methodName = property;
-        }
+        var sourceObj = source[property];
+        destination[property] = sourceObj;
+        if (sourceObj instanceof Function) sourceObj.displayName = property;
     }
-    return this;
+    return destination;
 };
 
-Function.prototype.subclass = function(className, sourceObj) {
-    targetScope = Class.namespaceFor(className);
-    shortName = Class.unqualifiedNameFor(className);
-    var klass;
-    klass = Class.newInitializer(shortName);
-    klass.superclass = this;
-    var protoclass = function() { }; // that's the constructor of the new prototype object
-    protoclass.prototype = this.prototype;
-    klass.prototype = new protoclass();
-    klass.prototype.constructor = klass;
-    klass.prototype.constructor.type = className; // KP: .name would be better but js ignores .name on anonymous functions
-    targetScope[shortName] = klass;
-    this.addMethods.call(klass, sourceObj);
-    if (!klass.prototype.initialize)
-        klass.prototype.initialize = protoclass;
-    return klass;
-};
+Object.extend(Function.prototype, {
+    addMethods: function(source) {
+        for (var property in source) {
+            if (property == 'constructor') continue;
+            var value = source[property];
+            this.prototype[property] = value;
+            if (typeof value == 'function') {
+                value.declaredClass = this.prototype.constructor.type;
+                value.methodName = property;
+            }
+        }
+        return this;
+    },
+    subclass = function(className, sourceObj) {
+        targetScope = Class.namespaceFor(className);
+        shortName = Class.unqualifiedNameFor(className);
+        var klass;
+        klass = Class.newInitializer(shortName);
+        klass.superclass = this;
+        var protoclass = function() { }; // that's the constructor of the new prototype object
+        protoclass.prototype = this.prototype;
+        klass.prototype = new protoclass();
+        klass.prototype.constructor = klass;
+        klass.prototype.constructor.type = className; // KP: .name would be better but js ignores .name on anonymous functions
+        targetScope[shortName] = klass;
+        this.addMethods.call(klass, sourceObj);
+        if (!klass.prototype.initialize)
+            klass.prototype.initialize = protoclass;
+        return klass;
+    }
+});
 
 exports.module = function() {
     return {
