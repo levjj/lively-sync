@@ -287,12 +287,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var last = this.last || this.snapshots[this.rev];
             var patch = last.diff(current).toPatch();
             if (patch.isEmpty()) return;
-            this.snapshotsize += current.toJSON().length;
-            this.patchsize += patch.toJSON().length;
-            this.rev++;
-            return;
-            //TODO: send patches instead of snapshots
-            if (this.socket) this.socket.emit('commit', this.rev, current);
+            if (this.socket) this.socket.emit('commit', this.rev, patch);
             if (keepHistory) {
                 this.snapshots[this.rev + 1] = current;
                 this.patches[this.rev + 1] = patch;
@@ -301,6 +296,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.rev++;
             console.log('commited snapshot for rev ' + this.rev);
+            return [current.toJSON().length, patch.toJSON().length];
         }
     }
 );
