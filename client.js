@@ -223,8 +223,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 var last = this.last
             }
             patch.apply(last);
-            this.rev = rev;
             this.loadPatch(patch);
+            this.rev = rev;
         },
         loadSnapshot: function(snapshot) {
             Properties.forEachOwn(this.syncTable, function(key, val) {
