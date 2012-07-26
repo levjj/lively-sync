@@ -289,6 +289,8 @@ Object.subclass('users.cschuster.sync.Control',
                 debugger;
                 var patch = last.diff(current).toPatch();
                 if (patch.isEmpty()) return;
+                
+                return;
                 //TODO: send patches instead of snapshots
                 this.socket.emit('commit', this.rev, current);
                 this.snapshots[this.rev + 1] = current;
