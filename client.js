@@ -152,22 +152,20 @@ Object.subclass('users.cschuster.sync.Control',
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 2) { // delete
-                        if (this.set(obj, key, undefined)) {
-                            debugger;
-                            value.unshift(obj[key]);
-                        };
+                        value.unshift(obj[key]);
+                        this.set(obj, key, undefined);
                         delete obj[key];
                     } else { // add or set
-                        if (this.set(obj, key, this.recreateObject(value[0]))) {
-                            value.unshift(obj[key]);
-                        }
+                        if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
+                        this.set(obj, key, this.recreateObject(value[0]));
                     }
                 } else {
                     var patchedValueObject = this.tryPatchValueObject(obj[key], value);
                     if (patchedValueObject) {
-                        if (this.set(obj, key, patchedValueObject)) {
-                            patch = [obj[key], patch];
-                        }
+                        var newPatch = [patchedValueObject];
+                        if (obj.hasOwnProperty(key)) newPatch.unshift(obj[key]);
+                        patch[key] = newPatch;
+                        this.set(obj, key, patchedValueObject);
                     } else {
                         this.applyObjectPatch(obj[key], value);
                     }
