@@ -150,7 +150,7 @@ Object.subclass('users.cschuster.sync.Server', {
         this.socket = socket;
         this.socket.on('checkout', this.checkout.bind(this));
         this.socket.on('update', this.update.bind(this));
-        this.socket.on('commit', this.commitSnapshot.bind(this));
+        this.socket.on('commit', this.commitPatch.bind(this));
     },
     
     withRepo: function(exclusive, cb) {
