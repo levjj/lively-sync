@@ -195,6 +195,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         receiveSnapshot: function(rev, snapshot) {
             if (rev != this.rev + 1 && rev != this.rev) {
+                console.warn("received snapshot for rev " + rev + " but local rev is " + this.rev);
                 return;
             }
             if (this.snapshots) {
