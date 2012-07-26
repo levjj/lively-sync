@@ -132,28 +132,19 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 
 
         commit: function() {
-            var start = Date.now();
-            try {
-                var current = new users.cschuster.sync.Snapshot();
-                current.createFromObjects(this.syncTable);
-                var last = this.snapshots[this.rev];
-                var diff = current.diff(last);
-                if (!diff) return;
-                var patch = diff.toPatch();
-                //TODO: send patches instead of snapshots
-                this.socket.emit('commit', this.rev, current);
-                this.snapshots[this.rev + 1] = current;
-                this.patches[this.rev + 1] = patch;
-                this.rev++;
-                console.log('commited snapshot for rev ' + this.rev);
-            } finally {
-                var commitTime = Date.now() - start;
-                this.commitTimeout = setTimeout(
-                    this.commit.bind(this),
-                    Math.max(100, commitTime * 4));
-            }
-        }
-    }
+            var current = new users.cschuster.sync.Snapshot();
+            current.createFromObjects(this.syncTable);
+            var last = this.snapshots[this.rev];
+            var diff = current.diff(last);
+            if (!diff) return;
+            var patch = diff.toPatch();
+            //TODO: send patches instead of snapshots
+            this.socket.emit('commit', this.rev, current);
+            this.snapshots[this.rev + 1] = current;
+            this.patches[this.rev + 1] = patch;
+            this.rev++;
+            console.log('commited snapshot for rev ' + this.rev);
+        }    }
 );
 
 users.cschuster.sync.Snapshot.addMethods({
