@@ -213,16 +213,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 //this.socket.emit('update', this.rev);
                 return;
             }
-            var last = this.last || this.snapshots[this.rev];
-            delete this.snapshots[this.rev];
-            this.rev = rev;
             patch = new users.cschuster.sync.Patch(patch);
-            patch.apply(last);
             if (this.snapshots) {
-                this.snapshots[this.rev] = last;
+                var last = this.snapshots[this.rev]
+                delete this.snapshots[this.rev];
+                this.patches[this.rev] = patch;
+                this.snapshots[rev] = last;
             } else {
-                this.last = last;
+                var last = this.last
             }
+            patch.apply(last);
+            this.rev = rev;
             this.loadPatch(patch);
         },
         loadSnapshot: function(snapshot) {
