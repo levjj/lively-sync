@@ -290,7 +290,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var patch = last.diff(current).toPatch();
             if (patch.isEmpty()) return;
             if (this.socket) this.socket.emit('commit', this.rev, patch);
-            if (keepHistory) {
+            if (this.snapshots) {
                 this.snapshots[this.rev + 1] = current;
                 this.patches[this.rev + 1] = patch;
             } else {
