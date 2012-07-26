@@ -66,9 +66,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         disconnect: function() {
             this.socket.disconnect();
             delete this.socket;
-            //FIXME: this does not work for all kinds of objects
-            Object.values(this.syncTable).invoke('remove');
-            this.syncTable = {};
+            var snapshot = new users.cschuster.sync.Snapshot();
+            snapshot.createFromObjects()
+            this.loadSnapshot(snapshot);
             this.rev = 0;
             console.log("disconnected");
         },
