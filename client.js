@@ -182,9 +182,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
-            if (this.maxRevision() > 0) this.loadRev(this.maxRevision());
             this.autoupdate = autoupdate;
             if (this.autoupdate) {
+                if (this.snapshots) this.loadRev(Object.keys(this.snaphots).last());
                 this.socket.emit('update', this.rev);
             }
             console.log("connected");
@@ -197,10 +197,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             console.log("disconnected");
         },
         receiveSnapshot: function(rev, snapshot) {
-            if (rev != this.rev + 1 && rev != this.rev) {
-                console.warn("received snapshot for rev " + rev + " but local rev is " + this.rev);
-                return;
-            }
+            if (!this.autoupdate && this.rev != rev) return;
             if (this.snapshots) {
                 this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
             } else {
@@ -211,11 +208,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.rev = rev;
         },
         receivePatch: function(rev, patch) {
-            if (rev != this.rev + 1 && rev != this.rev) {
-                console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
-                //this.socket.emit('update', this.rev);
-                return;
-            }
+            if (!this.autoupdate && this.rev != rev) return;
             patch = new users.cschuster.sync.Patch(patch);
             if (this.snapshots) {
                 var last = this.snapshots[this.rev]
@@ -264,6 +257,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         loadRev: function(rev) {
             if (!this.socket) return;
+            if (!rev) return;
             if (this.rev == rev) return;
             this.rev = rev;
             if (!this.snapshots || !this.snapshots[rev]) {
@@ -271,13 +265,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             } else {
                 this.loadSnapshot(this.snapshots[rev]);
             }
-        },
-        maxRevision: function() {
-            var max = 0;
-            for (var rev in this.snapshots) {
-                if ((+rev) > max) max = (+rev);
-            }
-            return max;
         }
     },
     'syncing', {
