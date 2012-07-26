@@ -194,15 +194,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             console.log("disconnected");
         },
         receiveSnapshot: function(rev, snapshot) {
-            var oldMax = this.maxRevision();
-            this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
-            console.log('received snapshot for rev ' + rev);
-            if (this.rev == oldMax) {
-                this.rev = rev;
-                this.loadSnapshot(this.snapshots[rev]);
-            } else {
-                signal(this, "rev", this.rev);
+            if (rev != this.rev + 1 && rev != this.rev) {
+                return;
             }
+            if (this.snapshots) {
+                this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
+            } else {
+                this.last = new users.cschuster.sync.Snapshot(snapshot);
+            }
+            console.log('received snapshot for rev ' + rev);
+            this.loadSnapshot(this.last || this.snapshots[rev]);
+            this.rev = rev;
         },
         receivePatch: function(rev, patch) {
             this.patches[rev] = patch;
