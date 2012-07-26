@@ -154,7 +154,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.createWorld();
         this.morph = this.newBox("X", 4, 4);
         this.world.addMorph(this.morph);
-        this.control = new users.cschuster.sync.Control();
+        this.control = new users.cschuster.sync.WorkingCopy();
         this.control.addPlugin(new users.cschuster.sync.MorphPlugin(this.world));
         this.control.addObject(this.morph);
     }
