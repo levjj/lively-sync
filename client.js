@@ -59,6 +59,9 @@ Object.subclass('users.cschuster.sync.Control',
             this.syncTable = {};
             this.rev = 0;
             this.loadSocketIO();
+            /* debug */
+            this.snapshotsize = 0;
+            this.patchsize = 0;
         },
         loadSocketIO: function() {
             if (!Global['io']) {
