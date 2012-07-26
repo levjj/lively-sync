@@ -211,19 +211,19 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (this.rev + 1 !== rev) {
                 console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
                 //this.socket.emit('update', this.rev);
-            } else {
-                var last = this.last || this.snapshots[this.rev];
-                delete this.snapshots[this.rev];
-                this.rev = rev;
-                patch = new users.cschuster.sync.Patch(patch);
-                patch.apply(last);
-                if (this.snapshots) {
-                    this.snapshots[this.rev] = last;
-                } else {
-                    this.last = last;
-                }
-                this.loadPatch(patch);
+                return;
             }
+            var last = this.last || this.snapshots[this.rev];
+            delete this.snapshots[this.rev];
+            this.rev = rev;
+            patch = new users.cschuster.sync.Patch(patch);
+            patch.apply(last);
+            if (this.snapshots) {
+                this.snapshots[this.rev] = last;
+            } else {
+                this.last = last;
+            }
+            this.loadPatch(patch);
         },
         loadSnapshot: function(snapshot) {
             Properties.forEachOwn(this.syncTable, function(key, val) {
