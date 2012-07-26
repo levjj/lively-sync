@@ -208,7 +208,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.rev = rev;
         },
         receivePatch: function(rev, patch) {
-            this.patches[rev] = patch;
             if (this.rev + 1 !== rev) {
                 console.warn("received patch for rev " + rev + " but local rev is " + this.rev);
                 //this.socket.emit('update', this.rev);
