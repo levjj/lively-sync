@@ -173,12 +173,12 @@ Object.subclass('users.cschuster.sync.Server', {
                 if (!fromRev || (fromRev < head - DIFFS_PER_SNAPSHOT)) {
                     repo.checkout(
                         head,
-                        this.socket.emit.bind(this.socket, 'snapshot', head));
+                        function(snapshot) { this.socket.emit('snapshot', head, snapshot.data); });
                 } else {
-                    repo.diff(
+                    repo.patch(
                         fromRev,
                         head,
-                        this.socket.emit.bind(this.socket, 'patch', head));
+                        function(patch) { this.socket.emit('patch', head, patch.data); });
                 }
             }.bind(this));
         }.bind(this));
