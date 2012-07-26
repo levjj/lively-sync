@@ -203,24 +203,25 @@ Object.subclass('users.cschuster.sync.Server', {
                     repo.commit(head, patch);
                     this.socket.broadcast.emit('patch', head + 1, patch);
                 } else {
-                    Seq([oldRev, head])
+                    //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
+                    //TODO: diff3 not implemented yet in jsondiffpatch
+                    console.error("received outdated patch");
+                    /*Seq([oldRev, head])
                     .parMap(function (rev) {
                         repo.checkout(rev, this.bind(this, null));
                     })
                     .seq(function (old, mine) {
-                        //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
-                        console.error("diff3 not implemented yet in jsondiffpatch");
-                        //var yours = xdiff.patch(old, patch);
-                        //var newPatch = xdiff.diff3(mine, yours, old);
-                        //if (newPatch) {
-                        //    repo.commit(head, newPatch);
-                        //    this.socket.broadcast.emit('patch', head + 1, newPatch);
-                        //}
-                        //var myPatch = xdiff.diff(yours, mine);
-                        //if (myPatch) {
-                        //    this.socket.emit('patch', head + 1, myPatch);
-                        //}
-                    }.bind(this));
+                        var yours = xdiff.patch(old, patch);
+                        var newPatch = xdiff.diff3(mine, yours, old);
+                        if (newPatch) {
+                            repo.commit(head, newPatch);
+                            this.socket.broadcast.emit('patch', head + 1, newPatch);
+                        }
+                        var myPatch = xdiff.diff(yours, mine);
+                        if (myPatch) {
+                            this.socket.emit('patch', head + 1, myPatch);
+                        }
+                    }.bind(this));*/
                 }
             }.bind(this));
         }.bind(this));
