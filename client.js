@@ -123,9 +123,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     recreated[key] = this.recreateObject(val);
                 }
             }
-            this.deserializeQueue.push(function() {
-                this.serializer.letAllPlugins('afterDeserializeObj', [recreated]);
-            });
+            this.deserializeQueue.push(recreated);
             return recreated;
         },
         tryPatchValueObject: function(existing, patch) {
