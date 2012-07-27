@@ -245,7 +245,17 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch,
     removeMorphPatch: {"X": [0,0]},
     removeSubmorphPatch: {"X/submorphs/0": [0,0]},
-    addScriptPatch: {},
+    addScriptPatch: {
+        "X/__serializedLivelyClosures__": [{}],
+        "X/__serializedLivelyClosures__/tick": [{
+            source:"function tick() { return \"tack\"; }",
+            __LivelyClassName__:"lively.Closure",
+            __SourceModuleName__:"Global.lively.lang.Closure"
+        }],
+        "X/__serializedLivelyClosures__/tick/varMapping": [{
+            "this": {__isSmartRef__:true, id: this.rect.id}
+        }],
+        "X/__serializedLivelyClosures__/tick/funcProperties": [{}]},
     removeScriptPatch: {"X/__serializedLivelyClosures__": [0,0]},
     updateScriptPatch: {"X/__serializedLivelyClosures__/0": {
         source:["function tick() { return \"tock\"; }"]}}
