@@ -171,6 +171,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected[this.rect.id + "/__serializedLivelyClosures__"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testUpdateScript: function() {
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotA = this.serialize(this.table);
+        this.rect.addScript(function tick() { return "tock"; });
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/__serializedLivelyClosures__/0"] = {
+            source: ["function tick() { return \"tock\"; }"]};
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
