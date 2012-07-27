@@ -56,12 +56,15 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     checkout: function(rev, cb) {
         this.latestSnapshotRevBefore(rev, function(from) {
-            this.db.query("SELECT type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3", [DEMO, from, rev], function(err, result) {
+            console.log("getting all rows between " + from + " and " + rev);
+            this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [DEMO, from, rev], function(err, result) {
                 if (err) return console.error(err);
                 if (result.rows.length < 1) return console.error("checkout: no revision between " + from + " and " + rev);
+                console.log("row[0]: Rev " + result.rows[0].rev + " (" + result.rows[0].type + ")");
                 if (result.rows[0].type != "snapshot") return console.error("checkout: expected rev " + from + " to be a snapshot");
                 var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
                 for (var i = 1; i < result.rows.length; i++) {
+                    console.log("row["+i+"]: Rev " + result.rows[i].rev + " (" + result.rows[i].type + ")");
                     if (result.rows[i].type != "patch") return console.error("checkout: expected rev " + from + " to be a diff");
                     snapshot.patch(new users.cschuster.sync.Patch(result.rows[i].data));
                 }
