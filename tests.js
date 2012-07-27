@@ -165,7 +165,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     testRemoveScript: function() {
         this.rect.addScript(function tick() { return "tack"; });
-        var snapshotA = ts.serialize(this.table);
+        var snapshotA = this.serialize(this.table);
         delete this.rect.tick;
         var snapshotB = this.serialize(this.table);
         var expected = {};
