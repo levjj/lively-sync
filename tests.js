@@ -152,7 +152,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         debugger;
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/scripts/0"] = [{a:"b"}];
+        expected[this.rect.id + "/__serializedLivelyClosures__"] = [{}];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [{
+            source:"function tick() { return \"tack\"; }",
+            __LivelyClassName__:"lively.Closure",
+            __SourceModuleName__:"Global.lively.lang.Closure"
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/varMapping"] = [{
+            "this": {__isSmartRef__:true, id: this.rect.id}
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
