@@ -152,6 +152,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected[this.rect.id + "/scripts/0"] = [{a:"b"}];
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
