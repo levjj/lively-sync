@@ -204,7 +204,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.last = new users.cschuster.sync.Snapshot(snapshot);
             }
             console.log('received snapshot for rev ' + rev);
-            debugger;
             this.loadSnapshot(this.last || this.snapshots[rev]);
             this.rev = rev;
         },
