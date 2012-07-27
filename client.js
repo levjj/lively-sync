@@ -237,11 +237,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         loadPatch: function(patch) {
             var oldTable = Object.extend({}, this.syncTable);
             var rawPatch = patch.toHierachicalPatch().data;
+            this.serializer = ObjectGraphLinearizer.forNewLively();
             this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
             this.refPatchQueue.invoke('call', this);
             this.deserializeQueue.invoke('call', this);
+            this.serializer.letAllPlugins('deserializationDone', []);
             for (var key in rawPatch) {
                 var obj = this.objectAtPath(key);
                 var patch = rawPatch[key];
