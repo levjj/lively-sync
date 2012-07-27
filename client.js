@@ -114,8 +114,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         || !object.__LivelyClassName__ || object.__isSmartRef__) {
                 return object;
             }
-            var serializer = ObjectGraphLinearizer.forNewLively();
-            var recreated = serializer.somePlugin('deserializeObj', [object]);
+            var recreated = this.serializer.somePlugin('deserializeObj', [object]);
             for (var key in object) {
                 var val = object[key];
                 if (val.__isSmartRef__) {
@@ -125,8 +124,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 }
             }
             this.deserializeQueue.push(function() {
-                serializer.letAllPlugins('afterDeserializeObj', [recreated]);
-                serializer.letAllPlugins('deserializationDone', [recreated]);
+                this.serializer.letAllPlugins('afterDeserializeObj', [recreated]);
             });
             return recreated;
         },
