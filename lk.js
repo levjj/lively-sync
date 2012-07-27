@@ -84,6 +84,19 @@ Object.extend(Array.prototype, {
     }
 });
 
+Object.subclass('Properties');
+Object.extend(Properties, {
+    forEachOwn: function(object, func, context) {
+        for (var name in object) {
+            if (!object.hasOwnProperty(name)) continue;
+            var value = object[name];
+            if (!Object.isFunction(value)) {
+                func.call(context || this, name, value);
+            }
+        }
+    }
+});
+
 exports.module = function() {
     return {
         requires: function() {
