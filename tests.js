@@ -162,6 +162,15 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         }];
         expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testRemoveScript: function() {
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotA = ts.serialize(this.table);
+        delete this.rect.tick;
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/__serializedLivelyClosures__"] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
