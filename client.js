@@ -111,7 +111,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         recreateObject: function(object) {
             if (!object || !Object.isObject(object) || Array.isArray(object)
-                        || !object.__LivelyClassName__ || object.__isSmartRef__) {
+                        || object.__isSmartRef__) {
                 return object;
             }
             if (!object.hasOwnProperty("__LivelyClassName__")) {
