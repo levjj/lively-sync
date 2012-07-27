@@ -179,6 +179,19 @@ Object.subclass('users.cschuster.sync.Patch', {
         }
         return new users.cschuster.sync.Diff(raw);
     },
+    addMissingClassNames: function(obj) {
+        if (typeof obj == "object") {
+            if (Array.isArray(obj)) { // instruction
+                if (obj.length == 1 && !obj[0].__LivelyClassName__) {
+                    obj.__LivelyClassName = undefined;
+                }
+            } else { // raw object or array
+                Properties.forEachOwn(obj, function(name, val) {
+                    this.addMissingClassNames(val);
+                }, this)
+            }
+        }
+    },
     addMissingSmartRefs: function(registry) {
         for (var key in registry) {
             if (Array.isArray(registry[key]) && key.indexOf('/')) {
@@ -224,6 +237,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
+        this.addMissingClassNames(diff.data.registry);
         this.addMissingSmartRefs(diff.data.registry);
         this.propagateDeletions(diff, snapshot);
         diff.apply(snapshot);
