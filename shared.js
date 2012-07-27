@@ -89,8 +89,8 @@ Object.subclass('users.cschuster.sync.Diff', {
                 delete obj[key];
             }
         }, this);
-        if (typeof obj.__LivelyClassName__ == "undefined")
-            delete obj.__LivelyClassName;
+        if (obj.__LivelyClassName__ === undefined)
+            delete obj.__LivelyClassName__;
         // always keep empty objects and arrays in raw mode
         return false;
     },
