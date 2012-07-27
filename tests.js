@@ -313,8 +313,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testAddScript: function() {
         this.patch(this.addScriptPatch);
-        this.assertEquals("tack", this.morph.tick());
         Global.bla = this.morph;
+        this.assertEquals("tack", this.morph.tick());
     },
     testRemoveScript: function() {
         this.morph.addScript(function tick() { return "tack"; });
