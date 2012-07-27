@@ -62,7 +62,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                 if (result.rows[0].type != "snapshot") return console.error("checkout: expected rev " + from + " to be a snapshot");
                 var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
                 for (var i = 1; i < result.rows.length; i++) {
-                    if (result.rows[i].type != "diff") return console.error("checkout: expected rev " + from + " to be a diff");
+                    if (result.rows[i].type != "patch") return console.error("checkout: expected rev " + from + " to be a diff");
                     snapshot.patch(new users.cschuster.sync.Patch(result.rows[i].data));
                 }
                 cb(snapshot);
