@@ -78,6 +78,12 @@ Object.extend(Function.prototype, {
     }
 });
 
+Object.extend(Array.prototype, {
+    last: function() {
+        return this[this.length - 1];
+    }
+});
+
 exports.module = function() {
     return {
         requires: function() {
