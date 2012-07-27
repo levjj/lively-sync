@@ -244,7 +244,11 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     transparentPatch: {"X/shape": {_Fill: [null]}},
     addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch,
     removeMorphPatch: {"X": [0,0]},
-    removeSubmorphPatch: {"X/submorphs/0": [0,0]}
+    removeSubmorphPatch: {"X/submorphs/0": [0,0]},
+    addScriptPatch: {},
+    removeScriptPatch: {},
+    updateScriptPatch: {"X/__serializedLivelyClosures__/0": {
+        source:["function tick() { return \"tock\"; }"]}}
 },
 'testing', {
     testMoveX: function() {
@@ -298,6 +302,20 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.morph.addMorph(submorph);
         this.patch(this.removeSubmorphPatch);
         this.assertShapeNode(this.div(this.div({childNodes: []})));
+    },
+    testAddScript: function() {
+        this.patch(addScriptPatch);
+        this.assertEquals("tack", this.rect.tick());
+    },
+    testRemoveScript: function() {
+        this.rect.addScript(function tick() { return "tack"; });
+        this.patch(removeScriptPatch);
+        this.assert(!this.rect.hasOwnProperty("tick"));
+    },
+    testUpdateScript: function() {
+        this.rect.addScript(function tick() { return "tack"; });
+        this.patch(updateScriptPatch);
+        this.assertEquals("tock", this.rect.tick());
     }
 });
 }) // end of module
