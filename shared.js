@@ -181,8 +181,8 @@ Object.subclass('users.cschuster.sync.Patch', {
     addMissingClassNames: function(obj) {
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
-                if (obj.length == 1 && !obj[0].hasOwnProperty("__LivelyClassName__")) {
-                    obj.__LivelyClassName__ = undefined;
+                if (obj.length < 3 && !obj.last().hasOwnProperty("__LivelyClassName__")) {
+                    obj.last().__LivelyClassName__ = undefined;
                 }
             } else { // raw object or array
                 Properties.forEachOwn(obj, function(name, val) {
