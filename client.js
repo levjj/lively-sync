@@ -306,7 +306,6 @@ Object.extend(users.cschuster.sync.Snapshot, {
 users.cschuster.sync.Snapshot.addMethods({
     getSerializer: function(data) {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
-        serializer.addPlugins(lively.persistence.getPluginsForLively());
         var p = new GenericFilter();
         p.addFilter(function(obj, prop, value) {
             return obj.isScript && prop == "currentTimeout";
