@@ -130,8 +130,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         var patch = new users.cschuster.sync.Patch();
         var toDelete = this.aggregateDeletions();
         for (var id in this.data.registry) {
-            if (id && !id.startsWith("#")
-                   && !toDelete.some(function(s) {return id.startsWith(s)})) {
+            if (id && !toDelete.some(function(s) {return id.startsWith(s)})) {
                 var obj = this.data.registry[id];
                 if (!this.coalesceDiff(obj, id)) {
                     patch.data[id] = obj;
