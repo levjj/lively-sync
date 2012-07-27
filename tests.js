@@ -253,7 +253,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
             __SourceModuleName__:"Global.lively.lang.Closure"
         }],
         "X/__serializedLivelyClosures__/tick/varMapping": [{
-            "this": {__isSmartRef__:true, id: this.rect.id}
+            "this": {__isSmartRef__:true, id: "X"}
         }],
         "X/__serializedLivelyClosures__/tick/funcProperties": [{}]},
     removeScriptPatch: {"X/__serializedLivelyClosures__": [0,0]},
