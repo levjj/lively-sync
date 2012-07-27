@@ -71,7 +71,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     isSmartRef: function(obj, id) {
         if (!obj) return false;
-        if (!Object.isObject(obj)) return false;
+        if (typeof obj != "object") return false;
         if (!obj.__isSmartRef__) return false;
         return obj.id == id;
     },
@@ -79,7 +79,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         // discards smartrefs
         // returns true if smartref can be removed, but
         // do not coalesce this part of the diff
-        if (!obj || !Object.isObject(obj)) return false; // primitive
+        if (!obj || typeof obj != "object") return false; // primitive
         if (this.isSmartRef(obj, id)) { // smartref
             return true;
         }
@@ -153,7 +153,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     convertToDiffInstruction: function(obj, optSnapshotObj) {
         // recreates diff instructions from patch
-        if (Object.isObject(obj)) {
+        if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 2) {
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
@@ -232,7 +232,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     toHierachicalPatch: function() {
         var newPatch = {};
         function removeAdds(obj) {
-            if (!obj || !Object.isObject(obj)) return obj;
+            if (!obj || typeof obj != 'object') return obj;
             if (Array.isArray(obj) && obj.length == 1) return obj[0];
             for (var key in obj) {
                 obj[key] = removeAdds(obj[key]);
