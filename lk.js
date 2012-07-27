@@ -84,13 +84,21 @@ Object.extend(Array.prototype, {
     }
 });
 
+Object.extend(Object, {
+    isEmpty: function(object) {
+        for (var key in object)
+            if (object.hasOwnProperty(key)) return false;
+        return true;
+    },
+});
+
 Object.subclass('Properties');
 Object.extend(Properties, {
     forEachOwn: function(object, func, context) {
         for (var name in object) {
             if (!object.hasOwnProperty(name)) continue;
             var value = object[name];
-            if (!Object.isFunction(value)) {
+            if (typeof value != 'function') {
                 func.call(context || this, name, value);
             }
         }
