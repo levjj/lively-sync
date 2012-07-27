@@ -145,6 +145,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
         var patch = snapshotB.diff(snapshotA).toPatch();
         this.assert(snapshotB.data.registry[this.rect.id].shape.__isSmartRef__);
+    },
+    testAddScript: function() {
+        var snapshotA = this.serialize(this.table);
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/scripts/0"] = [{a:"b"}];
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
