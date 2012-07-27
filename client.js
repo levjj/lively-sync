@@ -168,6 +168,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         this.set(obj, key, patchedValueObject);
                     } else {
                         this.applyObjectPatch(obj[key], value);
+                        this.deserializeQueue.push(recreated);
                     }
                 }
             }
