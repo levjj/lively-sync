@@ -246,7 +246,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     removeMorphPatch: {"X": [0,0]},
     removeSubmorphPatch: {"X/submorphs/0": [0,0]},
     addScriptPatch: {},
-    removeScriptPatch: {},
+    removeScriptPatch: {"X/__serializedLivelyClosures__": [0,0]},
     updateScriptPatch: {"X/__serializedLivelyClosures__/0": {
         source:["function tick() { return \"tock\"; }"]}}
 },
