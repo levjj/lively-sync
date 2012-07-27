@@ -150,6 +150,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         this.rect.addScript(function tick() { return "tack"; });
         var snapshotB = this.serialize(this.table);
+        debugger;
         var expected = {};
         expected[this.rect.id + "/__serializedLivelyClosures__"] = [{}];
         expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [{
