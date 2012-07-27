@@ -28,7 +28,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         for (var key in patch) {
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
-                if (!parentMorph) return;
+                if (!parentMorph) continue;
                 if (value.length > 1) { // delete
                     value.shift().remove();
                 }
