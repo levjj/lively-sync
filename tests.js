@@ -108,6 +108,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected = this.addRectPatch(this.rect);
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testRemoveMorph: function() {
