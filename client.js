@@ -240,7 +240,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.applyObjectPatch(this.syncTable, rawPatch);
             this.refPatchQueue.invoke('call', this);
             this.deserializeQueue.each(function(obj) {
-                debugger;
                 this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
             }.bind(this));
             this.serializer.letAllPlugins('deserializationDone', []);
