@@ -114,10 +114,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         || object.__isSmartRef__) {
                 return object;
             }
-            if (!object.hasOwnProperty("__LivelyClassName__")) {
-                object.__LivelyClassName__ = undefined;
-            }
-            var recreated = this.serializer.somePlugin('deserializeObj', [object]);
+            var recreated = this.serializer.somePlugin('deserializeObj', [object]) || {};
             for (var key in object) {
                 var val = object[key];
                 if (val.__isSmartRef__) {
