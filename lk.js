@@ -59,7 +59,7 @@ Object.extend(Function.prototype, {
         }
         return this;
     },
-    subclass = function(className, sourceObj) {
+    subclass: function(className, sourceObj) {
         targetScope = Class.namespaceFor(className);
         shortName = Class.unqualifiedNameFor(className);
         var klass;
