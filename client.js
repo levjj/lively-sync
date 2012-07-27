@@ -239,7 +239,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
             this.refPatchQueue.invoke('call', this);
-            this.deserializeQueue.invoke('call', this);
+            this.deserializeQueue.each(function(obj) {
+                this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
+            }.bind(this));
             this.serializer.letAllPlugins('deserializationDone', []);
             for (var key in rawPatch) {
                 var obj = this.objectAtPath(key);
