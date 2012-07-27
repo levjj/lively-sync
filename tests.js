@@ -178,7 +178,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.addScript(function tick() { return "tock"; });
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/__serializedLivelyClosures__/0"] = {
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = {
             source: ["function tick() { return \"tock\"; }"]};
         this.assertPatch(expected, snapshotA, snapshotB);
     }
