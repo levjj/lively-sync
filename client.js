@@ -323,7 +323,8 @@ users.cschuster.sync.Snapshot.addMethods({
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
     newId: function() {
         var id = this.path.join('/');
-        while (this.registry[id]) id = "#" + id;
+        if (this.registry.hasOwnProperty(id))
+            throw new Error("ID '" + id + "' already assigned");
         return id;
     }
 }).beGlobal();
