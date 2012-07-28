@@ -148,7 +148,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.deserializeQueue.push(recreated);
             return recreated;
         },
-        tryPatchValueObject: function(existing, patch) {
+        tryPatchValueObject: function(obj, key, patch) {
+            var existing = obj[key];
             function newVal(prop) {
                 return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
             }
@@ -182,7 +183,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         this.set(obj, key, this.recreateObject(value.last()));
                     }
                 } else {
-                    var patchedValueObject = this.tryPatchValueObject(obj[key], value);
+                    var patchedValueObject = this.tryPatchValueObject(obj, key, value);
                     if (patchedValueObject) {
                         var newPatch = [patchedValueObject];
                         if (obj.hasOwnProperty(key)) newPatch.unshift(obj[key]);
