@@ -129,13 +129,13 @@ Object.subclass('users.cschuster.sync.Repository', {
         }.bind(this));
     },
     
-    commit: function(head, patch) {
+    commit: function(head, patch, cb) {
         this.latestSnapshotRevBefore(head, function(latest) {
             if (head - latest > DIFFS_PER_SNAPSHOT) {
                 this._createSnapshot(head, patch);
             } else {
                 console.log("creating patch for revision " + (head + 1));
-                this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "patch", patch.toJSON()]);
+                this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "patch", patch.toJSON()], cb);
             }
         }.bind(this));
     },
