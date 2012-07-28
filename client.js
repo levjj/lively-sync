@@ -40,6 +40,28 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
+    removeAllClosures: function(obj) {
+        Functions.own(obj).
+	   select(function(name) { return obj[name].getOriginal().hasLivelyClosure }).
+	   each(function(name) { delete obj[name] });
+    },
+    fixClosures: function(obj, patch, parentObject) {
+        for (var key in patch) {
+            var isClosureObj = key == "__serializedLivelyClosures__";
+            var value = patch[key];
+            if (Array.isArray(value)) { // instruction
+                if (value.length == 2) { // delete
+                    if (isClosureObj) this.removeAllClosures(obj);
+                    if (parentObject) delete parentObject[key];
+                }
+                if (value.length == 1) { // add or set
+                    //parentMorph.addScript(obj[key]);
+                }
+            } else {
+                this.fixClosures(obj[key], value, isClosureObj && obj);
+            }
+        }
+    },
     updatedObj: function(key, obj, patch) {
         this.fixSceneGraph(obj, patch);
         this.fixClosures(obj, patch);
