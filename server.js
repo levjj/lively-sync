@@ -199,10 +199,12 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     commitPatch: function (oldRev, patch) {
+        console.log("step0: patching to rev " + (head + 1));
         this.withRepo(true, function(repo) {
+            console.log("step1: patching to rev " + (head + 1));
             repo.head(function (head) {
                 if (oldRev == head) {
-                    console.log("patching to rev " + (head + 1));
+                    console.log("step2: patching to rev " + (head + 1));
                     repo.commit(head, new users.cschuster.sync.Patch(patch));
                     this.socket.broadcast.emit('patch', head + 1, patch);
                 } else {
