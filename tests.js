@@ -149,6 +149,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.addScript(function tick() { return "tack"; });
         var snapshotB = this.serialize(this.table);
         var expected = {};
+        expected[this.rect.id + "/__serializedLivelyClosures__"] = [{}];
         expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [{
             source:"function tick() { return \"tack\"; }",
             __LivelyClassName__:"lively.Closure",
