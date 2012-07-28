@@ -271,7 +271,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     removeMorphPatch: {"X": [0,0]},
     removeSubmorphPatch: {"X/submorphs/0": [0,0]},
     addScriptPatch: function(first) {
-        var result = {
+        var result = {}
+        if (first) result["X/__serializedLivelyClosures__"] = [{}];
+        Object.extend(result, {
             "X/__serializedLivelyClosures__/tick": [{
                 source:"function tick() { return \"tack\"; }",
                 __LivelyClassName__:"lively.Closure",
@@ -280,8 +282,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
             "X/__serializedLivelyClosures__/tick/varMapping": [{
                 "this": {__isSmartRef__:true, id: "X"}
             }],
-            "X/__serializedLivelyClosures__/tick/funcProperties": [{}]};
-        if (first) result["X/__serializedLivelyClosures__"] = [{}];
+            "X/__serializedLivelyClosures__/tick/funcProperties": [{}]});
         return result;
     },
     removeScriptPatch: {"X/__serializedLivelyClosures__": [0,0]},
