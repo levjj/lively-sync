@@ -170,7 +170,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 Functions.own(obj).forEach(function(funcName) {
                     var func = obj[funcName];
                     if (!func || !func.hasLivelyClosure) return;
-                    newClosures[funcName] = func.livelyClosure;
+                    var closure = func.livelyClosure;
+                    newClosures[funcName] = closure;
+                    if (!closure.hasFuncSource()) {
+                        closure.setFuncSource(closure.originalFunc.toString());
+                    }
                 });
                 obj['__serializedLivelyClosures__'] = newClosures;
                 return false;
