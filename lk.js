@@ -84,6 +84,12 @@ Object.extend(Array.prototype, {
     }
 });
 
+Object.extend(String.prototype, {
+    startsWith: function(pattern) {
+        return this.indexOf(pattern) === 0;
+    }
+});
+
 Object.extend(Object, {
     isEmpty: function(object) {
         for (var key in object)
