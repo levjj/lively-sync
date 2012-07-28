@@ -343,6 +343,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertShapeNode(this.div(this.div({childNodes: []})));
     },
     testAddScript: function() {
+        debugger;
         this.patch(this.addScriptPatch(true));
         this.assertEquals("tack", this.morph.tick());
     },
