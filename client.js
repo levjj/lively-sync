@@ -168,7 +168,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             } else if (key == '__serializedLivelyClosures__') {
                 var newClosures = {}
                 Functions.own(obj).forEach(function(funcName) {
-                    var func = original[funcName];
+                    var func = obj[funcName];
                     if (!func || !func.hasLivelyClosure) return;
                     newClosures[funcName] = func.livelyClosure;
                 });
