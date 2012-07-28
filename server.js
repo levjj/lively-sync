@@ -199,9 +199,9 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     commitPatch: function (oldRev, patch) {
-        console.log("step0: patching to rev " + (head + 1));
+        console.log("step0: patching");
         this.withRepo(true, function(repo) {
-            console.log("step1: patching to rev " + (head + 1));
+            console.log("step1: patching");
             repo.head(function (head) {
                 if (oldRev == head) {
                     console.log("step2: patching to rev " + (head + 1));
