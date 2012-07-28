@@ -316,7 +316,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertShapeNode(this.div(this.div({childNodes: []})));
     },
     testAddScript: function() {
-        this.patch(this.addScriptPatch(true));
+        this.patch(this.addScriptPatch(false));
         this.assertEquals("tack", this.morph.tick());
     },
     testRemoveScript: function() {
@@ -331,7 +331,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testAddSecondScript: function() {
         this.morph.addScript(function tag() { return "nag"; });
-        debugger;
         this.patch(this.addScriptPatch(false));
         this.assertEquals("nag", this.morph.tag());
         this.assertEquals("tack", this.morph.tick());
