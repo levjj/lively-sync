@@ -244,6 +244,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.rev = rev;
         },
         receivePatch: function(rev, patch) {
+            debugger;
             if (!this.autoupdate && this.rev != rev) return;
             patch = new users.cschuster.sync.Patch(patch);
             if (this.snapshots) {
