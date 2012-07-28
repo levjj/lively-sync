@@ -161,9 +161,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                                             newVal("height"), newVal("width"));
             } else if (existing instanceof Color) {
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
-            } else if (existing instanceof lively.Closure) {
-                debugger;
-                return new lively.Closure.fromSource('', {});
             } else {
                 return false;
             }
