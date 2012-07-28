@@ -50,11 +50,10 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var isClosureObj = key == "__serializedLivelyClosures__";
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
-                if (value.length == 2) { // delete
+                if (value.length == 3) { // delete
                     if (isClosureObj) this.removeAllClosures(obj);
                     if (parentObject) delete parentObject[key];
-                }
-                if (value.length == 1) { // add or set
+                } else { // add or set
                     //parentMorph.addScript(obj[key]);
                 }
             } else {
