@@ -327,7 +327,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.last = current;
             }
             this.rev++;
-            console.log('commited snapshot for rev ' + this.rev);
+            console.log('commited patch for rev ' + this.rev);
             return [current.toJSON().length, patch.toJSON().length];
         }
     }
