@@ -202,8 +202,10 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(true, function(repo) {
             repo.head(function (head) {
                 if (oldRev == head) {
-                    repo.commit(head, new users.cschuster.sync.Patch(patch));
                     this.socket.broadcast.emit('patch', head + 1, patch);
+                    repo.commit(head, new users.cschuster.sync.Patch(patch), function() {
+                        repo.release();
+                    });
                 } else {
                     //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
                     //TODO: diff3 not implemented yet in jsondiffpatch
