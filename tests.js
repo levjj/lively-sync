@@ -324,6 +324,19 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.morph.addScript(function tick() { return "tack"; });
         this.patch(this.updateScriptPatch);
         this.assertEquals("tock", this.morph.tick());
-    }
+    },
+    testAddSecondScript: function() {
+        this.morph.addScript(function tag() { return "nag"; });
+        this.patch(this.addScriptPatch);
+        this.assertEquals("nag", this.morph.tag());
+        this.assertEquals("tack", this.morph.tick());
+    },
+    testRemoveSecondScript: function() {
+        this.morph.addScript(function tag() { return "nag"; });
+        this.morph.addScript(function tick() { return "tack"; });
+        this.patch(this.removeScriptPatch);
+        this.assertEquals("nag", this.morph.tag());
+        this.assert(!this.morph.hasOwnProperty("tick"));
+    },
 });
 }) // end of module
