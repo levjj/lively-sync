@@ -327,6 +327,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testAddSecondScript: function() {
         this.morph.addScript(function tag() { return "nag"; });
+        debugger;
         this.patch(this.addScriptPatch);
         this.assertEquals("nag", this.morph.tag());
         this.assertEquals("tack", this.morph.tick());
