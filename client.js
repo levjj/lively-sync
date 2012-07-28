@@ -163,8 +163,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             } else if (existing instanceof Color) {
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
             } else if (existing instanceof lively.Closure) {
-                debugger;
-                return lively.Closure.fromSource();
+                return new lively.Closure(null, newVal("source"), newVal("varMapping"), null);
             } else if (key == '__serializedLivelyClosures__') {
                 var newClosures = {}
                 Functions.own(obj).forEach(function(funcName) {
