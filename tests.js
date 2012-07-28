@@ -243,20 +243,24 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch,
     removeMorphPatch: {"X": [0,0]},
     removeSubmorphPatch: {"X/submorphs/0": [0,0]},
-    addScriptPatch: {
-        "X/__serializedLivelyClosures__": [{}],
-        "X/__serializedLivelyClosures__/tick": [{
-            source:"function tick() { return \"tack\"; }",
-            __LivelyClassName__:"lively.Closure",
-            __SourceModuleName__:"Global.lively.lang.Closure"
-        }],
-        "X/__serializedLivelyClosures__/tick/varMapping": [{
-            "this": {__isSmartRef__:true, id: "X"}
-        }],
-        "X/__serializedLivelyClosures__/tick/funcProperties": [{}]},
+    addScriptPatch: function(first) {
+        var patch = {
+            "X/__serializedLivelyClosures__/tick": [{
+                source:"function tick() { return \"tack\"; }",
+                __LivelyClassName__:"lively.Closure",
+                __SourceModuleName__:"Global.lively.lang.Closure"
+            }],
+            "X/__serializedLivelyClosures__/tick/varMapping": [{
+                "this": {__isSmartRef__:true, id: "X"}
+            }],
+            "X/__serializedLivelyClosures__/tick/funcProperties": [{}]};
+        if (first) patch["X/__serializedLivelyClosures__"] = [{}];
+        return patch;
+    },
     removeScriptPatch: {"X/__serializedLivelyClosures__": [0,0]},
     updateScriptPatch: {"X/__serializedLivelyClosures__/tick": {
-        source:["function tick() { return \"tock\"; }"]}}
+        source:["function tick() { return \"tock\"; }"]}},
+    removeSecondScriptPatch: {"X/__serializedLivelyClosures__/tick": [0,0]},
 },
 'testing', {
     testMoveX: function() {
@@ -312,7 +316,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assertShapeNode(this.div(this.div({childNodes: []})));
     },
     testAddScript: function() {
-        this.patch(this.addScriptPatch);
+        this.patch(this.addScriptPatch(true));
         this.assertEquals("tack", this.morph.tick());
     },
     testRemoveScript: function() {
@@ -327,15 +331,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testAddSecondScript: function() {
         this.morph.addScript(function tag() { return "nag"; });
-        debugger;
-        this.patch(this.addScriptPatch);
+        this.patch(this.addScriptPatch(false));
         this.assertEquals("nag", this.morph.tag());
         this.assertEquals("tack", this.morph.tick());
     },
     testRemoveSecondScript: function() {
         this.morph.addScript(function tag() { return "nag"; });
         this.morph.addScript(function tick() { return "tack"; });
-        this.patch(this.removeScriptPatch);
+        this.patch(this.removeSecondScriptPatch);
         this.assertEquals("nag", this.morph.tag());
         this.assert(!this.morph.hasOwnProperty("tick"));
     },
