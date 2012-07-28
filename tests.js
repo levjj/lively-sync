@@ -179,7 +179,34 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = {
             source: ["function tick() { return \"tock\"; }"]};
         this.assertPatch(expected, snapshotA, snapshotB);
-    }
+    },
+    testAddSecondScript: function() {
+        this.rect.addScript(function tag() { return "nag"; });
+        var snapshotA = this.serialize(this.table);
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [{
+            source:"function tick() { return \"tack\"; }",
+            __LivelyClassName__:"lively.Closure",
+            __SourceModuleName__:"Global.lively.lang.Closure"
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/varMapping"] = [{
+            "this": {__isSmartRef__:true, id: this.rect.id}
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testRemoveSecondScript: function() {
+        this.rect.addScript(function tag() { return "nag"; });
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotA = this.serialize(this.table);
+        delete this.rect.tick;
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
