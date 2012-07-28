@@ -321,7 +321,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assert(!this.morph.hasOwnProperty("tick"));
     },
     testUpdateScript: function() {
-        this.rect.addScript(function tick() { return "tack"; });
+        this.morph.addScript(function tick() { return "tack"; });
         debugger;
         this.patch(this.updateScriptPatch);
         this.assertEquals("tock", this.morph.tick());
