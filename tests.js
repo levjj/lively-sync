@@ -233,6 +233,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = this.addRectPatch(this.rect);
         Object.extend(expected, this.addRectPatch(submorph, this.rect));
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
