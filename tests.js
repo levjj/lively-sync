@@ -314,7 +314,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     testAddMorph: function() {
         var morph2 = this.newBox("Y", 5, 5);
-        this.control.addObject(morph2);
+        //this.control.addObject(morph2);
         this.patch(this.addRectPatch(morph2));
         this.assertWorldNode(
             this.div(
