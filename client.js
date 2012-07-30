@@ -255,7 +255,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             } else {
                 last = this.last;
             }
-            this.loadPatch(Object.deepCopy(patch));
+            this.loadPatch(patch.clone());
             patch.apply(last);
             this.rev = rev;
         },
