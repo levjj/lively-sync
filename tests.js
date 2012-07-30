@@ -207,6 +207,24 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testAddMorphWithScript: function() {
+        var snapshotA = this.serialize({});
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected = this.addRectPatch(this.rect);
+        expected[this.rect.id + "/__serializedLivelyClosures__"] = [{}];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick"] = [{
+            source:"function tick() { return \"tack\"; }",
+            __LivelyClassName__:"lively.Closure",
+            __SourceModuleName__:"Global.lively.lang.Closure"
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/varMapping"] = [{
+            "this": {__isSmartRef__:true, id: this.rect.id}
+        }];
+        expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
