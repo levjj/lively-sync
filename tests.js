@@ -385,7 +385,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         morph2.addMorph(submorph);
         var patch = this.addRectPatch(morph2);
         Object.extend(patch, this.addRectPatch(submorph, morph2));
-        debugger;
         this.patch(patch);
         this.assertWorldNode(
             this.div(this.div(
