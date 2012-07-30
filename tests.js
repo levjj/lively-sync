@@ -375,7 +375,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         var patch = this.addRectPatch(morph2);
         Object.extend(patch, this.addScriptPatch(false));
         this.patch(patch);
-        this.assertEquals("nag", this.world.submorphs.last().tag());
+        this.assertEquals("nag", this.world.submorphs[1].tag());
     }
 });
 }) // end of module
