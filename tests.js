@@ -375,9 +375,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         morph2.addScript(function tag() { return "nag"; });
         var patch = this.addRectPatch(morph2);
         Object.extend(patch, this.addScriptPatch(false));
-        debugger;
         this.patch(patch);
-        this.assertEquals("nag", this.world.submorphs.first().tag());
+        this.assertEquals("tack", this.world.submorphs.first().tick());
     }
 });
 }) // end of module
