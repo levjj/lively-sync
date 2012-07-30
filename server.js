@@ -121,18 +121,19 @@ Object.subclass('users.cschuster.sync.Repository', {
         });
     },
     
-    _createSnapshot: function(head, patch) {
+    _createSnapshot: function(head, patch, cb) {
         this.checkout(head, function(snapshot) {
-            snapshot.patch(patch);
+            patch.apply(snapshot);
             console.log("creating snapshot for revision " + (head + 1));
-            this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "snapshot", snapshot.toJSON()]);
+            this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)",
+                          [DEMO, head + 1, "snapshot", snapshot.toJSON()], cb);
         }.bind(this));
     },
     
     commit: function(head, patch, cb) {
         this.latestSnapshotRevBefore(head, function(latest) {
             if (head - latest > DIFFS_PER_SNAPSHOT) {
-                this._createSnapshot(head, patch);
+                this._createSnapshot(head, patch, cb);
             } else {
                 console.log("creating patch for revision " + (head + 1));
                 this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "patch", patch.toJSON()], cb);
