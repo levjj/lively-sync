@@ -370,13 +370,13 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         this.assert(!this.morph.hasOwnProperty("tick"));
     },
     testAddMorphWithScript: function() {
-        var morph2 = this.newBox("Y", 5, 5);
+        this.patch(this.removeMorphPatch);
+        var morph2 = this.newBox("X", 5, 5);
         morph2.addScript(function tag() { return "nag"; });
         var patch = this.addRectPatch(morph2);
         Object.extend(patch, this.addScriptPatch(false));
-        debugger;
         this.patch(patch);
-        this.assertEquals("nag", this.world.submorphs[1].tag());
+        this.assertEquals("nag", this.world.submorphs.first().tag());
     }
 });
 }) // end of module
