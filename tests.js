@@ -224,6 +224,17 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         }];
         expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testAddMorphWithSubmorph: function() {
+        var snapshotA = this.serialize({});
+        this.rect.addScript(function tick() { return "tack"; });
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorph = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph);
+        var snapshotB = this.serialize(this.table);
+        var extends = this.addRectPatch(this.rect);
+        Object.extends(expected, this.addRectPatch(submorph, this.rect));
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
