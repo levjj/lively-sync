@@ -388,16 +388,12 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         debugger;
         this.patch(patch);
         this.assertWorldNode(
-            this.div(
-                this.div(
-                    this.div(
-                        this.div({style: {width: '2px', height: '7px'}},
-                            this.div(this.div({style: {width: '1px', height: '3px'}}))
-                        )
-                    ),
-                    this.hand()
-                )
-            )
+            this.div(this.div(
+                this.div({style: {width: '2px', height: '7px'}},
+                    this.div(this.div(this.div({style: {width: '1px', height: '3px'}})))
+                ),
+                this.hand()
+            ))
         );
     }
 });
