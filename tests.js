@@ -227,7 +227,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     testAddMorphWithSubmorph: function() {
         var snapshotA = this.serialize({});
-        this.rect.addScript(function tick() { return "tack"; });
         var bounds = pt(0,0).extent(pt(20,20));
         var submorph = new lively.morphic.Box(bounds);
         this.rect.addMorph(submorph);
