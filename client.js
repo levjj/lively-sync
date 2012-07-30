@@ -132,11 +132,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             });
         },
         recreateObject: function(object) {
-            if (!object || !Object.isObject(object) || Array.isArray(object)
-                        || object.__isSmartRef__) {
+            if (!object || !Object.isObject(object) || object.__isSmartRef__) {
                 return object;
             }
-            var recreated = this.serializer.somePlugin('deserializeObj', [object]) || {};
+            var recreated = Array.isArray(object) ? [] :
+                this.serializer.somePlugin('deserializeObj', [object]) || {};
             for (var key in object) {
                 var val = object[key];
                 if (val.__isSmartRef__) {
