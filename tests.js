@@ -372,7 +372,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     testAddMorphWithScript: function() {
         var morph2 = this.newBox("Y", 5, 5);
         morph2.addScript(function tag() { return "nag"; });
-        this.patch(this.addRectPatch(morph2));
+        var patch = this.addRectPatch(morph2);
+        Object.extend(patch, this.addScriptPatch(false));
+        this.patch(patch);
         this.assertEquals("nag", this.world.submorphs.last().tag());
     }
 });
