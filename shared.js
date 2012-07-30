@@ -260,12 +260,14 @@ Object.subclass('users.cschuster.sync.Patch', {
             var val = this.data[key];
             var parts = key.split('/');
             var current = newPatch;
+            var rawMode = false;
             for (var i = 0; i < parts.length - 1; i++) {
                 if (!current[parts[i]]) {
                     current[parts[i]] = {};
                 }
                 current = current[parts[i]];
-                if (Array.isArray(current)) {
+                if (!rawMode && Array.isArray(current)) {
+                    rawMode = true;
                     current = current[0];
                     val = removeAdds(val);
                 }
