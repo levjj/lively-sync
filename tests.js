@@ -377,6 +377,27 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         Object.extend(patch, this.addScriptPatch(false));
         this.patch(patch);
         this.assertEquals("tack", this.world.submorphs.first().tick());
+    },
+    testAddMorphWithSubmorph: function() {
+        this.patch(this.removeMorphPatch);
+        var morph2 = this.newBox("Q", 2, 7);
+        var submorph = this.newBox("P", 1, 3);
+        morph2.addMorph(submorph);
+        var patch = this.addRectPatch(morph2);
+        Object.extend(patch, this.addRectPatch(submorph, morph2));
+        this.patch(patch);
+        this.assertWorldNode(
+            this.div(
+                this.div(
+                    this.div(
+                        this.div({style: {width: '2px', height: '7px'}},
+                            this.div(this.div({style: {width: '1px', height: '3px'}}))
+                        )
+                    ),
+                    this.hand()
+                )
+            )
+        );
     }
 });
 }) // end of module
