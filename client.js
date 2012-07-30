@@ -248,16 +248,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             console.log("received patch for rev " + rev);
             if (!this.autoupdate && this.rev != rev) return;
             patch = new users.cschuster.sync.Patch(patch);
+            var last;
             if (this.snapshots) {
-                var last = this.snapshots[this.rev]
+                last = this.snapshots[this.rev];
                 delete this.snapshots[this.rev];
                 this.patches[this.rev] = patch;
                 this.snapshots[rev] = last;
             } else {
-                var last = this.last
+                last = this.last;
             }
-            patch.apply(last);
             this.loadPatch(patch);
+            patch.apply(last);
             this.rev = rev;
         },
         loadSnapshot: function(snapshot) {
