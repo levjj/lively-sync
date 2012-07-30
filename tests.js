@@ -232,7 +232,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var submorph = new lively.morphic.Box(bounds);
         this.rect.addMorph(submorph);
         var snapshotB = this.serialize(this.table);
-        var extends = this.addRectPatch(this.rect);
+        var expected = this.addRectPatch(this.rect);
         Object.extends(expected, this.addRectPatch(submorph, this.rect));
         this.assertPatch(expected, snapshotA, snapshotB);
     }
