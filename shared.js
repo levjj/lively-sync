@@ -278,7 +278,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         return JSON.stringify(this.data);
     },
     clone: function() {
-        return new this(Object.deepCopy(this.data));
+        return new users.cschuster.sync.Patch(Object.deepCopy(this.data));
     }
 });
 
