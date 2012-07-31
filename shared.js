@@ -177,9 +177,6 @@ Object.subclass('users.cschuster.sync.Patch', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    createSmartRef: function(id) {
-        return {__isSmartRef__: true, id: id};
-    },
     convertToDiffInstruction: function(obj, optSnapshotObj) {
         // recreates diff instructions from patch
         if (typeof obj == "object") {
