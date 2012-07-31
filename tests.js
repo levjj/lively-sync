@@ -243,6 +243,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         Object.extend(expected, this.addRectPatch(submorph, this.rect));
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testRemoveMorphWithSubmorph: function() {
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorph = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph);
+        var snapshotA = this.serialize(this.table);
+        var snapshotB = this.serialize({});
+        var expected = {};
+        expected[this.rect.id] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
