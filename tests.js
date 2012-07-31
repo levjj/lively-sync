@@ -225,6 +225,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/__serializedLivelyClosures__/tick/funcProperties"] = [{}];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testRemoveMorphWithScript: function() {
+        this.rect.addScript(function tick() { return "tack"; });
+        var snapshotA = this.serialize(this.table);
+        var snapshotB = this.serialize({});
+        var expected = {};
+        expected[this.rect.id] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testAddMorphWithSubmorph: function() {
         var snapshotA = this.serialize({});
         var bounds = pt(0,0).extent(pt(20,20));
@@ -234,7 +242,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = this.addRectPatch(this.rect);
         Object.extend(expected, this.addRectPatch(submorph, this.rect));
         this.assertPatch(expected, snapshotA, snapshotB);
-    }
+    },
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
