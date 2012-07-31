@@ -49,6 +49,28 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         Properties.forEachOwn(raw, function(k,v) { result[path + k] = [v]; });
         if (optOwner) result[path][0].owner = {__isSmartRef__:true,id:optOwner.id};
         return result;
+    },
+    addPolygonPatch: function(morph) {
+        var result = this.addRectPatch(morph);
+        result[morph.id][0].__LivelyClassName__ = "lively.morphic.Path";
+        result[morph.id][0].__SourceModuleName__ = "Global.lively.morphic.AdditionalMorphs";
+        var raw = {
+            "/shape": {dontChangeShape:false, cachedVertices:null, _PathElements:[],
+                       _BorderWidth:1, _NodeClass:["Morph","Path"], 
+                       __LivelyClassName__:"lively.morphic.Shapes.Path",
+                       __SourceModuleName__:"Global.lively.morphic.PathShapes"},
+            "/shape/_PathElements/0": {isAbsolute:true,"x":4,"y":0,
+                                       __LivelyClassName__:"lively.morphic.Shapes.MoveTo",
+                                       __SourceModuleName__:"Global.lively.morphic.PathShapes"},
+            "/shape/_PathElements/1": {isAbsolute:true,"x":4,"y":4,
+                                       __LivelyClassName__:"lively.morphic.Shapes.LineTo",
+                                       __SourceModuleName__:"Global.lively.morphic.PathShapes"},
+            "/shape/_PathElements/2": {isAbsolute:true,"x":0,"y":4,
+                                       __LivelyClassName__:"lively.morphic.Shapes.LineTo",
+                                       __SourceModuleName__:"Global.lively.morphic.PathShapes"}
+        };
+        Properties.forEachOwn(raw, function(k,v) { result[morph.id + k] = [v]; });
+        return result;
     }
 },
 'testing', {
@@ -259,10 +281,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             [pt(4, 0), pt(4, 4), pt(0, 4)], 1);
         this.table[polygon.id] = polygon;
         var snapshotB = this.serialize(this.table);
-        var expected = {};
-        //TODO: use real data for spec
-        expected = snapshotA.diff(snapshotB).toPatch().data;
-        debugger;
+        var expected = this.addPolygonPatch(polygon);
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
