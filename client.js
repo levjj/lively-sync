@@ -126,8 +126,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             return obj[prop] = val;
         },
-        patchRef: function(object, prop, smartRef) {
-            this.refPatchQueue.push([object, prop, id]);
+        patchRef: function(object, prop, smartRef, immediate) {
+            if (!immedate)
+                return this.refPatchQueue.push([object, prop, smartRef.id]);
+            this.set(object, prop, this.objectAtPath(smartRef));
         },
         recreateObject: function(object) {
             if (!object || !Object.isObject(object) || object.__isSmartRef__) {
