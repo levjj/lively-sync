@@ -32,7 +32,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "/eventHandler": {morph:{__isSmartRef__:true,id:path},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
-            "/renderContextTable": rect.htmlDispatchTable,
+            "/renderContextTable": rect.renderContextTable,
             "/shape": {_NodeClass:["Morph","Box"],
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
@@ -43,7 +43,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
             "/shape/_Padding": {"x":0,"y":0,"width":0,"height":0,
                 __LivelyClassName__:"Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Graphics"},
-            "/shape/renderContextTable": rect.shape.htmlDispatchTable
+            "/shape/renderContextTable": rect.shape.renderContextTable
         };
         var result = {};
         Properties.forEachOwn(raw, function(k,v) { result[path + k] = [v]; });
