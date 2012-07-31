@@ -369,6 +369,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     updateScriptPatch: {"X/__serializedLivelyClosures__/tick": {
         source:["function tick() { return \"tock\"; }"]}},
     removeSecondScriptPatch: {"X/__serializedLivelyClosures__/tick": [0,0]},
+    addPolygonPatch: users.cschuster.sync.tests.DiffTest.prototype.addPolygonPatch
 },
 'testing', {
     testMoveX: function() {
