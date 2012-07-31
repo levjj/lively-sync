@@ -146,18 +146,15 @@ Object.subclass('users.cschuster.sync.Diff', {
     createSmartRef: function(id) {
         return {__isSmartRef__: true, id: id};
     },
-    findInObjOrAdd: function(obj, prop, foundAdd, foundDel) {
+    findInObjOrAdd: function(obj, prop, foundOperation) {
         var target = obj[prop];
         if (!target) { // target not in diff, add empty object
             target = obj[prop] = {};
         } else if (Array.isArray(target)) { // instruction
-            if (target.length < 3) {
-                if (foundAdd) foundAdd();
-            } else {
-                if (foundDel) foundDel();
-            }
-            // add and set have the real data as last element
+            // can only be add or set, so real target is always last element
             target = target.last();
+            // callback for operation
+            foundOperation();
         }
         return target;
     },
@@ -169,15 +166,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         target[prop] = op;
     },
     addMissingSmartRefArray: function(path, arrayName, index, op) {
-        var addObjOp = false, removeObjOp = false;
+        var addObjOp = false;
         var target = this.findInObjOrAdd(
             this.data.registry,
             path,
-            function() { addObjOp = true;},
-            function() { removeObjOp = true; });
-        if (removeObjOp) {
-            return;
-        } else if (addObjOp) {
+            function() { addObjOp = true;});
+        if (addObjOp) {
             target[arrayName] = {0: op.last(), _t: "a"};
         } else {
             var subtarget = this.findInObjOrAdd(
