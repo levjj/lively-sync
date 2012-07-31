@@ -260,7 +260,8 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[polygon.id] = polygon;
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        //expected = this.addPolygonPatch(polygon);
+        //TODO: use real data for spec
+        expected = snapshotA.diff(snapshotB).toPatch().data;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
