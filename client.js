@@ -139,7 +139,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.serializer.somePlugin('deserializeObj', [object]) || {};
             for (var key in object) {
                 var val = object[key];
-                if (val.__isSmartRef__) {
+                if (val && Object.isObject(val) && val.__isSmartRef__) {
                     this.patchRef(recreated, key, val);
                 } else {
                     recreated[key] = this.recreateObject(val);
