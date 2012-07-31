@@ -143,6 +143,9 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return patch;
     },
+    createSmartRef: function(id) {
+        return {__isSmartRef__: true, id: id};
+    },
     addMissingClassNames: function(obj) {
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
