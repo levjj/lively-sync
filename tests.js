@@ -475,8 +475,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
             ))
         );
     },
-    testAddPath: function() {
-        var polygon = this.newBox("Y", 5, 5);
+    testAddPolygon: function() {
+        var polygon = lively.morphic.Morph.makePolygon(
+            [pt(4, 0), pt(4, 4), pt(0, 4)], 1);
         this.patch(this.addPolygonPatch(polygon));
         this.assertWorldNode(
             this.div(
