@@ -225,7 +225,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             console.log("connected");
         },
         disconnect: function() {
-            this.socket.disconnect();
+            if (this.socket) this.socket.disconnect();
             delete this.socket;
             this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
             this.rev = 0;
