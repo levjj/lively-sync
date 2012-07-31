@@ -474,6 +474,19 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
                 this.hand()
             ))
         );
+    },
+    testAddPath: function() {
+        var polygon = this.newBox("Y", 5, 5);
+        this.patch(this.addPolygonPatch(polygon));
+        this.assertWorldNode(
+            this.div(
+                this.div(
+                    this.div(this.div({style: {width: '4px', height: '4px'}})),
+                    this.div(this.div({tagName: "svg"})),
+                    this.hand()
+                )
+            )
+        );
     }
 });
 }) // end of module
