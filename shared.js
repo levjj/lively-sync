@@ -170,8 +170,8 @@ Object.subclass('users.cschuster.sync.Diff', {
         var target = this.findInObjOrAdd(
             this.data.registry,
             path,
-            function() { addObjOp = true;});
-        if (newObj) {
+            function(isAdd) { if (isAdd) addObjOp = true;});
+        if (addObjOp) {
             target[arrayName] = {0: op.last(), _t: "a"};
         } else {
             var subtarget = this.findInObjOrAdd(
