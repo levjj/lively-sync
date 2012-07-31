@@ -146,6 +146,60 @@ Object.subclass('users.cschuster.sync.Diff', {
     createSmartRef: function(id) {
         return {__isSmartRef__: true, id: id};
     },
+    findInObjOrAdd: function(obj, prop, foundOperation) {
+        var target = obj[prop];
+        if (!target) { // target not in diff, add empty object
+            target = obj[prop] = {};
+        } else if (Array.isArray(target)) { // instruction
+            // can only be add or set, so real target is always last element
+            target = target.last();
+            // callback for operation
+            foundOperation();
+        }
+        return target;
+    },
+    addMissingSmartRefObj: function(path, prop, op) {
+        var target = this.findInObjOrAdd(
+            this.data.registry,
+            path,
+            function() { op = op.last(); });
+        target[prop] = op;
+    },
+    addMissingSmartRefArray: function(path, arrayName, index, op) {
+        var target = this.findInObjOrAdd(
+            this.data.registry,
+            path,
+            function() { newObj = true;});
+        if (newObj) {
+            target[arrayName] = {0: op.last(), _t: "a"};
+        } else {
+            var subtarget = this.findInObjOrAdd(
+                target, arrayName, function() { op = op.last(); });
+            if (subtarget)
+            subtarget[index] = op;
+        }
+    },
+    addMissingSmartRef: function(key, op) {
+        var path = key.split('/');
+        if (!isNaN(path.last())) {
+            var index = path.pop();
+            var arrayName = path.pop();
+            this.addMissingSmartRefArray(path.join('/'), arrayName, index, op);
+        } else {
+            var prop = path.pop();
+            this.addMissingSmartRefObj(path.join('/'), prop, op);
+        }
+    },
+    addMissingSmartRefs: function() {
+        for (var key in this.data.registry) {
+            if (Array.isArray(registry[key]) && key.indexOf('/') >= 0) {
+                var op = [this.createSmartRef(key)];
+                if (this.data.registry[key].length == 2) continue;
+                if (this.data.registry[key].length == 3) op.push(0,0);
+                this.addMissingSmartRef(key, op);
+            }
+        }
+    },
     addMissingClassNames: function(obj) {
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
