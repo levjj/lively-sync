@@ -176,7 +176,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         } else {
             var subtarget = this.findInObjOrAdd(
                 target, arrayName, function() { op = op.last(); });
-            if (subtarget)
+            subtarget._t = "a";
             subtarget[index] = op;
         }
     },
