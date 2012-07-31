@@ -279,14 +279,14 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         loadPatch: function(patch) {
             var oldTable = Object.extend({}, this.syncTable);
+            var newObjs = Object.values(patch.data).
+                select(function(v) { return Array.isArray(v) && v.length < 3 }).
+                map(function(v) { return v.last() });
             var rawPatch = patch.toHierachicalPatch().data;
             this.serializer = ObjectGraphLinearizer.forNewLively();
             this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
-            var newObjs = Object.values(rawPatch).
-                select(function(v) { return Array.isArray(v) && v.length < 3 }).
-                map(function(v) { return v.last() });
             this.refPatchQueue.each(function(ea) {
                 this.patchRef(ea[0], ea[1], ea[2], newObjs);
             }.bind(this));
