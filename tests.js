@@ -498,6 +498,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         );
     },
     testOpenObjectInspector: function() {
+        this.world.openInspectorFor({a:23});
+        var patch = this.diffToEmpty();
+        this.control.disconnect();
+        this.patch(patch);
         
     }
 });
