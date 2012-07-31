@@ -199,7 +199,7 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     addMissingSmartRefs: function(registry) {
         for (var key in registry) {
-            if (Array.isArray(registry[key]) && key.indexOf('/')) {
+            if (Array.isArray(registry[key]) && key.indexOf('/') >= 0) {
                 var op = [this.createSmartRef(key)];
                 if (registry[key].length == 2) continue;
                 if (registry[key].length == 3) op.push(0,0);
