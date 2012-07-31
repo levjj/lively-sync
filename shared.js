@@ -86,7 +86,11 @@ Object.subclass('users.cschuster.sync.Diff', {
         // object or array
         Properties.forEachOwn(obj, function(key, value) {
             if (this.removeSmartRefs(value, id + "/" + key)) {
-                delete obj[key];
+                if (Array.isArray(obj)) {
+                    obj.removeAt(key);
+                } else {
+                    delete obj[key];
+                }
             }
         }, this);
         if (obj.__LivelyClassName__ === undefined)
