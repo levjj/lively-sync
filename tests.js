@@ -498,9 +498,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         );
     },
     testOpenObjectInspector: function() {
+        debugger;
         this.world.openInspectorFor({a:23});
         var patch = this.diffToEmpty();
-        debugger;
         this.control.disconnect();
         this.patch(patch.data);
         this.assertWorldNode(
