@@ -192,7 +192,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     addMissingSmartRefs: function() {
         for (var key in this.data.registry) {
-            if (Array.isArray(this.data.registry[key]) && key.indexOf('/') >= 0) {
+            if (Array.isArray(this.data.registry[key])) {
                 var op = [this.createSmartRef(key)];
                 if (this.data.registry[key].length == 2) continue;
                 if (this.data.registry[key].length == 3) op.push(0,0);
