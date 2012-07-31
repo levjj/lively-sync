@@ -285,6 +285,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[polygon.id] = polygon;
         var snapshotB = this.serialize(this.table);
         var expected = this.addPolygonPatch(polygon);
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
