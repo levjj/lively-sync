@@ -326,6 +326,12 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
     },
     hand: function() {
         return this.div(this.div({attributes: {class: 'Morph HandMorph'}}));
+    },
+    diffToEmpty: function() {
+        var table = this.control.syncTable;
+        var current = users.cschuster.sync.Snapshot.createFromObjects(table);
+        var empty = users.cschuster.sync.Snapshot.empty();
+        return empty.diff(current).toPatch();
     }
 },
 'assertion', {
