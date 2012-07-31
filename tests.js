@@ -502,7 +502,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         var patch = this.diffToEmpty();
         this.control.disconnect();
         this.patch(patch.data);
-        
+        this.assertWorldNode(
+            this.div(
+                this.div(
+                    this.div(this.div()),
+                    this.hand()
+                )
+            )
+        );
     }
 });
 }) // end of module
