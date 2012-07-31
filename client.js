@@ -279,9 +279,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         loadPatch: function(patch) {
             var oldTable = Object.extend({}, this.syncTable);
-            var newObjs = Object.values(patch.data).
-                select(function(v) { return Array.isArray(v) && v.length < 3 }).
-                map(function(v) { return v.last() });
+            var newObjs = Object.keys(patch.data).
+                select(function(v) { return Array.isArray(patch.data[v]) &&
+                                            patch.data[v].length < 3 });
             var rawPatch = patch.toHierachicalPatch().data;
             this.serializer = ObjectGraphLinearizer.forNewLively();
             this.deserializeQueue = [];
