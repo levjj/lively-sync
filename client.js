@@ -127,7 +127,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             return obj[prop] = val;
         },
         patchRef: function(object, prop, smartRef, immediate) {
-            if (!immedate)
+            if (!immediate)
                 return this.refPatchQueue.push([object, prop, smartRef.id]);
             this.set(object, prop, this.objectAtPath(smartRef));
         },
