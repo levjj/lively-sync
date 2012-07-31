@@ -252,6 +252,16 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected[this.rect.id] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testAddPolygon: function() {
+        var snapshotA = this.serialize(this.table);
+        var polygon = lively.morphic.Morph.makePolygon(
+            [pt(4, 0), pt(4, 4), pt(0, 4)], 1);
+        this.table[polygon.id] = polygon;
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        //expected = this.addPolygonPatch(polygon);
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
