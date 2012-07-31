@@ -52,6 +52,7 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     addPolygonPatch: function(morph) {
         var result = this.addRectPatch(morph);
+        delete result[morph.id + "/_Position"];
         result[morph.id][0].__LivelyClassName__ = "lively.morphic.Path";
         result[morph.id][0].__SourceModuleName__ = "Global.lively.morphic.AdditionalMorphs";
         var raw = {
