@@ -262,7 +262,6 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         //TODO: use real data for spec
         expected = snapshotA.diff(snapshotB).toPatch().data;
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
