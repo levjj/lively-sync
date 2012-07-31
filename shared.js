@@ -169,12 +169,15 @@ Object.subclass('users.cschuster.sync.Diff', {
         target[prop] = op;
     },
     addMissingSmartRefArray: function(path, arrayName, index, op) {
-        var addObjOp = false;
+        var addObjOp = false, removeObjOp = false;
         var target = this.findInObjOrAdd(
             this.data.registry,
             path,
-            function(isAdd) { if (isAdd) addObjOp = true;});
-        if (addObjOp) {
+            function() { addObjOp = true;},
+            function() { removeObjOp = true; });
+        if (removeObjOp) {
+            return;
+        } else if (addObjOp) {
             target[arrayName] = {0: op.last(), _t: "a"};
         } else {
             var subtarget = this.findInObjOrAdd(
