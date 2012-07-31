@@ -84,15 +84,19 @@ Object.subclass('users.cschuster.sync.Diff', {
             return true;
         }
         // object or array
+        var delCount = 0;
         Properties.forEachOwn(obj, function(key, value) {
             if (this.removeSmartRefs(value, id + "/" + key)) {
                 if (Array.isArray(obj)) {
-                    obj.removeAt(key);
+                    delCount++;
                 } else {
                     delete obj[key];
                 }
             }
         }, this);
+        if (Array.isArray(obj) && delCount == obj.length) {
+            obj.clear();
+        }
         if (obj.__LivelyClassName__ === undefined)
             delete obj.__LivelyClassName__;
         // always keep empty objects and arrays in raw mode
