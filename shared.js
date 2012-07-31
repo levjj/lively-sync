@@ -182,69 +182,11 @@ Object.subclass('users.cschuster.sync.Patch', {
         }
         return new users.cschuster.sync.Diff(raw);
     },
-    addMissingClassNames: function(obj) {
-        if (typeof obj == "object") {
-            if (Array.isArray(obj)) { // instruction
-                if (obj.length == 3) return;
-                var o = obj.last();
-                if (o && typeof o == "object" && !o.hasOwnProperty("__LivelyClassName__")) {
-                    o.__LivelyClassName__ = undefined;
-                }
-            } else { // raw object or array
-                Properties.forEachOwn(obj, function(name, val) {
-                    this.addMissingClassNames(val);
-                }, this)
-            }
-        }
-    },
-    addMissingSmartRefs: function(registry) {
-        for (var key in registry) {
-            if (Array.isArray(registry[key]) && key.indexOf('/') >= 0) {
-                var op = [this.createSmartRef(key)];
-                if (registry[key].length == 2) continue;
-                if (registry[key].length == 3) op.push(0,0);
-                var parent = key.substring(0, key.lastIndexOf('/'));
-                var thisKey = key.substring(key.lastIndexOf('/') + 1);
-                if (!isNaN(thisKey) && parent.indexOf('/')) {
-                    var oldKey = thisKey;
-                    thisKey = parent.substring(parent.lastIndexOf('/') + 1);
-                    parent = parent.substring(0, parent.lastIndexOf('/'));
-                    if (!registry.hasOwnProperty(parent)) {
-                        registry[parent] = {};
-                    }
-                    if (!registry[parent].hasOwnProperty(thisKey)) {
-                        registry[parent][thisKey] = {_t:"a"};
-                    }
-                    registry[parent][thisKey][oldKey] = op;
-                } else {
-                    if (Array.isArray(registry[parent])) {
-                        // there is already an add or set instruction
-                        // so just append our raw data
-                        registry[parent].last()[thisKey] = op.last();
-                    } else {
-                        if (!registry.hasOwnProperty(parent)) {
-                            registry[parent] = {};
-                        }
-                        registry[parent][thisKey] = op;
-                    }
-                }
-            }
-        }
-    },
-    propagateDeletions: function(diff, snapshot) {
-        var toDelete = diff.aggregateDeletions();
-        for (var id in snapshot.data.registry) {
-            if (toDelete.some(function(s) {return id.startsWith(s)})) {
-                var op = [snapshot.data.registry[id], 0, 0];
-                diff.data.registry[id] = op;
-            }
-        }
-    },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
-        this.addMissingClassNames(diff.data.registry);
-        this.addMissingSmartRefs(diff.data.registry);
-        this.propagateDeletions(diff, snapshot);
+        diff.addMissingClassNames();
+        diff.addMissingSmartRefs();
+        diff.propagateDeletions(snapshot);
         diff.apply(snapshot);
     },
     isEmpty: function() {
