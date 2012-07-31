@@ -490,6 +490,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
                 )
             )
         );
+    },
+    testOpenObjectInspector: function() {
+        
     }
 });
 }) // end of module
