@@ -126,10 +126,16 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             return obj[prop] = val;
         },
-        patchRef: function(object, prop, smartRef, immediate) {
-            if (!immediate)
-                return this.refPatchQueue.push([object, prop, smartRef.id]);
-            this.set(object, prop, this.objectAtPath(smartRef));
+        patchRef: function(object, prop, smartRef, newObjs) {
+            if (!newObjs) {
+                this.refPatchQueue.push([object, prop, smartRef.id]);
+            } else {
+                if (newObjs.include(object)) {
+                    object[prop] = this.objectAtPath(smartRef);
+                } else {
+                    this.set(object, prop, this.objectAtPath(smartRef));
+                }
+            }
         },
         recreateObject: function(object) {
             if (!object || !Object.isObject(object) || object.__isSmartRef__) {
