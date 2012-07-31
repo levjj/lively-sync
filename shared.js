@@ -143,6 +143,30 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return patch;
     },
+    addMissingClassNames: function(obj) {
+        if (typeof obj == "object") {
+            if (Array.isArray(obj)) { // instruction
+                if (obj.length == 3) return;
+                var o = obj.last();
+                if (o && typeof o == "object" && !o.hasOwnProperty("__LivelyClassName__")) {
+                    o.__LivelyClassName__ = undefined;
+                }
+            } else { // raw object or array
+                Properties.forEachOwn(obj, function(name, val) {
+                    this.addMissingClassNames(val);
+                }, this)
+            }
+        }
+    },
+    propagateDeletions: function(snapshot) {
+        var toDelete = this.aggregateDeletions();
+        for (var id in snapshot.data.registry) {
+            if (toDelete.some(function(s) {return id.startsWith(s)})) {
+                var op = [snapshot.data.registry[id], 0, 0];
+                this.data.registry[id] = op;
+            }
+        }
+    },
     toJSON: function() {
         return JSON.stringify(this.data);
     }
