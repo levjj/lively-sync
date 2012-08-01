@@ -622,7 +622,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
 },
 'testing', {
     testEmptyWorlds: function() {
-        this.assertSync(1);
+        this.assertSync(0);
     },
     testAddMorph: function() {
         this.addBox();
