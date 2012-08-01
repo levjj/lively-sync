@@ -612,7 +612,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     testNewBoxSnapshot: function() {
         this.openInWorldA(this.newBox(5, 5, "X"));
         this.syncSnapshot();
-        debugger;
         this.assertSync(2);
     },
     testNewBoxPatch: function() {
