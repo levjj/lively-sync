@@ -558,6 +558,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
         this.controlB = new users.cschuster.sync.WorkingCopy();
         this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
+        this.controlA.rev = 1;
     },
     tearDown: function($super) {
         this.worldB.remove();
@@ -575,11 +576,15 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.worldA.addMorph(morph);
         this.controlA.addObject(morph);
     },
-    computePatch: function() {
-        var table = this.controlA.syncTable;
-        var current = this.controlA.last;
-        var empty = users.cschuster.sync.Snapshot.empty();
-        return empty.diff(current).toPatch();
+    syncPatch: function() {
+        this.controlA.commit();
+        var p = controlA.lastPatch;
+        this.controlB.receivePatch(controlA.rev, p);
+    },
+    syncSnapshot: function() {
+        this.controlA.commit();
+        var s = controlA.last;
+        this.controlB.receiveSnapshot(controlA.rev, s);
     }
 });
 }) // end of module
