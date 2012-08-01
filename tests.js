@@ -319,8 +319,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         rect.openInHand();
         var snapshotC = this.serialize(this.table);
         debugger;
-        this.assertPatch(snapshotA, snapshotC);
         this.assertPatch(snapshotB, snapshotC);
+        this.assertPatch(snapshotA, snapshotC);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
