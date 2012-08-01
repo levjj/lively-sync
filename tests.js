@@ -589,7 +589,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     }
 },
 'asserting', {
-    assertSync: function() {
+    assertSync: function(rev) {
+        this.assertEquals(rev, this.controlA.rev);
+        this.assertEquals(rev, this.controlB.rev);
         this.assertEqualState(this.controlA.last, this.controlB.last);
         var a = users.cschuster.sync.Snapshot.createFromObjects(this.controlA.syncTable);
         var b = users.cschuster.sync.Snapshot.createFromObjects(this.controlB.syncTable);
@@ -604,13 +606,13 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
 },
 'testing', {
     testEmptyWorlds: function() {
-        this.assertSync();
+        this.assertSync(1);
     },
     testNewBoxSnapshot: function() {
         this.openInWorldA(this.newBox(5, 5, "X"));
         debugger;
         this.syncSnapshot();
-        this.assertSync();
+        this.assertSync(2);
     }
 });
 }) // end of module
