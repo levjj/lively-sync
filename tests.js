@@ -632,10 +632,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         var box = this.addBox();
         box.setExtent(pt(10,10));
         this.sync();
-        this.assertSync(3);
+        this.assertSync(2);
         box.setExtent(pt(30,30));
         this.sync();
-        this.assertSync(4);
+        this.assertSync(3);
     },
     testMove: function() {
         var box = this.addBox();
