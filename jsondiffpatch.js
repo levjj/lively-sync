@@ -338,6 +338,30 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
         }
     }
 
+    var objectDelete = function(obj, key){
+        if (isArray(obj) && obj._key) {
+            var getKey = obj._key;
+            if (typeof obj._key != 'function') {
+                getKey = function(item){
+                    return item[obj._key];
+                }
+            }
+            for (var i = 0; i < obj.length; i++) {
+                if (getKey(obj[i]) === key) {
+                    obj.splice(i, 1);
+                    i--;
+                    return;
+                }
+            }
+            return;
+        }
+        if (isArray(obj)) {
+            obj.splice(key, 1);
+        } else { 
+            delete obj[key];
+        }
+    }
+
     var textDiffReverse = function(td){
 
         if (!jdp.config.textDiffReverse){
@@ -486,7 +510,7 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                     if (d[2] == 0) {
                         // undefined, delete value
                         if (pname !== null) {
-                            objectSet(o, pname);
+                            objectDelete(o, pname);
                         }
                         else {
                             return;
