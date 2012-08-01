@@ -564,7 +564,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlA.rev = 1;
         this.controlB.autoupdate = true;
         this.controlC.autoupdate = true;
-        this.syncSnapshot();
+        this.sync();
     },
     tearDown: function($super) {
         this.worldB.remove();
