@@ -12,8 +12,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         return users.cschuster.sync.Snapshot.createFromObjects(object);
     },
     assertPatch: function(expected, snapshotA, snapshotB) {
+        if (snapshotB == undefined) {
+            snapshotB = snapshotA;
+            snapshotA = expected;
+            expected = undefined;
+        }
         var patch = snapshotA.diff(snapshotB).toPatch();
-        this.assertEqualState(expected, patch.data);
+        if (expected != undefined)
+            this.assertEqualState(expected, patch.data);
         patch.apply(snapshotA);
         this.assertEqualState(snapshotA, snapshotB);
     }
