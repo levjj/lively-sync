@@ -308,6 +308,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.openInHand();
         var snapshotB = this.serialize(this.table);
         this.assertPatch(snapshotA, snapshotB);
+    },
+    testGrabBasicRectangle: function() {
+        this.table = {};
+        var snapshotA = this.serialize(this.table);
+        var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
+        this.table[rect.id] = rect;
+        var snapshotB = this.serialize(this.table);
+        this.assertPatch(snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
