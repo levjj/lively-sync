@@ -667,6 +667,19 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         box.setFill(null);
         this.sync();
         this.assertSync(3);
+    },
+    testAddSubmorph: function() {
+        var box = this.addBox();
+        box.addMorph(this.newBox(3, 3, "Y"));
+        this.sync();
+        this.assertSync(2);
+        var z = this.newBox(3, 3, "Z");
+        box.addMorph(z);
+        this.sync();
+        this.assertSync(3);
+        z.addMorph(this.newBox(3, 3, "Z"));
+        this.sync();
+        this.assertSync(4);
     }
 });
 }) // end of module
