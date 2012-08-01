@@ -559,6 +559,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlB = new users.cschuster.sync.WorkingCopy();
         this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
         this.controlA.rev = 1;
+        this.syncSnapshot();
     },
     tearDown: function($super) {
         this.worldB.remove();
@@ -603,6 +604,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
 },
 'testing', {
     testEmptyWorlds: function() {
+        this.assertSync();
+    },
+    testNewBoxSnapshot: function() {
+        this.openInWorldA(newBox(5, 5, "X"));
         this.syncSnapshot();
         this.assertSync();
     }
