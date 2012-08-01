@@ -586,5 +586,25 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         var s = controlA.last;
         this.controlB.receiveSnapshot(controlA.rev, s);
     }
+},
+'asserting', {
+    assertSync: function() {
+        this.assertEqualState(controlA.last, controlB.last);
+        var a = users.cschuster.sync.Snapshot.createFromObjects(controlA.syncTable);
+        var b = users.cschuster.sync.Snapshot.createFromObjects(controlB.syncTable);
+        this.assertEqualState(a, b);
+        this.assertEquals(controlA.syncTable.length, controlB.syncTable.length);
+        for (var key in controlA.syncTable) {
+            var morphA = controlA.syncTable[key];
+            var morphB = controlA.syncTable[key];
+            this.assertEquals(morphA.jQuery().html(), morphB.jQuery().html());
+        }
+    }
+},
+'testing', {
+    testEmptyWorlds: function() {
+        this.syncSnapshot();
+        this.assertSync();
+    }
 });
 }) // end of module
