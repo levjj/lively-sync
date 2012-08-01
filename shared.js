@@ -253,10 +253,16 @@ Object.subclass('users.cschuster.sync.Patch', {
                 } else if (optSnapshotObj !== undefined) {
                     obj.unshift(optSnapshotObj);
                 }
-            } else { // raw object or array
+            } else { // path object or array
+                // recursive call
                 Properties.forEachOwn(obj, function(name, val) {
                     this.convertToDiffInstruction(val, optSnapshotObj[name]);
-                }, this)
+                }, this);
+                // adding _t back if this is an array
+                var isntArray = Properties.own(obj).detect(function(name) {
+                    return isNaN(name);
+                });
+                if (!isntArray) obj._t = "a";
             }
         }
     },
