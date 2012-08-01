@@ -628,6 +628,18 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.addBox();
         this.assertSync(1);
     },
+    testEmptyDiff: function() {
+        this.addBox();
+        this.assertSync(1);
+        this.sync();
+        this.assertSync(1);
+    },
+    testRemoveMorph: function() {
+        var box = this.addBox();
+        box.remove();
+        this.controlA.removeObject(box);
+        this.assertSync(2);
+    },
     testResize: function() {
         var box = this.addBox();
         box.setExtent(pt(10,10));
