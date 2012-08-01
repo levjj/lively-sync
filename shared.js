@@ -213,7 +213,9 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 3) return;
                 var o = obj.last();
-                if (o && typeof o == "object" && !o.hasOwnProperty("__LivelyClassName__")) {
+                if (o && typeof o == "object" &&
+                    !o.hasOwnProperty("__isSmartRef__") &&
+                    !o.hasOwnProperty("__LivelyClassName__")) {
                     o.__LivelyClassName__ = undefined;
                 }
             } else { // raw object or array
