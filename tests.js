@@ -635,5 +635,21 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.syncPatch();
         this.assertSync(3);
     },
+    testNewBoxMoveSnapshot: function() {
+        var box = this.newBox(5, 5, "X");
+        this.openInWorldA(box);
+        this.syncSnapshot();
+        box.moveBy(pt(10,10));
+        this.syncSnapshot();
+        this.assertSync(3);
+    },
+    testNewBoxMoveSnapshot: function() {
+        var box = this.newBox(5, 5, "X");
+        this.openInWorldA(box);
+        this.syncPatch();
+        box.moveBy(pt(10,10));
+        this.syncPatch();
+        this.assertSync(3);
+    },
 });
 }) // end of module
