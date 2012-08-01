@@ -671,6 +671,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     testAddSubmorph: function() {
         var box = this.addBox();
         box.addMorph(this.newBox(3, 3, "Y"));
+        debugger;
         this.sync();
         this.assertSync(2);
         var z = this.newBox(3, 3, "Z");
