@@ -100,6 +100,15 @@ Object.extend(Object, {
 
 Object.subclass('Properties');
 Object.extend(Properties, {
+    own: function(object) {
+        var a = [];
+        for (var name in object) {
+            if (object.hasOwnProperty(name) && typeof object[name] != 'function')) {
+                a.push(name);
+            }
+        }
+        return a;
+    },
     forEachOwn: function(object, func, context) {
         for (var name in object) {
             if (!object.hasOwnProperty(name)) continue;
