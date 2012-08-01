@@ -339,6 +339,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.patches[this.rev + 1] = patch;
             } else {
                 this.last = current;
+                this.lastPatch = patch;
             }
             this.rev++;
             console.log('commited patch for rev ' + this.rev);
