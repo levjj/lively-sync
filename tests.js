@@ -318,6 +318,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(snapshotA, snapshotB);
         rect.openInHand();
         var snapshotC = this.serialize(this.table);
+        debugger;
         this.assertPatch(snapshotA, snapshotC);
         this.assertPatch(snapshotB, snapshotC);
     }
