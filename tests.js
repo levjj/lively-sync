@@ -305,8 +305,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
     },
     testGrabMorph: function() {
         var snapshotA = this.serialize(this.table);
-        debugger;
-        this.rect.grabMe();
+        this.rect.openInHand();
         var snapshotB = this.serialize(this.table);
         this.assertPatch(snapshotA, snapshotB);
     }
