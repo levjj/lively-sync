@@ -629,10 +629,16 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         box.setExtent(pt(10,10));
         this.syncSnapshot();
         this.assertSync(3);
+        box.setExtent(pt(30,30));
+        this.syncSnapshot();
+        this.assertSync(3);
     },
     testResizePatch: function() {
         var box = this.addBox();
         box.setExtent(pt(10,10));
+        this.syncPatch();
+        this.assertSync(3);
+        box.setExtent(pt(30,30));
         this.syncPatch();
         this.assertSync(3);
     },
@@ -641,12 +647,18 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         box.moveBy(pt(10,10));
         this.syncSnapshot();
         this.assertSync(3);
+        box.moveBy(pt(30,0));
+        this.syncSnapshot();
+        this.assertSync(4);
     },
     testMovePatch: function() {
         var box = this.addBox();
         box.moveBy(pt(10,10));
         this.syncPatch();
         this.assertSync(3);
+        box.moveBy(pt(30,0));
+        this.syncPatch();
+        this.assertSync(4);
     },
     testColorSnapshot: function() {
         var box = this.addBox();
