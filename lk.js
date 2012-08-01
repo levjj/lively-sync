@@ -79,6 +79,13 @@ Object.extend(Function.prototype, {
 });
 
 Object.extend(Array.prototype, {
+    find: function(iterator, context) {
+        for (var value, i = 0, len = this.length; i < len; i++) {
+            value = this[i];
+            if (iterator.call(context, value, i)) return value;
+        }
+        return undefined;
+    },
     last: function() {
         return this[this.length - 1];
     }
