@@ -580,7 +580,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     },
     syncPatch: function() {
         this.controlA.commit();
-        var p = this.controlA.lastPatch;
+        var p = Object.deepCopy(this.controlA.lastPatch.data);
         this.controlB.receivePatch(this.controlA.rev, p);
     },
     syncSnapshot: function() {
