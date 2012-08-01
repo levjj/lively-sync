@@ -561,7 +561,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
         this.controlC = new users.cschuster.sync.WorkingCopy();
         this.controlC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
-        this.controlA.rev = 1;
         this.controlB.autoupdate = true;
         this.controlC.autoupdate = true;
         this.sync();
