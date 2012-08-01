@@ -578,12 +578,12 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     },
     syncPatch: function() {
         this.controlA.commit();
-        var p = controlA.lastPatch;
-        this.controlB.receivePatch(controlA.rev, p);
+        var p = this.controlA.lastPatch;
+        this.controlB.receivePatch(this.controlA.rev, p);
     },
     syncSnapshot: function() {
         this.controlA.commit();
-        var s = controlA.last;
+        var s = this.controlA.last;
         this.controlB.receiveSnapshot(this.controlA.rev, s);
     }
 },
