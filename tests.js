@@ -547,4 +547,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         );
     }
 });
+Object.subclass('MyClass',
+'default category', {
+    m1: function() {},
+});
 }) // end of module
