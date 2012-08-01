@@ -584,7 +584,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlA.addObject(morph);
     },
     sync: function() {
-        this.controlA.commit();
+        var res = this.controlA.commit();
+        if (!res) return;
         var snapshot = Object.deepCopy(this.controlA.last.data);
         this.controlB.receiveSnapshot(this.controlA.rev, snapshot);
         var patch = Object.deepCopy(this.controlA.lastPatch.data);
