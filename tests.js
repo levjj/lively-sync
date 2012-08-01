@@ -300,7 +300,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         var inspector = this.world.openInspectorFor({a:23});
         this.table[inspector.id] = inspector;
-        debugger;
         var snapshotB = this.serialize(this.table);
         this.assertPatch(snapshotA, snapshotB);
     }
