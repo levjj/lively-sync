@@ -316,6 +316,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[rect.id] = rect;
         var snapshotB = this.serialize(this.table);
         this.assertPatch(snapshotA, snapshotB);
+        rect.openInHand();
+        var snapshotC = this.serialize(this.table);
+        this.assertPatch(snapshotA, snapshotC);
+        this.assertPatch(snapshotB, snapshotC);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
