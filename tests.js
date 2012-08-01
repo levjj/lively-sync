@@ -555,14 +555,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.worldA = this.world;
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
         this.worldC = lively.morphic.World.createOn(document.body, new Rectangle(600,0,300,300));
-        this.controlA = new users.cschuster.sync.WorkingCopy();
-        this.controlA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
-        this.controlB = new users.cschuster.sync.WorkingCopy();
-        this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
-        this.controlC = new users.cschuster.sync.WorkingCopy();
-        this.controlC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
-        this.controlB.autoupdate = true;
-        this.controlC.autoupdate = true;
+        this.wcA = new users.cschuster.sync.WorkingCopy();
+        this.wcA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
+        this.wcB = new users.cschuster.sync.WorkingCopy();
+        this.wcB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
+        this.wcC = new users.cschuster.sync.WorkingCopy();
+        this.wcC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
+        this.wcB.autoupdate = true;
+        this.wcC.autoupdate = true;
         this.sync();
     },
     tearDown: function($super) {
@@ -580,15 +580,15 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     },
     openInWorldA: function(morph) {
         this.worldA.addMorph(morph);
-        this.controlA.addObject(morph);
+        this.wcA.addObject(morph);
     },
     sync: function() {
-        var res = this.controlA.commit();
+        var res = this.wcA.commit();
         if (!res) return;
-        var snapshot = Object.deepCopy(this.controlA.last.data);
-        this.controlB.receiveSnapshot(this.controlA.rev, snapshot);
-        var patch = Object.deepCopy(this.controlA.lastPatch.data);
-        this.controlC.receivePatch(this.controlA.rev, patch);
+        var snapshot = Object.deepCopy(this.wcA.last.data);
+        this.wcB.receiveSnapshot(this.wcA.rev, snapshot);
+        var patch = Object.deepCopy(this.wcA.lastPatch.data);
+        this.wcC.receivePatch(this.wcA.rev, patch);
     },
     addBox: function() {
         var box = this.newBox(5, 5, "X");
@@ -599,22 +599,22 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
 },
 'asserting', {
     assertSync: function(rev) {
-        this.assertEquals(rev, this.controlA.rev);
-        this.assertEquals(rev, this.controlB.rev);
-        this.assertEquals(rev, this.controlC.rev);
-        this.assertEqualState(this.controlA.last, this.controlB.last);
-        this.assertEqualState(this.controlA.last, this.controlC.last);
-        var a = users.cschuster.sync.Snapshot.createFromObjects(this.controlA.syncTable);
-        var b = users.cschuster.sync.Snapshot.createFromObjects(this.controlB.syncTable);
-        var c = users.cschuster.sync.Snapshot.createFromObjects(this.controlC.syncTable);
+        this.assertEquals(rev, this.wcA.rev);
+        this.assertEquals(rev, this.wcB.rev);
+        this.assertEquals(rev, this.wcC.rev);
+        this.assertEqualState(this.wcA.last, this.wcB.last);
+        this.assertEqualState(this.wcA.last, this.wcC.last);
+        var a = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
+        var b = users.cschuster.sync.Snapshot.createFromObjects(this.wcB.syncTable);
+        var c = users.cschuster.sync.Snapshot.createFromObjects(this.wcC.syncTable);
         this.assertEqualState(a, b);
         this.assertEqualState(a, c);
-        this.assertEquals(this.controlA.syncTable.length, this.controlB.syncTable.length);
-        this.assertEquals(this.controlA.syncTable.length, this.controlC.syncTable.length);
-        for (var key in this.controlA.syncTable) {
-            var morphA = this.controlA.syncTable[key];
-            var morphB = this.controlB.syncTable[key];
-            var morphC = this.controlC.syncTable[key];
+        this.assertEquals(this.wcA.syncTable.length, this.wcB.syncTable.length);
+        this.assertEquals(this.wcA.syncTable.length, this.wcC.syncTable.length);
+        for (var key in this.wcA.syncTable) {
+            var morphA = this.wcA.syncTable[key];
+            var morphB = this.wcB.syncTable[key];
+            var morphC = this.wcC.syncTable[key];
             this.assertEquals(morphA.jQuery().html(), morphB.jQuery().html());
             this.assertEquals(morphA.jQuery().html(), morphC.jQuery().html());
         }
@@ -637,7 +637,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     testRemoveMorph: function() {
         var box = this.addBox();
         box.remove();
-        this.controlA.removeObject(box);
+        this.wcA.removeObject(box);
         this.sync();
         this.assertSync(2);
     },
