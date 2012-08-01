@@ -594,9 +594,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         var b = users.cschuster.sync.Snapshot.createFromObjects(controlB.syncTable);
         this.assertEqualState(a, b);
         this.assertEquals(controlA.syncTable.length, controlB.syncTable.length);
-        for (var key in controlA.syncTable) {
-            var morphA = controlA.syncTable[key];
-            var morphB = controlA.syncTable[key];
+        for (var key in this.controlA.syncTable) {
+            var morphA = this.controlA.syncTable[key];
+            var morphB = this.controlA.syncTable[key];
             this.assertEquals(morphA.jQuery().html(), morphB.jQuery().html());
         }
     }
