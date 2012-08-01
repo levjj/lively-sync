@@ -302,6 +302,12 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[inspector.id] = inspector;
         var snapshotB = this.serialize(this.table);
         this.assertPatch(snapshotA, snapshotB);
+    },
+    testGrabMorph: function() {
+        var snapshotA = this.serialize(this.table);
+        this.rect.grabMe();
+        var snapshotB = this.serialize(this.table);
+        this.assertPatch(snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
