@@ -331,7 +331,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var current = users.cschuster.sync.Snapshot.createFromObjects(this.syncTable);
             var last = this.last || this.snapshots[this.rev];
             var patch = last.diff(current).toPatch();
-            if (patch.isEmpty()) return;
+            if (patch.isEmpty()) return null;
             if (this.socket) this.socket.emit('commit', this.rev, patch);
             if (this.snapshots) {
                 this.snapshots[this.rev + 1] = current;
