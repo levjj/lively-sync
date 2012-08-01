@@ -583,7 +583,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     },
     syncSnapshot: function() {
         this.controlA.commit();
-        var s = this.controlA.last;
+        var s = Object.deepCopy(this.controlA.last.data);
         this.controlB.receiveSnapshot(this.controlA.rev, s);
     }
 },
