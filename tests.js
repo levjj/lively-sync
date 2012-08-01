@@ -613,6 +613,11 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.openInWorldA(this.newBox(5, 5, "X"));
         this.syncSnapshot();
         this.assertSync(2);
+    },
+    testNewBoxPatch: function() {
+        this.openInWorldA(this.newBox(5, 5, "X"));
+        this.syncPatch();
+        this.assertSync(2);
     }
 });
 }) // end of module
