@@ -650,10 +650,10 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         var box = this.addBox();
         box.setFill(Color.black);
         this.sync();
-        this.assertSync(3);
+        this.assertSync(2);
         box.setFill(null);
         this.sync();
-        this.assertSync(4);
+        this.assertSync(3);
     }
 });
 }) // end of module
