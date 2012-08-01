@@ -616,7 +616,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     },
     testNewBoxPatch: function() {
         this.openInWorldA(this.newBox(5, 5, "X"));
-        debugger;
         this.syncPatch();
         this.assertSync(2);
     }
