@@ -311,29 +311,12 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
             }
             for (var i = 0; i < obj.length; i++) {
                 if (getKey(obj[i]) === key) {
-                    if (typeof value == 'undefined') {
-                        obj.splice(i, 1);
-                        i--;
-                    }
-                    else {
-                        obj[i] = value;
-                    }
+                    obj[i] = value;
                     return;
                 }
             }
-            if (typeof value != 'undefined') {
-                obj.push(value);
-            }
-            return;
-        }
-        if (typeof value == 'undefined') {
-            if (isArray(obj)) {
-                obj.splice(key, 1);
-            } else { 
-                delete obj[key];
-            }
-        }
-        else {
+            obj.push(value);
+        } else {
             obj[key] = value;
         }
     }
