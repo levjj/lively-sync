@@ -586,9 +586,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     sync: function() {
         this.controlA.commit();
         var snapshot = Object.deepCopy(this.controlA.last.data);
-        this.controlB.receiveSnapshot(this.controlA.rev, s);
+        this.controlB.receiveSnapshot(this.controlA.rev, snapshot);
         var patch = Object.deepCopy(this.controlA.lastPatch.data);
-        this.controlC.receivePatch(this.controlA.rev, p);
+        this.controlC.receivePatch(this.controlA.rev, patch);
     },
     addBox: function() {
         var box = this.newBox(5, 5, "X");
