@@ -574,9 +574,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         morph.id = id;
         return morph;
     },
-    addBox: function() {
-        
-    },
     openInWorldA: function(morph) {
         this.worldA.addMorph(morph);
         this.controlA.addObject(morph);
@@ -590,7 +587,13 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.controlA.commit();
         var s = Object.deepCopy(this.controlA.last.data);
         this.controlB.receiveSnapshot(this.controlA.rev, s);
-    }
+    },
+    addBox: function() {
+        var box = newBox(5, 5, "X");
+        this.openInWorldA(box);
+        this.syncSnapshot();
+        return box;
+    },
 },
 'asserting', {
     assertSync: function(rev) {
