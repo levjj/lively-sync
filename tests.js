@@ -554,16 +554,21 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.createWorld();
         this.worldA = this.world;
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
+        this.worldC = lively.morphic.World.createOn(document.body, new Rectangle(600,0,300,300));
         this.controlA = new users.cschuster.sync.WorkingCopy();
         this.controlA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
         this.controlB = new users.cschuster.sync.WorkingCopy();
         this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
+        this.controlC = new users.cschuster.sync.WorkingCopy();
+        this.controlC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
         this.controlA.rev = 1;
         this.controlB.autoupdate = true;
+        this.controlC.autoupdate = true;
         this.syncSnapshot();
     },
     tearDown: function($super) {
         this.worldB.remove();
+        this.worldC.remove();
         $super();
     }
 },
@@ -578,20 +583,17 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.worldA.addMorph(morph);
         this.controlA.addObject(morph);
     },
-    syncPatch: function() {
+    sync: function() {
         this.controlA.commit();
-        var p = Object.deepCopy(this.controlA.lastPatch.data);
-        this.controlB.receivePatch(this.controlA.rev, p);
-    },
-    syncSnapshot: function() {
-        this.controlA.commit();
-        var s = Object.deepCopy(this.controlA.last.data);
+        var snapshot = Object.deepCopy(this.controlA.last.data);
         this.controlB.receiveSnapshot(this.controlA.rev, s);
+        var patch = Object.deepCopy(this.controlA.lastPatch.data);
+        this.controlC.receivePatch(this.controlA.rev, p);
     },
     addBox: function() {
         var box = this.newBox(5, 5, "X");
         this.openInWorldA(box);
-        this.syncSnapshot();
+        this.sync();
         return box;
     },
 },
@@ -599,15 +601,22 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     assertSync: function(rev) {
         this.assertEquals(rev, this.controlA.rev);
         this.assertEquals(rev, this.controlB.rev);
+        this.assertEquals(rev, this.controlC.rev);
         this.assertEqualState(this.controlA.last, this.controlB.last);
+        this.assertEqualState(this.controlA.last, this.controlC.last);
         var a = users.cschuster.sync.Snapshot.createFromObjects(this.controlA.syncTable);
         var b = users.cschuster.sync.Snapshot.createFromObjects(this.controlB.syncTable);
+        var c = users.cschuster.sync.Snapshot.createFromObjects(this.controlC.syncTable);
         this.assertEqualState(a, b);
+        this.assertEqualState(a, c);
         this.assertEquals(this.controlA.syncTable.length, this.controlB.syncTable.length);
+        this.assertEquals(this.controlA.syncTable.length, this.controlC.syncTable.length);
         for (var key in this.controlA.syncTable) {
             var morphA = this.controlA.syncTable[key];
-            var morphB = this.controlA.syncTable[key];
+            var morphB = this.controlB.syncTable[key];
+            var morphC = this.controlC.syncTable[key];
             this.assertEquals(morphA.jQuery().html(), morphB.jQuery().html());
+            this.assertEquals(morphA.jQuery().html(), morphC.jQuery().html());
         }
     }
 },
@@ -615,68 +624,36 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     testEmptyWorlds: function() {
         this.assertSync(1);
     },
-    testNewBoxSnapshot: function() {
+    testAddMorph: function() {
         this.addBox();
         this.assertSync(2);
     },
-    testNewBoxPatch: function() {
-        this.openInWorldA(this.newBox(5, 5, "X"));
-        this.syncPatch();
-        this.assertSync(2);
-    },
-    testResizeSnapshot: function() {
+    testResize: function() {
         var box = this.addBox();
         box.setExtent(pt(10,10));
-        this.syncSnapshot();
+        this.sync();
         this.assertSync(3);
         box.setExtent(pt(30,30));
-        this.syncSnapshot();
-        this.assertSync(3);
+        this.sync();
+        this.assertSync(4);
     },
-    testResizePatch: function() {
-        var box = this.addBox();
-        box.setExtent(pt(10,10));
-        this.syncPatch();
-        this.assertSync(3);
-        box.setExtent(pt(30,30));
-        this.syncPatch();
-        this.assertSync(3);
-    },
-    testMoveSnapshot: function() {
+    testMove: function() {
         var box = this.addBox();
         box.moveBy(pt(10,10));
-        this.syncSnapshot();
+        this.sync();
         this.assertSync(3);
         box.moveBy(pt(30,0));
-        this.syncSnapshot();
+        this.sync();
         this.assertSync(4);
     },
-    testMovePatch: function() {
-        var box = this.addBox();
-        box.moveBy(pt(10,10));
-        this.syncPatch();
-        this.assertSync(3);
-        box.moveBy(pt(30,0));
-        this.syncPatch();
-        this.assertSync(4);
-    },
-    testColorSnapshot: function() {
+    testColor: function() {
         var box = this.addBox();
         box.setFill(Color.black);
-        this.syncSnapshot();
+        this.sync();
         this.assertSync(3);
         box.setFill(null);
-        this.syncSnapshot();
+        this.sync();
         this.assertSync(4);
-    },
-    testColorPatch: function() {
-        var box = this.addBox();
-        box.setFill(Color.black);
-        this.syncPatch();
-        this.assertSync(3);
-        box.setFill(null);
-        this.syncPatch();
-        this.assertSync(4);
-    },
+    }
 });
 }) // end of module
