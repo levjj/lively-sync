@@ -165,7 +165,13 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                 o[prop]._key = o[prop + '_key'] || o['_' + prop + '_key'];
             }
             
-            pdiff = diff(o[prop], n[prop]);
+            if (!o.hasOwnProperty(prop)) {
+                pdiff = [n[prop]];
+            } else if (!n.hasOwnProperty(prop)) {
+                pdiff = [o[prop], 0, 0];
+            } else {
+                pdiff = diff(o[prop], n[prop]);
+            }
             if (typeof pdiff != 'undefined') {
                 if (typeof odiff == 'undefined') {
                     odiff = {};
