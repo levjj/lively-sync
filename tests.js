@@ -584,14 +584,14 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     syncSnapshot: function() {
         this.controlA.commit();
         var s = controlA.last;
-        this.controlB.receiveSnapshot(controlA.rev, s);
+        this.controlB.receiveSnapshot(this.controlA.rev, s);
     }
 },
 'asserting', {
     assertSync: function() {
-        this.assertEqualState(controlA.last, controlB.last);
-        var a = users.cschuster.sync.Snapshot.createFromObjects(controlA.syncTable);
-        var b = users.cschuster.sync.Snapshot.createFromObjects(controlB.syncTable);
+        this.assertEqualState(this.controlA.last, this.controlB.last);
+        var a = users.cschuster.sync.Snapshot.createFromObjects(this.controlA.syncTable);
+        var b = users.cschuster.sync.Snapshot.createFromObjects(this.controlB.syncTable);
         this.assertEqualState(a, b);
         this.assertEquals(controlA.syncTable.length, controlB.syncTable.length);
         for (var key in this.controlA.syncTable) {
