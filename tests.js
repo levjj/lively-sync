@@ -547,8 +547,39 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         );
     }
 });
-Object.subclass('MyClass',
-'default category', {
-    m1: function() {},
+lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTest',
+'running', {
+    setUp: function($super) {
+        $super();
+        this.createWorld();
+        this.worldA = this.world;
+        this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
+        this.controlA = new users.cschuster.sync.WorkingCopy();
+        this.controlA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
+        this.controlB = new users.cschuster.sync.WorkingCopy();
+        this.controlB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
+    },
+    tearDown: function($super) {
+        this.worldB.remove();
+        $super();
+    }
+},
+'helping', {
+    newBox: function(width, height, id) {
+        var bounds = pt(0,0).extent(pt(width, height));
+        var morph = new lively.morphic.Box(bounds);
+        morph.id = id;
+        return morph;
+    },
+    openInWorldA: function(morph) {
+        this.worldA.addMorph(morph);
+        this.controlA.addObject(morph);
+    },
+    computePatch: function() {
+        var table = this.controlA.syncTable;
+        var current = this.controlA.last;
+        var empty = users.cschuster.sync.Snapshot.empty();
+        return empty.diff(current).toPatch();
+    }
 });
 }) // end of module
