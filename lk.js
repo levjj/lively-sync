@@ -110,7 +110,7 @@ Object.extend(Properties, {
     own: function(object) {
         var a = [];
         for (var name in object) {
-            if (object.hasOwnProperty(name) && typeof object[name] != 'function')) {
+            if (object.hasOwnProperty(name) && typeof object[name] != 'function') {
                 a.push(name);
             }
         }
