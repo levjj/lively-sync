@@ -1,8 +1,10 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
-TestCase.subclass('users.cschuster.sync.tests.DiffTest',
+lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
 'helper', {
-    setUp: function() {
+    setUp: function($super) {
+        $super();
+        this.createWorld();
         var bounds = pt(0,0).extent(pt(100,100));
         this.rect = new lively.morphic.Box(bounds);
         this.table = {};
@@ -292,6 +294,14 @@ TestCase.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = this.addPolygonPatch(polygon);
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testOpenObjectInspector: function() {
+        this.table = {};
+        var snapshotA = this.serialize(this.table);
+        var inspector = this.world.openInspectorFor({a:23});
+        this.table[inspector.id] = inspector;
+        var snapshotB = this.serialize(this.table);
+        this.assertPatch(snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
