@@ -574,6 +574,9 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         morph.id = id;
         return morph;
     },
+    addBox: function() {
+        
+    },
     openInWorldA: function(morph) {
         this.worldA.addMorph(morph);
         this.controlA.addObject(morph);
@@ -610,8 +613,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.assertSync(1);
     },
     testNewBoxSnapshot: function() {
-        this.openInWorldA(this.newBox(5, 5, "X"));
-        this.syncSnapshot();
+        this.addBox();
         this.assertSync(2);
     },
     testNewBoxPatch: function() {
@@ -620,33 +622,25 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.assertSync(2);
     },
     testNewBoxResizeSnapshot: function() {
-        var box = this.newBox(5, 5, "X");
-        this.openInWorldA(box);
-        this.syncSnapshot();
+        var box = this.addBox();
         box.setExtent(pt(10,10));
         this.syncSnapshot();
         this.assertSync(3);
     },
     testNewBoxResizePatch: function() {
-        var box = this.newBox(5, 5, "X");
-        this.openInWorldA(box);
-        this.syncPatch();
+        var box = this.addBox();
         box.setExtent(pt(10,10));
         this.syncPatch();
         this.assertSync(3);
     },
     testNewBoxMoveSnapshot: function() {
-        var box = this.newBox(5, 5, "X");
-        this.openInWorldA(box);
-        this.syncSnapshot();
+        var box = this.addBox();
         box.moveBy(pt(10,10));
         this.syncSnapshot();
         this.assertSync(3);
     },
-    testNewBoxMoveSnapshot: function() {
-        var box = this.newBox(5, 5, "X");
-        this.openInWorldA(box);
-        this.syncPatch();
+    testNewBoxMovePatch: function() {
+        var box = this.addBox();
         box.moveBy(pt(10,10));
         this.syncPatch();
         this.assertSync(3);
