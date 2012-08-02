@@ -238,6 +238,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             console.log("disconnected");
         },
         receiveSnapshot: function(rev, snapshot) {
+            if (this.onConnect) { this.onConnect(); delete this.onConnect; }
             if (!this.autoupdate && this.rev != rev) return;
             if (this.snapshots) {
                 this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
