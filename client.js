@@ -251,6 +251,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         receivePatch: function(rev, patch) {
             console.log("received patch for rev " + rev);
+            if (this.onConnect) { this.onConnect(); delete this.onConnect; }
             if (!this.autoupdate && this.rev != rev) return;
             patch = new users.cschuster.sync.Patch(patch);
             var last;
