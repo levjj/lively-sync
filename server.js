@@ -11,7 +11,7 @@ var module = require('./lk').module;
 require('./shared');
 
 var CONNECTION_STRING = "tcp://syncproto:steam@localhost/syncproto";
-var DIFFS_PER_SNAPSHOT = 20;
+var DIFFS_PER_SNAPSHOT = 100;
 var DEMO = 'demo';
 
 module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
