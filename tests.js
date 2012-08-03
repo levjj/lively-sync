@@ -321,11 +321,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(snapshotA, snapshotC);
     }
 });
-lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTest',
+lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchTest',
 'running', {
     setUp: function($super) {
         $super();
-        this.createWorld();
         this.morph = this.newBox("X", 4, 4);
         this.world.addMorph(this.morph);
         this.control = new users.cschuster.sync.WorkingCopy();
