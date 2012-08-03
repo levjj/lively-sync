@@ -699,6 +699,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         box.addScript(function tick() { return "tack"; });
         this.sync();
         this.assertSync(2);
+        debugger;
         box.addScript(function rot() { this.rotateBy(0.1); });
         this.sync();
         this.assertSync(3);
