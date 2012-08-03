@@ -1,10 +1,9 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
-lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.DiffTest',
+lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
 'helper', {
     setUp: function($super) {
         $super();
-        this.createWorld();
         var bounds = pt(0,0).extent(pt(100,100));
         this.rect = new lively.morphic.Box(bounds);
         this.table = {};
