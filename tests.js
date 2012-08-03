@@ -710,7 +710,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         this.sync();
         this.assertSync(4);
         box.addScript(function rot() { this.rotateBy(2); });
-        debugger;
         this.sync();
         this.assertSync(5);
         box.rot();
