@@ -720,7 +720,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         h.grabMorph(box);
         this.sync();
         this.assertSync(2);
-        h.setPosition(pt(400,100));
+        //h.setPosition(pt(400,100));
         this.sync();
         this.assertSync(3);
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
