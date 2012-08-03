@@ -716,7 +716,16 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     },
     testDragAndDrop: function() {
         var box = this.addBox();
-        this.worldA.firstHand().grabMorph(box);
+        var h = this.worldA.firstHand();
+        h.grabMorph(box);
+        this.sync();
+        this.assertSync(2);
+        h.setPosition(pt(400,100));
+        this.sync();
+        this.assertSync(3);
+        h.dropContentsOn(this.worldA, {stop: Functions.Null});
+        this.sync();
+        this.assertSync(4);
     }
 });
 }) // end of module
