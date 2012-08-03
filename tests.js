@@ -673,7 +673,6 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
     testAddSubmorph: function() {
         var box = this.addBox();
         box.addMorph(this.newBox(3, 3, "Y"));
-        debugger;
         this.sync();
         this.assertSync(2);
         var z = this.newBox(3, 3, "Z");
@@ -683,6 +682,16 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         z.addMorph(this.newBox(3, 3, "Z"));
         this.sync();
         this.assertSync(4);
+    },
+    testRemoveSubmorph: function() {
+        var box = this.addBox();
+        var z = this.newBox(3, 3, "Z");
+        box.addMorph(z);
+        this.sync();
+        this.assertSync(2);
+        z.remove();
+        this.sync();
+        this.assertSync(3);
     }
 });
 }) // end of module
