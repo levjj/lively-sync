@@ -576,6 +576,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
         var bounds = pt(0,0).extent(pt(width, height));
         var morph = new lively.morphic.Box(bounds);
         morph.id = id;
+        morph.name = id;
         return morph;
     },
     openInWorldA: function(morph) {
