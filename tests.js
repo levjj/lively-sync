@@ -461,7 +461,7 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.MorphPatchTes
         var submorph = this.newBox("Z", 2, 2);
         this.morph.addMorph(submorph);
         this.patch(this.removeSubmorphPatch);
-        this.assertShapeNode(this.div(this.div({childNodes: []})));
+        this.assertShapeNode(this.div({childNodes: []}));
     },
     testAddScript: function() {
         this.patch(this.addScriptPatch(true));
