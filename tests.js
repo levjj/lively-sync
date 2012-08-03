@@ -545,11 +545,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
         );
     }
 });
-lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTest',
+lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsTest',
 'running', {
     setUp: function($super) {
         $super();
-        this.createWorld();
         this.worldA = this.world;
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
         this.worldC = lively.morphic.World.createOn(document.body, new Rectangle(600,0,300,300));
