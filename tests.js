@@ -615,8 +615,8 @@ lively.morphic.tests.TestCase.subclass('users.cschuster.sync.tests.SyncWorldsTes
             var morphA = this.wcA.syncTable[key];
             var morphB = this.wcB.syncTable[key];
             var morphC = this.wcC.syncTable[key];
-            this.assertEquals(morphA.jQuery().html(), morphB.jQuery().html());
-            this.assertEquals(morphA.jQuery().html(), morphC.jQuery().html());
+            this.assertEquals(morphA.renderContext().morphNode, morphB.renderContext().morphNode);
+            this.assertEquals(morphA.renderContext().morphNode, morphC.renderContext().morphNode);
         }
     }
 },
