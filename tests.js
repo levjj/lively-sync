@@ -375,6 +375,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     },
     assertWorldNode: function(expected) {
         this.assertNodeMatches(expected, this.world.renderContext().getShapeNode());
+    },
+    assertNoSourceModuleNames: function() {
+        for (var i = 0; i < this.world.submorphs.length; i++) {
+            var m = this.world.submorphs[i];
+            this.assert(!m.hasOwnProperty("__SourceModuleName__"));
+        }
     }
 },
 'specs', {
