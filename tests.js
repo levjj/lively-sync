@@ -586,6 +586,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
                 )
             )
         );
+    },
+    testSimpleConnect: function() {
+        this.morph.a = 2;
+        this.morph.b = 4;
+        this.patch(this.connectPatch);
+        this.morph.a = 3;
+        this.assertEquals(3, this.morph.b);
     }
 });
 lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsTest',
