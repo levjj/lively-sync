@@ -560,6 +560,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
         this.wcB.autoupdate = true;
         this.wcC.autoupdate = true;
+        this.wcA.addObject(this.worldA.firstHand());
         this.sync();
     },
     tearDown: function($super) {
