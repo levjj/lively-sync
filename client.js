@@ -144,6 +144,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var recreated = Array.isArray(object) ? [] :
                 this.serializer.somePlugin('deserializeObj', [object]) || {};
             for (var key in object) {
+                if (!object.hasOwnProperty(key)) continue;
                 var val = object[key];
                 if (val && Object.isObject(val) && val.__isSmartRef__) {
                     this.patchRef(recreated, key, val);
