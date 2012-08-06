@@ -342,6 +342,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     patch: function(patchData) {
         var patch = new users.cschuster.sync.Patch(Object.deepCopy(patchData));
         this.control.loadPatch(patch);
+        this.assertNoSourceModuleNames();
     },
     div: function(/*args*/) {
         var result = {tagName: 'div'};
