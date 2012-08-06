@@ -626,6 +626,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(1);
     },
     testAddMorph: function() {
+        debugger;
         this.addBox();
         this.assertSync(2);
     },
