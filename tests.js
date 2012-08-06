@@ -326,8 +326,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotA = this.serialize(this.table);
         connect(this.rect, "a", this.rect, "b");
         var snapshotB = this.serialize(this.table);
-        debugger;
-        this.assertPatch(snapshotA, snapshotB);
+        var expected = {};
+        expected[this.rect.id] = {attributeConnections:[[]],
+                                      doNotCopyProperties:[["$$a"]],doNotSerialize:[["$$a"]]};
+        expected[this.rect.id + "/attributeConnections/0"] = [{
+            sourceAttrName:"a",sourceObj:{__isSmartRef__:true,id:this.rect.id},
+            targetMethodName:"b",targetObj:{__isSmartRef__:true,id:this.rect.id},
+            __LivelyClassName__:"AttributeConnection",__SourceModuleName__:"Global.lively.bindings"}];
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchTest',
