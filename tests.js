@@ -655,10 +655,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var box = this.addBox();
         box.moveBy(pt(10,10));
         this.sync();
-        this.assertSync(2);
+        this.assertSync(3);
         box.moveBy(pt(30,0));
         this.sync();
-        this.assertSync(3);
+        this.assertSync(4);
     },
     testColor: function() {
         var box = this.addBox();
