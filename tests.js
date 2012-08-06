@@ -381,8 +381,20 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     assertNoSourceModuleNames: function() {
         for (var i = 0; i < this.world.submorphs.length; i++) {
             var m = this.world.submorphs[i];
+            this.assert(!m.hasOwnProperty("__LivelyClassName__"));
             this.assert(!m.hasOwnProperty("__SourceModuleName__"));
         }
+    },
+    assertArraysHaveNoMethods: function() {
+        for (var i = 0; i < this.world.submorphs.length; i++) {
+            var m = this.world.submorphs[i];
+            for (var key in m) {
+                var v = m[key];
+                if (m.hasOwnProperty(key) && Array.isArray(v)) {
+                    this.assert(!v.hasOwnProperty("each"));
+                }
+            }
+        }        
     }
 },
 'specs', {
