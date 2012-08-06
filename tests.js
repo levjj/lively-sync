@@ -696,24 +696,28 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var box = this.addBox();
         box.addScript(function tick() { return "tack"; });
         this.sync();
-        this.assertSync(2);
+        this.assertSync(3);
         box.addScript(function rot() { this.rotateBy(0.1); });
         this.sync();
-        this.assertSync(3);
+        this.assertSync(4);
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
-        this.assertSync(3);
+        this.assertSync(4);
+        this.sync();
+        this.assertSync(5);
         delete box.tick;
         this.sync();
-        this.assertSync(4);
+        this.assertSync(6);
         box.addScript(function rot() { this.rotateBy(2); });
         this.sync();
-        this.assertSync(5);
+        this.assertSync(7);
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
-        this.assertSync(5);
+        this.assertSync(7);
+        this.sync();
+        this.assertSync(8);
     },
     testDragAndDrop: function() {
         var box = this.addBox();
