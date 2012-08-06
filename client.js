@@ -363,7 +363,7 @@ users.cschuster.sync.Snapshot.addMethods({
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
         var p = new GenericFilter();
         p.addFilter(function(obj, prop, value) {
-            return value instanceof lively.morphic.World;
+            return value && Object.isObject(value) && value.isWorld;
         });
         serializer.addPlugins([p]);
         serializer.showLog = false;
