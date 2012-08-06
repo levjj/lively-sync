@@ -606,6 +606,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var a = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
         var b = users.cschuster.sync.Snapshot.createFromObjects(this.wcB.syncTable);
         var c = users.cschuster.sync.Snapshot.createFromObjects(this.wcC.syncTable);
+        this.assertEqualState(this.wcA.last, a);
         this.assertEqualState(a, b);
         this.assertEqualState(a, c);
         this.assertEquals(this.wcA.syncTable.length, this.wcB.syncTable.length);
