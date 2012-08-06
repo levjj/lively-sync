@@ -771,6 +771,23 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.sync();
         this.assertSync(8);
     },
+    testSimpleConnect: function() {
+        var box = this.addBox();
+        box.a = 2;
+        box.b = 4;
+        connect(box, "a", box, "b");
+        this.sync();
+        this.assertSync(3);
+        box.a = 3;
+        this.assertEquals(3, box.b);
+        this.worldB.get("X").a = 3;
+        this.assertEquals(3, this.worldB.get("X").b);
+        this.worldC.get("X").a = 3;
+        this.assertEquals(3, this.worldC.get("X").b);
+        this.assertSync(3, true);
+        this.sync();
+        this.assertSync(4);
+    },
     testDragAndDrop: function() {
         var box = this.addBox();
         var h = this.worldA.firstHand();
