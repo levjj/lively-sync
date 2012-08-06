@@ -724,13 +724,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var h = this.worldA.firstHand();
         h.grabMorph(box);
         this.sync();
-        this.assertSync(2);
+        this.assertSync(3);
         h.setPosition(pt(400,100));
         this.sync();
-        this.assertSync(3);
+        this.assertSync(4);
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
         this.sync();
-        this.assertSync(4);
+        this.assertSync(5);
     }
 });
 }) // end of module
