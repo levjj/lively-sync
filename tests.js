@@ -725,6 +725,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var box = this.addBox();
         var h = this.worldA.firstHand();
         h.grabMorph(box);
+        this.wcA.removeObject(box);
         debugger;
         this.sync();
         this.assertSync(3);
