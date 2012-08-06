@@ -706,7 +706,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
-        this.assertSync(4);
+        this.assertSync(4, true);
         this.sync();
         this.assertSync(5);
         delete box.tick;
@@ -718,7 +718,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
-        this.assertSync(7);
+        this.assertSync(7, true);
         this.sync();
         this.assertSync(8);
     },
