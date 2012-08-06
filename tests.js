@@ -445,12 +445,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     removeSecondScriptPatch: {"X/__serializedLivelyClosures__/tick": [0,0]},
     addPolygonPatch: users.cschuster.sync.tests.DiffTest.prototype.addPolygonPatch,
     connectPatch: {"X":{attributeConnections: [[]],
-                          doNotCopyProperties: [["$$a"]], doNotSerialize: [["$$a"]]},
-                      "X/attributeConnections/0": [{
-                          sourceAttrName: "a", sourceObj: {__isSmartRef__:true, id: "X"},
-                          targetMethodName:"b", targetObj: {__isSmartRef__:true, id: "X"},
-                          __LivelyClassName__: "AttributeConnection",
-                          __SourceModuleName__: "Global.lively.bindings"}]}
+                        doNotCopyProperties: [["$$a"]], doNotSerialize: [["$$a"]]},
+                   "X/attributeConnections/0": [{
+                        sourceAttrName: "a", sourceObj: {__isSmartRef__:true, id: "X"},
+                        targetMethodName:"b", targetObj: {__isSmartRef__:true, id: "X"},
+                        __LivelyClassName__: "AttributeConnection",
+                        __SourceModuleName__: "Global.lively.bindings"}]}
 },
 'testing', {
     testMoveX: function() {
