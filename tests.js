@@ -787,6 +787,29 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(3, true);
         this.sync();
         this.assertSync(4);
+        box.a = 5;
+        this.sync();
+        this.assertSync(5);
+    },
+    testGeometryConnect: function() {
+        var box = this.addBox();
+        box.bar = 0;
+        box.addScript(function foo() { this.bar = rot; });
+        connect(box, "rotation", box, "foo");
+        this.sync();
+        this.assertSync(3);
+        box.rotateBy(1);
+        this.assertEquals(1, box.bar);
+        this.worldB.get("X").rotateBy(1);
+        this.assertEquals(1, this.worldB.get("X").bar);
+        this.worldC.get("X").rotateBy(1);
+        this.assertEquals(1, this.worldC.get("X").bar);
+        this.assertSync(3, true);
+        this.sync();
+        this.assertSync(4);
+        box.rotateBy(1);
+        this.sync();
+        this.assertSync(5);
     },
     testDragAndDrop: function() {
         var box = this.addBox();
