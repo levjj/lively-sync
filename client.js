@@ -364,8 +364,7 @@ users.cschuster.sync.Snapshot.addMethods({
         var p = new GenericFilter();
         p.addFilter(function(obj, prop, value) {
             return (obj.isScript && prop == "currentTimeout") ||
-                    value instanceof lively.morphic.World ||
-                    value instanceof lively.morphic.HandMorph;
+                    value instanceof lively.morphic.World;
         });
         serializer.addPlugins([p]);
         serializer.showLog = false;
