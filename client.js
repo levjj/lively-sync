@@ -381,6 +381,19 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         if (this.registry.hasOwnProperty(id))
             throw new Error("ID '" + id + "' already assigned");
         return id;
+    },
+    copyPropertiesAndRegisterReferences: function(source, copy) {
+        if (source.hasOwnProperty("submorphs")) {
+            this.path.push("submorphs");
+            for (var i = 0; i < source.submorphs.length; i++) {
+                this.path.push(i);
+                var obj = source.submorphs[i];
+                if (this.getIdFromObject(obj) === undefined) this.addIdToObject(obj);
+                this.path.pop();
+            }
+            this.path.pop();
+        }
+        cop.proceed(source, copy);
     }
 }).beGlobal();
 
