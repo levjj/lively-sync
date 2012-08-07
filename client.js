@@ -402,7 +402,15 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             }
             this.path.pop();
         }
-        cop.proceed(source, copy);
+        var keys = Object.keys(source).sort();
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (!source.hasOwnProperty(key) || (key === this.idProperty && !this.keepIds))
+                continue;
+            var value = source[key];
+            if (this.somePlugin('ignoreProp', [source, key, value])) continue;
+            copy[key] = this.registerWithPath(value, key);
+        }
     }
 }).beGlobal();
 
