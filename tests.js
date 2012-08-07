@@ -794,7 +794,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testGeometryConnect: function() {
         var box = this.addBox();
         box.bar = 0;
-        box.addScript(function foo() { this.bar = rot; });
+        box.addScript(function foo(rot) { this.bar = rot; });
         connect(box, "rotation", box, "foo");
         this.sync();
         this.assertSync(3);
