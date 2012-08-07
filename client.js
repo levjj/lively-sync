@@ -384,7 +384,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
     },
     addNewRegistryEntry: function(id, obj) {
         var oldPath = this.path.clone();
-        this.path = id.split('/');
+        this.path = oldPath.length == 0 ? [] : id.split('/');
         try {
             cop.proceed(id, obj);
         } finally {
