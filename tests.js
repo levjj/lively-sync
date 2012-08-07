@@ -795,6 +795,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var box = this.addBox();
         box.bar = 0;
         box.addScript(function foo(rot) { this.bar = rot; });
+        debugger;
         connect(box, "rotation", box, "foo");
         this.sync();
         this.assertSync(3);
