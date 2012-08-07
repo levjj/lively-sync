@@ -194,12 +194,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 2) { // delete
                         value.unshift(obj[key]);
-                        if (Array.isArray(obj)) {
-                            obj.removeAt(key);
-                        } else {
-                            this.set(obj, key, undefined);
-                            delete obj[key];
-                        }
+                        this.set(obj, key, undefined);
+                        delete obj[key];
                     } else { // add or set
                         if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
                         this.set(obj, key, this.recreateObject(value.last()));
