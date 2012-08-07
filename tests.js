@@ -91,6 +91,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assert(diff.toPatch().isEmpty(), 'no diff for identical morphs');
     },
     testResizedRectangle: function() {
+        debugger;
         var snapshotA = this.serialize(this.table);
         this.rect.setExtent(pt(400,20));
         var snapshotB = this.serialize(this.table);
