@@ -72,6 +72,13 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 });
 
+lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairArraysPlugin',
+'plugin interface', {
+    afterDeserializeObj: function(obj) {
+        if (Array.isArray(obj)) obj.repair();
+    }
+});
+
 Object.subclass('users.cschuster.sync.WorkingCopy',
     'initializing', {
         initialize: function(keepHistory) {
@@ -282,6 +289,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                                             patch.data[v].length < 3 });
             var rawPatch = patch.toHierachicalPatch().data;
             this.serializer = ObjectGraphLinearizer.forNewLively();
+            this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
             this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
