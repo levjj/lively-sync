@@ -382,6 +382,15 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             throw new Error("ID '" + id + "' already assigned");
         return id;
     },
+    addNewRegistryEntry: function(id, obj) {
+        var oldPath = this.path.clone();
+        this.path = id.split('/');
+        try {
+            cop.proceed(id, obj);
+        } finally {
+            this.path = oldPath;
+        }
+    },
     copyPropertiesAndRegisterReferences: function(source, copy) {
         if (source.hasOwnProperty("submorphs")) {
             this.path.push("submorphs");
