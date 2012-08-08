@@ -744,7 +744,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.savedColor = Color.web.salmon.lighter();
         this.sync();
         this.assertSync(4);
-        box.setBorederColor(box.savedColor);
+        box.setBorderColor(box.savedColor);
         this.sync();
         this.assertSync(5);
     },
