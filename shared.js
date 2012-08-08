@@ -248,10 +248,10 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     prepareToPatch: function(snapshot) {
-        diff.addMissingClassNames(this.data);
-        diff.addMissingSmartRefs();
-        diff.propagateDeletions(snapshot);
-        diff.recreateSmartRefUpdates(this.data, snapshot);
+        this.addMissingClassNames(this.data);
+        this.addMissingSmartRefs();
+        this.propagateDeletions(snapshot);
+        this.recreateSmartRefUpdates(this.data, snapshot);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
