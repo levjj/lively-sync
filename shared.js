@@ -75,7 +75,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (!obj) return false;
         if (typeof obj != "object") return false;
         if (!obj.__isSmartRef__) return false;
-        return obj.id == id;
+        return typeof id == "undefined" || obj.id == id;
     },
     removeSmartRefs: function(obj, id) {
         // discards smartrefs
