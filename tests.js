@@ -809,10 +809,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(5);
     },
     testTopLevelReference: function() {
-        var box = this.addBox();
-        var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
-        var table = {X:x,Y:y};
-        var snapshotA = this.serialize(table);
+        var x = this.addBox("X"), y = this.addBox("Y"), z = this.addBox("Z");
         x.a = y;
         var snapshotB = this.serialize(table);
         this.assertPatch({X: {a:ref("Y")}}, snapshotA, snapshotB);
