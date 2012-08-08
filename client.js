@@ -402,7 +402,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             this.path.push(key);
             if (Array.isArray(source[key])) {
                 var indices = Array.range(0, source[key].length - 1).reject(function(ea) {
-                    return this.somePlugin('ignoreProp', source[key], ea, source[key][ea]);
+                    return this.somePlugin('ignoreProp', [source[key], ea, source[key][ea]]);
                 }.bind(this));
                 this.addIdToAllProperties(source[key], indices);
             } else {
@@ -415,7 +415,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         var keys = Object.keys(source);
         keys.remove(this.idProperty);
         keys = keys.reject(function(ea) {
-            return this.somePlugin('ignoreProp', source, ea, source[ea]);
+            return this.somePlugin('ignoreProp', [source, ea, source[ea]]);
         }.bind(this));
         keys = keys.sort();
         this.addIdToAllProperties(source, keys);
