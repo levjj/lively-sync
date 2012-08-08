@@ -822,6 +822,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.sync();
         this.assertSync(4);
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
+        debugger;
         this.sync();
         this.assertSync(5);
     }
