@@ -804,7 +804,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var box = this.addBox();
         var snapshotA = this.serialize({X: {}});
         var snapshotB = this.serialize({});
-        this.assertPatch({X: [0,0]}, snapshotA, snapshotB);
+        this.sync();
+        this.assertSync(3);
     },
     testSimpleProperty: function() {
         var box = this.addBox();
