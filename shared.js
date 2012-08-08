@@ -297,7 +297,6 @@ Object.subclass('users.cschuster.sync.Patch', {
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
-        diff.prepareToPatch(snapshot);
         diff.apply(snapshot);
     },
     isEmpty: function() {
