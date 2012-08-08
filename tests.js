@@ -811,14 +811,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testTopLevelReference: function() {
         var x = this.addBox("X"), y = this.addBox("Y"), z = this.addBox("Z");
         x.a = y;
-        var snapshotB = this.serialize(table);
-        this.assertPatch({X: {a:ref("Y")}}, snapshotA, snapshotB);
-        table.Z = z;
-        var snapshotC = this.serialize(table);
+        this.sync();
+        this.assertSync(5);
         x.a = z;
-        var snapshotD = this.serialize(table);
-        this.assertPatch({X: {a:{id:["Z"]}}}, snapshotC, snapshotD);
-        this.assertPatch({X: {a:{id:["Z"]}},Z: [{id:"Z"}]}, snapshotB, snapshotD);
+        this.sync();
+        this.assertSync(6);
     },
     testNestedReferences: function() {
         var box = this.addBox();
