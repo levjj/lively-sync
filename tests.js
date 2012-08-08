@@ -748,6 +748,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
 },
 'asserting', {
     assertSync: function(rev, dirty) {
+        if (!dirty) this.sync();
         this.assertEquals(rev, this.wcA.rev);
         this.assertEquals(rev, this.wcB.rev);
         this.assertEquals(rev, this.wcC.rev);
