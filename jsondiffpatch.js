@@ -284,7 +284,8 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
     
     if (typeof require === 'function' && typeof exports === 'object') {
         // CommonJS, eg: node.js
-        exports = jdp;
+        exports.patch = jdp.patch;
+        exports.diff = jdp.diff;
     } else if (typeof define === 'function' && define['amd']) {
         // AMD
         define(jdp);
