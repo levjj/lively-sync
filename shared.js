@@ -293,7 +293,9 @@ Object.subclass('users.cschuster.sync.Patch', {
             raw.registry[key] = diffVal ;
             this.convertToDiffInstruction(diffVal, origVal);
         }
-        return new users.cschuster.sync.Diff(raw);
+        var diff = new users.cschuster.sync.Diff(raw);
+        if (optSnapshot) diff.prepareToPatch(optSnapshot);
+        return diff;
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
