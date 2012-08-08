@@ -828,25 +828,18 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(6);
     },
     testArray: function() {
-        var box = this.addBox();
-        var x = {id:"X",a:[]}, y = {id:"Y"}, z = {id:"Z"};
-        var snapshotA = this.serialize({X:x});
+        var x = this.addBox(), y = this.newBox(1, 2, "Y"), z = this.newBox(3, 4, "Z");
+        x.a = [];
+        this.assertSync(3);
         x.a.push(y);
-        var snapshotB = this.serialize({X:x});
-        this.assertPatch({"X/a/0": [{id:"Y"}]}, snapshotA, snapshotB);
+        this.assertSync(4);
         x.a.push(z);
-        var snapshotC = this.serialize({X:x});
-        this.assertPatch({"X/a/1": [{id:"Z"}]}, snapshotB, snapshotC);
-        this.assertPatch({"X/a/0": [{id:"Y"}], "X/a/1": [{id:"Z"}]}, snapshotA, snapshotC);
+        this.assertSync(5);
         x.a[0] = x.a[1];
-        var snapshotD = this.serialize({X:x});
-        var expected = {"X":{a:{1:{id:["X/a/0"]}}},"X/a/0":{id:["Z"]},"X/a/1":[0,0]};
-        this.assertPatch(expected, snapshotC, snapshotD);
+        this.assertSync(6);
         x.a.removeAt(0);
         x.a[0] = y;
-        var snapshotE = this.serialize({X:x});
-        var expected = {"X/a/0":{id:["Y"]},"X": {a: {1: [0,0]}}};
-        this.assertPatch(expected, snapshotD, snapshotE);
+        this.assertSync(7);
     },
     testResize: function() {
         var box = this.addBox();
