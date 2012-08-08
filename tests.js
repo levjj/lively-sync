@@ -817,8 +817,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(8);
     },
     testNestedReferences: function() {
-        var box = this.addBox();
-        var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
+        var x = this.addBox("X"), y = this.newBox("Y"), z = this.newBox("Z");
         var snapshotA = this.serialize({X:x});
         x.a = y;
         var snapshotB = this.serialize({X:x});
