@@ -227,7 +227,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    recreateSmartRefUpdates: function(snapshot) {
+    recreateSmartRefs: function(snapshot) {
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 3) return;
