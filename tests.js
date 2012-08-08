@@ -84,6 +84,26 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
     }
 },
 'testing', {
+    testAddObject: function() {
+        
+        
+    },
+    testRemoveObject: function() {
+        
+        
+    },
+    testSimpleProperty: function() {
+        
+        
+    },
+    testReference: function() {
+        
+        
+    },
+    testArray: function() {
+        
+        
+    },
     testIdenticalRectangle: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize(this.table);
