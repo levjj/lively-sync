@@ -413,6 +413,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
     },
     copyPropertiesAndRegisterReferences: function(source, copy) {
         var keys = Object.keys(source);
+        keys.remove(this.idProperty);
         keys = keys.reject(function(ea) {
             return this.somePlugin('ignoreProp', source, ea, source[ea]);
         }.bind(this));
@@ -420,7 +421,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         this.addIdToAllProperties(source, keys);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
-            if (!source.hasOwnProperty(key) || (key === this.idProperty && !this.keepIds))
+            if (!source.hasOwnProperty(key))
                 continue;
             var value = source[key];
             copy[key] = this.registerWithPath(value, key);
