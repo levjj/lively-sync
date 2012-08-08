@@ -227,7 +227,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    recreateSmartRefs: function(snapshot) {
+    recreateSmartRefs: function(obj, orig) {
+        if (typeof orig == "undefined") { orig = obj; obj = this.data; }
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 3) return;
@@ -239,7 +240,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                 }
             } else { // raw object or array
                 Properties.forEachOwn(obj, function(name, val) {
-                    this.addMissingClassNames(val);
+                    this.recreateSmartRefs(val, orig[name], this.isSmartRef(orig[name]));
                 }, this)
             }
         }
