@@ -817,20 +817,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(8);
     },
     testNestedReferences: function() {
-        var x = this.addBox("X"), y = this.newBox("Y"), z = this.newBox("Z");
-        var snapshotA = this.serialize({X:x});
+        var x = this.addBox("X"), y = this.newBox(1, 2, "Y"), z = this.newBox(3, 4, "Z");
         x.a = y;
-        var snapshotB = this.serialize({X:x});
-        this.assertPatch({"X/a": [{id:"Y"}]}, snapshotA, snapshotB);
-        x.b = z;
-        var snapshotC = this.serialize({X:x});
-        this.assertPatch({"X/b": [{id:"Z"}]}, snapshotB, snapshotC);
-        this.assertPatch({"X/a": [{id:"Y"}], "X/b": [{id:"Z"}]}, snapshotA, snapshotC);
-        x.a = z;
-        var snapshotD = this.serialize({X:x});
-        var expected = {"X":{b:{id:["X/a"]}},"X/a": {id: ["Z"]}, "X/b":[0,0]};
-        this.assertPatch(expected, snapshotC, snapshotD);
-        this.assertPatch({X:{b:ref("X/a")}, "X/a": {id: ["Z"]}}, snapshotB, snapshotD);
+        this.assertSync(3);
     },
     testArray: function() {
         var box = this.addBox();
