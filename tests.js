@@ -853,10 +853,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testResize: function() {
         var box = this.addBox();
         box.setExtent(pt(10,10));
-        this.sync();
         this.assertSync(3);
         box.setExtent(pt(30,30));
-        this.sync();
         this.assertSync(4);
     },
     testMove: function() {
