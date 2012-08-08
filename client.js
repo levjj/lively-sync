@@ -399,8 +399,9 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             if (!source.hasOwnProperty(key)) continue;
-            this.path.push(key);
             var value = source[key];
+            if (!value || !Object.isObject(value)) continue;
+            this.path.push(key);
             if (Array.isArray(value)) {
                 var indices = Array.range(0, value.length - 1).reject(function(ea) {
                     return this.somePlugin('ignoreProp', [value, ea, value[ea]]);
