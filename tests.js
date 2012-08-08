@@ -85,8 +85,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
 },
 'testing', {
     testAddObject: function() {
-        
-        
+        var snapshotA = this.serialize({});
+        var snapshotB = this.serialize({X: {}});
+        this.assertPatch({X: [{}]}, snapshotA, snapshotB);
     },
     testRemoveObject: function() {
         
