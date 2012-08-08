@@ -228,21 +228,14 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     recreateSmartRefs: function(obj, orig) {
-        if (typeof orig == "undefined") { orig = obj; obj = this.data; }
-        if (typeof obj == "object") {
-            if (Array.isArray(obj)) { // instruction
-                if (obj.length == 3) return;
-                var o = obj.last();
-                if (o && typeof o == "object" &&
-                    !o.hasOwnProperty("__isSmartRef__") &&
-                    !o.hasOwnProperty("__LivelyClassName__")) {
-                    o.__LivelyClassName__ = undefined;
+        if (obj && typeof obj == "object" && !Array.isArray(obj)) {
+            Properties.forEachOwn(obj, function(name, val) {
+                if (this.isSmartRef(orig[name])) {
+                    obj[name] = this.createSmartRef(val.id[0]);
+                } else {
+                    this.recreateSmartRefs(val, orig[name]);
                 }
-            } else { // raw object or array
-                Properties.forEachOwn(obj, function(name, val) {
-                    this.recreateSmartRefs(val, orig[name], this.isSmartRef(orig[name]));
-                }, this)
-            }
+            }, this);
         }
     },
     propagateDeletions: function(snapshot) {
