@@ -799,13 +799,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testSimpleProperty: function() {
         var box = this.addBox();
         box.a = 23;
-        this.sync();
         this.assertSync(3);
         box.a = 25;
-        this.sync();
         this.assertSync(4);
         delete box.a;
-        this.sync();
         this.assertSync(5);
     },
     testTopLevelReference: function() {
