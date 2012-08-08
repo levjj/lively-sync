@@ -282,9 +282,9 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
         return patch(o, pname, reverse(d), path);
     }
     
-    if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
+    if (typeof require === 'function' && typeof exports === 'object') {
         // CommonJS, eg: node.js
-        module.exports = jdp;
+        exports = jdp;
     } else if (typeof define === 'function' && define['amd']) {
         // AMD
         define(jdp);
