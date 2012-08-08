@@ -252,7 +252,7 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                 }
                 else {
                     // object diff
-                    target = pname === null ? o : objectGet(o, pname);
+                    target = pname === null ? o : o[pname];
                     if (typeof target != 'object' || isArray(target)) {
                         throw new Error('cannot apply patch at "' + subpath + '": object expected');
                     }
