@@ -283,6 +283,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         diff.addMissingClassNames(diff.data);
         diff.addMissingSmartRefs();
         diff.propagateDeletions(snapshot);
+        diff.recreateSmartRefUpdates(snapshot);
         diff.apply(snapshot);
     },
     isEmpty: function() {
