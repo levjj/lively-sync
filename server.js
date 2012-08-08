@@ -68,7 +68,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                     patch.apply(snapshot);
                 }
                 cb(snapshot);
-                } catch (e) { console.error(e); console.error("rev="+result.rows[i].rev+" patch="+result.rows[i].data); }
+                } catch (e) { console.error(e); console.error(e.stack); console.error("rev="+result.rows[i].rev+" patch="+result.rows[i].data); }
             });
         }.bind(this));
     },
