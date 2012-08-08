@@ -143,6 +143,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         debugger;
         this.assertPatch(snapshotA, snapshotB);
+        delete this.rect.savedColor;
+        var snapshotC = this.serialize(this.table);
+        this.assertPatch(snapshotB, snapshotC);
+        this.assertPatch(snapshotA, snapshotC);
     },
     testAddMorph: function() {
         var snapshotA = this.serialize({});
