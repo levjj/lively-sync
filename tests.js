@@ -802,10 +802,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     },
     testRemoveObject: function() {
         var box = this.addBox();
-        var snapshotA = this.serialize({X: {}});
-        var snapshotB = this.serialize({});
+        box.x = {id: "X"};
         this.sync();
-        this.assertSync(3);
+        delete box.x;
+        this.sync();
+        this.assertSync(4);
     },
     testSimpleProperty: function() {
         var box = this.addBox();
