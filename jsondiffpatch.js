@@ -1,11 +1,14 @@
+if (typeof exports !== 'undefined') {
+  module = require('./lk').module;
+}
 module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
 
-/*
-*   Json Diff Patch
-*   ---------------
-*   https://github.com/benjamine/JsonDiffPatch
-*   by Benjamin Eidelman - beneidel@gmail.com
-*/
+/**
+ *   Json Diff Patch
+ *   ---------------
+ *   https://github.com/benjamine/JsonDiffPatch
+ *   by Benjamin Eidelman - beneidel@gmail.com
+ */
 (function(){
 
     var jdp = {};
