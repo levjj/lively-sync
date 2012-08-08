@@ -105,13 +105,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch({X: {a:[0,0]}}, snapshotC, snapshotD);
     },
     testTopLevelReference: function() {
-        function ref(id) { return {__isSmartRef__: true, id: id}; }
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {}, y = {}, z = {};
         var table = {X:x,Y:y};
         var snapshotA = this.serialize(table);
         x.a = y;
         var snapshotB = this.serialize(table);
-        this.assertPatch({X: {a:[ref("Y")]}}, snapshotA, snapshotB);
+        this.assertPatch({X: {a:ref("Y")}}, snapshotA, snapshotB);
         table.Z = z;
         var snapshotC = this.serialize(table);
         x.a = z;
