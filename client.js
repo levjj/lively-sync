@@ -395,24 +395,34 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             this.path = oldPath;
         }
     },
-    copyPropertiesAndRegisterReferences: function(source, copy) {
-        if (source.hasOwnProperty("submorphs")) {
-            this.path.push("submorphs");
-            for (var i = 0; i < source.submorphs.length; i++) {
-                this.path.push(i);
-                var obj = source.submorphs[i];
+    addIdToAllProperties: function(source, keys) {
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (!source.hasOwnProperty(key)) continue;
+            this.path.push(key);
+            if (Array.isArray(source[key]) {
+                var indices = Array.range(0, source[key].length - 1).reject(function(ea) {
+                    return this.somePlugin('ignoreProp', source[key], ea, source[key][ea]);
+                }.bind(this));
+                this.addIdToAllProperties(source[key], indices);
+            } else {
                 if (this.getIdFromObject(obj) === undefined) this.addIdToObject(obj);
-                this.path.pop();
             }
             this.path.pop();
         }
-        var keys = Object.keys(source).sort();
+    },
+    copyPropertiesAndRegisterReferences: function(source, copy) {
+        var keys = Object.keys(source);
+        keys = keys.reject(function(ea) {
+            return this.somePlugin('ignoreProp', source, ea, source[ea]);
+        }.bind(this));
+        keys = keys.sort();
+        this.addIdToAllProperties(source, keys);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             if (!source.hasOwnProperty(key) || (key === this.idProperty && !this.keepIds))
                 continue;
             var value = source[key];
-            if (this.somePlugin('ignoreProp', [source, key, value])) continue;
             copy[key] = this.registerWithPath(value, key);
         }
     }
