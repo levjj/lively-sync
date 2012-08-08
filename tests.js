@@ -169,6 +169,21 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/submorphs/0"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testRemoveTwoSubmorphs: function() {
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorph1 = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph1);
+        var submorph2 = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorph2);
+        var snapshotA = this.serialize(this.table);
+        this.rect.removeMorph(submorph1);
+        this.rect.removeMorph(submorph2);
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/submorphs/0"] = [0,0];
+        expected[this.rect.id + "/submorphs/1"] = [0,0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testDiffingDoesNotAffectSnapshot: function() {
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
