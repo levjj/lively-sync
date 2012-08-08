@@ -21,8 +21,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var patch = snapshotA.diff(snapshotB).toPatch();
         if (expected != undefined)
             this.assertEqualState(expected, patch.data);
-        patch.apply(snapshotA);
-        this.assertEqualState(snapshotA, snapshotB);
+        var patchedSnapshotA = snapshotA.clone();
+        patch.apply(patchedSnapshotA);
+        this.assertEqualState(patchedSnapshotA, snapshotB);
     }
 },
 'specs', {
