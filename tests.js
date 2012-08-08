@@ -777,6 +777,78 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testEmptyWorlds: function() {
         this.assertSync(1);
     },
+    testAddObject: function() {
+        var snapshotA = this.serialize({});
+        var snapshotB = this.serialize({X: {}});
+        this.assertPatch({X: [{}]}, snapshotA, snapshotB);
+    },
+    testRemoveObject: function() {
+        var snapshotA = this.serialize({X: {}});
+        var snapshotB = this.serialize({});
+        this.assertPatch({X: [0,0]}, snapshotA, snapshotB);
+    },
+    testSimpleProperty: function() {
+        var snapshotA = this.serialize({X: {}});
+        var snapshotB = this.serialize({X: {a:23}});
+        this.assertPatch({X: {a:[23]}}, snapshotA, snapshotB);
+        var snapshotC = this.serialize({X: {a:25}});
+        this.assertPatch({X: {a:[25]}}, snapshotB, snapshotC);
+        var snapshotD = this.serialize({X: {}});
+        this.assertPatch({X: {a:[0,0]}}, snapshotC, snapshotD);
+    },
+    testTopLevelReference: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
+        var table = {X:x,Y:y};
+        var snapshotA = this.serialize(table);
+        x.a = y;
+        var snapshotB = this.serialize(table);
+        this.assertPatch({X: {a:ref("Y")}}, snapshotA, snapshotB);
+        table.Z = z;
+        var snapshotC = this.serialize(table);
+        x.a = z;
+        var snapshotD = this.serialize(table);
+        this.assertPatch({X: {a:{id:["Z"]}}}, snapshotC, snapshotD);
+        this.assertPatch({X: {a:{id:["Z"]}},Z: [{id:"Z"}]}, snapshotB, snapshotD);
+    },
+    testNestedReferences: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
+        var snapshotA = this.serialize({X:x});
+        x.a = y;
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X/a": [{id:"Y"}]}, snapshotA, snapshotB);
+        x.b = z;
+        var snapshotC = this.serialize({X:x});
+        this.assertPatch({"X/b": [{id:"Z"}]}, snapshotB, snapshotC);
+        this.assertPatch({"X/a": [{id:"Y"}], "X/b": [{id:"Z"}]}, snapshotA, snapshotC);
+        x.a = z;
+        var snapshotD = this.serialize({X:x});
+        var expected = {"X":{b:{id:["X/a"]}},"X/a": {id: ["Z"]}, "X/b":[0,0]};
+        this.assertPatch(expected, snapshotC, snapshotD);
+        this.assertPatch({X:{b:ref("X/a")}, "X/a": {id: ["Z"]}}, snapshotB, snapshotD);
+    },
+    testArray: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X",a:[]}, y = {id:"Y"}, z = {id:"Z"};
+        var snapshotA = this.serialize({X:x});
+        x.a.push(y);
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X/a/0": [{id:"Y"}]}, snapshotA, snapshotB);
+        x.a.push(z);
+        var snapshotC = this.serialize({X:x});
+        this.assertPatch({"X/a/1": [{id:"Z"}]}, snapshotB, snapshotC);
+        this.assertPatch({"X/a/0": [{id:"Y"}], "X/a/1": [{id:"Z"}]}, snapshotA, snapshotC);
+        x.a[0] = x.a[1];
+        var snapshotD = this.serialize({X:x});
+        var expected = {"X":{a:{1:{id:["X/a/0"]}}},"X/a/0":{id:["Z"]},"X/a/1":[0,0]};
+        this.assertPatch(expected, snapshotC, snapshotD);
+        x.a.removeAt(0);
+        x.a[0] = y;
+        var snapshotE = this.serialize({X:x});
+        var expected = {"X/a/0":{id:["Y"]},"X": {a: {1: [0,0]}}};
+        this.assertPatch(expected, snapshotD, snapshotE);
+    },
     testAddMorph: function() {
         this.addBox();
         this.assertSync(2);
