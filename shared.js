@@ -5,7 +5,7 @@
 
 if (typeof exports !== 'undefined') {
   module = require('./lk').module;
-  jsondiffpatch = require('jsondiffpatch');
+  jsondiffpatch = require('./jsondiffpatch');
 }
 
 module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpatch').toRun(function() {

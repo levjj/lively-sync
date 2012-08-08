@@ -12,11 +12,6 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
     if (typeof jsondiffpatch != 'undefined'){
         jdp = jsondiffpatch;
     }
-    
-    jdp.config = {
-        textDiffMinLength: 60
-    };
-    
 
     jdp.dateReviver = function(key, value){
         var a;
@@ -27,40 +22,6 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
             }
         }
         return value;
-    }
-    
-    var diff_match_patch_autoconfig = function(){
-        var dmp;
-        
-        if (jdp.config.diff_match_patch) {
-            dmp = new jdp.config.diff_match_patch.diff_match_patch();
-        }
-        if (typeof diff_match_patch != 'undefined') {
-            if (typeof diff_match_patch == 'function') {
-                dmp = new diff_match_patch();
-            }
-            else 
-                if (typeof diff_match_patch == 'object' &&
-                typeof diff_match_patch.diff_match_patch == 'function') {
-                    dmp = new diff_match_patch.diff_match_patch();
-                }
-        }
-        
-        if (dmp) {
-            jdp.config.textDiff = function(txt1, txt2){
-                return dmp.patch_toText(dmp.patch_make(txt1, txt2));
-            }
-            jdp.config.textPatch = function(txt1, patch){
-                var results = dmp.patch_apply(dmp.patch_fromText(patch), txt1);
-                for (var i = 0; i < results[1].length; i++) {
-                    if (!results[1][i]) {
-                        throw new Error('text patch failed');
-                    }
-                }
-                return results[0];
-            };
-            return true;
-        }
     }
 
     var isArray = (typeof Array.isArray == 'function') ?
@@ -96,75 +57,11 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
         return adiff;
     };
     
-    var arrayDiffByKey = function(o, n, itemKey){
-        var adiff, ol = o.length, nl = n.length, getKey, dcount = 0;
-        
-        if (typeof itemKey == 'function') {
-            getKey = itemKey;
-        }
-        else {
-            getKey = function(item){
-                return item[itemKey];
-            }
-        }
-        
-        for (var i = 0; i < nl; i++) {
-            if (typeof adiff == 'undefined') {
-                adiff = {
-                    _t: 'a'
-                };
-            }
-            // added, changed or unchanged
-            adiff[getKey(n[i])] = [n[i]];
-            dcount++;
-        }
-        for (var i = 0; i < ol; i++) {
-            var key = getKey(o[i]);
-            if (typeof adiff == 'undefined' || typeof adiff[key] == 'undefined') {
-                if (typeof adiff == 'undefined') {
-                    adiff = {
-                        _t: 'a'
-                    };
-                }
-                // deleted
-                adiff[key] = [o[i], 0, 0];
-                dcount++;
-            }
-            else {
-                var d = diff(o[i], adiff[key][0]);
-                if (typeof d == 'undefined') {
-                    // unchanged
-                    delete adiff[key];
-                    dcount--;
-                }
-                else {
-                    // changed
-                    adiff[key] = d;
-                }
-            }
-        }
-        if (dcount > 0) {
-            return adiff;
-        }
-        else {
-            // no changes
-            return;
-        }
-    };
-    
     var objectDiff = function(o, n){
     
         var odiff, pdiff, prop, addPropDiff;
         
         addPropDiff = function(name){
-        
-            if (isArray(n[prop]) && (n[prop + '_key'] || n['_' + prop + '_key'])) {
-                n[prop]._key = n[prop + '_key'] || n['_' + prop + '_key'];
-            }
-            if (isArray(o[prop]) && (o[prop + '_key'] || o['_' + prop + '_key'])) {
-                o[prop]._key = o[prop + '_key'] || o['_' + prop + '_key'];
-            }
-            
             if (!o.hasOwnProperty(prop)) {
                 pdiff = [n[prop]];
             } else if (!n.hasOwnProperty(prop)) {
@@ -238,24 +135,12 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
             d = [];
             if (typeof o != 'undefined') {
                 if (typeof n != 'undefined') {
-                    var longText = (ntype == 'string' && otype == 'string' && Math.min(o.length, n.length) > jdp.config.textDiffMinLength);
-                    if (longText && !jdp.config.textDiff) {
-                        diff_match_patch_autoconfig();
-                    }
-                    if (longText && jdp.config.textDiff) {
-                        // get changes form old value to new value as a text diff
-                        d.push(jdp.config.textDiff(o, n), 0, 2);
-                    }
-                    else {
-                        // old value changed to new value
-                        d.push(o);
-                        d.push(n);
-                    }
+                    // old value changed to new value
+                    d.push(o, n);
                 }
                 else {
                     // old value has been removed
-                    d.push(o);
-                    d.push(0, 0);
+                    d.push(o, 0, 0);
                 }
             }
             else {
@@ -267,12 +152,7 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
         else {
             if (isArray(n)) {
                 // diff 2 arrays	
-                if (n._key || o._key) {
-                    return arrayDiffByKey(o, n, n._key || o._key);
-                }
-                else {
-                    return arrayDiff(o, n);
-                }
+                return arrayDiff(o, n);
             }
             else {
                 // diff 2 objects
@@ -281,140 +161,11 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
         }
     };
     
-    var objectGet = function(obj, key){
-        if (isArray(obj) && obj._key) {
-            var getKey = obj._key;
-            if (typeof obj._key != 'function') {
-                getKey = function(item){
-                    return item[obj._key];
-                }
-            }
-            for (var i = 0; i < obj.length; i++) {
-                if (getKey(obj[i]) === key) {
-                    return obj[i];
-                }
-            }
-            return;
-        }
-        return obj[key];
-    };
-    
-    jdp.getByKey = objectGet;
-    
-    var objectSet = function(obj, key, value){
-        if (isArray(obj) && obj._key) {
-            var getKey = obj._key;
-            if (typeof obj._key != 'function') {
-                getKey = function(item){
-                    return item[obj._key];
-                }
-            }
-            for (var i = 0; i < obj.length; i++) {
-                if (getKey(obj[i]) === key) {
-                    obj[i] = value;
-                    return;
-                }
-            }
-            obj.push(value);
-        } else {
-            obj[key] = value;
-        }
-    }
-
-    var objectDelete = function(obj, key){
-        if (isArray(obj) && obj._key) {
-            var getKey = obj._key;
-            if (typeof obj._key != 'function') {
-                getKey = function(item){
-                    return item[obj._key];
-                }
-            }
-            for (var i = 0; i < obj.length; i++) {
-                if (getKey(obj[i]) === key) {
-                    obj.splice(i, 1);
-                    i--;
-                    return;
-                }
-            }
-            return;
-        }
-        if (isArray(obj)) {
-            obj.splice(key, 1);
-        } else { 
-            delete obj[key];
-        }
-    }
-
-    var textDiffReverse = function(td){
-
-        if (!jdp.config.textDiffReverse){
-            jdp.config.textDiffReverse = function(d){
-
-                var i, l, lines, line, lineTmp, header = null, headerRegex = /^@@ +\-(\d+),(\d+) +\+(\d+),(\d+) +@@$/, lineHeader, lineAdd, lineRemove;
-
-                var diffSwap = function() {
-                    // swap
-                    if (lineAdd !== null) {
-                        lines[lineAdd] = '-' + lines[lineAdd].slice(1);
-                    }
-                    if (lineRemove !== null) {
-                        lines[lineRemove] = '+' + lines[lineRemove].slice(1);
-                        if (lineAdd !== null) {
-                            lineTmp = lines[lineAdd];
-                            lines[lineAdd] = lines[lineRemove];
-                            lines[lineRemove] = lineTmp;
-                        }
-                    }
-
-                    // fix header
-                    lines[lineHeader] = '@@ -' + header[3] + ',' + header[4] + ' +' + header[1] + ',' + header[2] + ' @@';
-
-                    header = null;
-                    lineHeader = null;
-                    lineAdd = null;
-                    lineRemove = null;
-                }
-
-                lines = d.split('\n');
-                for (i = 0, l = lines.length; i<l; i++) {
-                    line = lines[i];
-                    var lineStart = line.slice(0,1);
-                    if (lineStart==='@'){
-                        if (header !== null) {
-                            //diffSwap();
-                        }
-                        header = headerRegex.exec(line);
-                        lineHeader = i;
-                        lineAdd = null;
-                        lineRemove = null;
-
-                        // fix header
-                        lines[lineHeader] = '@@ -' + header[3] + ',' + header[4] + ' +' + header[1] + ',' + header[2] + ' @@';
-                    } else if (lineStart == '+'){
-                        lineAdd = i;
-                        lines[i] = '-' + lines[i].slice(1);
-                    } else if (lineStart == '-'){
-                        lineRemove = i;
-                        lines[i] = '+' + lines[i].slice(1);
-                    }
-                }
-                if (header !== null) {
-                    //diffSwap();
-                }
-                return lines.join('\n');
-            };
-        }
-        return jdp.config.textDiffReverse(td);
-    }
-
     var reverse = jdp.reverse = function(d){
-
         var prop, rd;
-
-        if (typeof d == 'undefined')
-        {
+        if (typeof d == 'undefined') {
             return;
-        } else if (d === null){
+        } else if (d === null) {
             return null;
         } else if (typeof d == 'object' && !isDate(d)) {
             if (isArray(d)){
@@ -428,17 +179,8 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                     }
                 }
                 else {
-                    if (d[2] == 0) {
-                        // undefined, delete value => add value
-                        return [d[0]];
-                    }
-                    else
-                        if (d[2] == 2) {
-                            return [textDiffReverse(d[0]), 0, 2];
-                        }
-                        else {
-                            throw new Error("invalid diff type");
-                        }
+                    // undefined, delete value => add value
+                    return [d[0]];
                 }
             }else {
                 rd = {};
@@ -449,8 +191,6 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                 }
                 return rd;
             }
-        } else if (typeof d === 'string' && d.slice(0,2) === '@@'){
-            return textDiffReverse(d);
         }
         return d;
     }
@@ -485,49 +225,19 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                 if (d.length < 3) {
                     nvalue = d[d.length - 1];
                     if (pname !== null) {
-                        objectSet(o, pname, nvalue);
+                        o[pname] = nvalue;
                     }
                     return nvalue;
                 }
                 else {
-                    if (d[2] == 0) {
-                        // undefined, delete value
-                        if (pname !== null) {
-                            objectDelete(o, pname);
-                        }
-                        else {
-                            return;
-                        }
-                    }
-                    else 
-                        if (d[2] == 2) {
-                            // text diff
-                            if (!jdp.config.textPatch) {
-                                diff_match_patch_autoconfig();
-                            }
-                            if (!jdp.config.textPatch) {
-                                throw new Error("textPatch function not found");
-                            }
-                            try {
-                                nvalue = jdp.config.textPatch(objectGet(o, pname), d[0]);
-                            } 
-                            catch (text_patch_err) {
-                                throw new Error('cannot apply patch at "' + subpath + '": ' + text_patch_err);
-                            }
-                            if (pname !== null) {
-                                objectSet(o, pname, nvalue);
-                            }
-                            return nvalue;
-                        }
-                        else {
-                            throw new Error("invalid diff type");
-                        }
+                    // undefined, delete value
+                    delete o[pname];
                 }
             }
             else {
                 if (d._t == 'a') {
                     // array diff
-                    target = pname === null ? o : objectGet(o, pname);
+                    target = pname === null ? o : o[pname];
                     if (typeof target != 'object' || !isArray(target)) {
                         throw new Error('cannot apply patch at "' + subpath + '": array expected');
                     }
@@ -538,6 +248,7 @@ module('users.cschuster.sync.jsondiffpatch').requires().toRun(function() {
                             }
                         }
                     }
+                    target.repair();
                 }
                 else {
                     // object diff
