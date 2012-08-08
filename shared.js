@@ -21,6 +21,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     toJSON: function() {
         return JSON.stringify(this.data);
+    },
+    clone: function() {
+        return new users.cschuster.sync.Snapshot(Object.deepCopy(this.data));
     }
 });
 
