@@ -739,8 +739,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var patch = Object.deepCopy(this.wcA.lastPatch.data);
         this.wcC.receivePatch(this.wcA.rev, patch);
     },
-    addBox: function() {
-        var box = this.newBox(5, 5, "X");
+    addBox: function(optID) {
+        var box = this.newBox(5, 5, optID || "X");
         this.openInWorldA(box);
         this.sync();
         return box;
