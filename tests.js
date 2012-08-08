@@ -777,17 +777,37 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testEmptyWorlds: function() {
         this.assertSync(1);
     },
+    testAddMorph: function() {
+        this.addBox();
+        this.assertSync(2);
+    },
+    testEmptyDiff: function() {
+        this.addBox();
+        this.assertSync(2);
+        this.sync();
+        this.assertSync(2);
+    },
+    testRemoveMorph: function() {
+        var box = this.addBox();
+        box.remove();
+        this.wcA.removeObject(box);
+        this.sync();
+        this.assertSync(3);
+    },
     testAddObject: function() {
+        var box = this.addBox();
         this.wcA.addObject({id: "X"});
         this.sync();
         this.assertSync(2);
     },
     testRemoveObject: function() {
+        var box = this.addBox();
         var snapshotA = this.serialize({X: {}});
         var snapshotB = this.serialize({});
         this.assertPatch({X: [0,0]}, snapshotA, snapshotB);
     },
     testSimpleProperty: function() {
+        var box = this.addBox();
         var snapshotA = this.serialize({X: {}});
         var snapshotB = this.serialize({X: {a:23}});
         this.assertPatch({X: {a:[23]}}, snapshotA, snapshotB);
@@ -797,7 +817,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertPatch({X: {a:[0,0]}}, snapshotC, snapshotD);
     },
     testTopLevelReference: function() {
-        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var box = this.addBox();
         var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
         var table = {X:x,Y:y};
         var snapshotA = this.serialize(table);
@@ -812,7 +832,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertPatch({X: {a:{id:["Z"]}},Z: [{id:"Z"}]}, snapshotB, snapshotD);
     },
     testNestedReferences: function() {
-        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var box = this.addBox();
         var x = {id:"X"}, y = {id:"Y"}, z = {id:"Z"};
         var snapshotA = this.serialize({X:x});
         x.a = y;
@@ -829,7 +849,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertPatch({X:{b:ref("X/a")}, "X/a": {id: ["Z"]}}, snapshotB, snapshotD);
     },
     testArray: function() {
-        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var box = this.addBox();
         var x = {id:"X",a:[]}, y = {id:"Y"}, z = {id:"Z"};
         var snapshotA = this.serialize({X:x});
         x.a.push(y);
@@ -848,23 +868,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var snapshotE = this.serialize({X:x});
         var expected = {"X/a/0":{id:["Y"]},"X": {a: {1: [0,0]}}};
         this.assertPatch(expected, snapshotD, snapshotE);
-    },
-    testAddMorph: function() {
-        this.addBox();
-        this.assertSync(2);
-    },
-    testEmptyDiff: function() {
-        this.addBox();
-        this.assertSync(2);
-        this.sync();
-        this.assertSync(2);
-    },
-    testRemoveMorph: function() {
-        var box = this.addBox();
-        box.remove();
-        this.wcA.removeObject(box);
-        this.sync();
-        this.assertSync(3);
     },
     testResize: function() {
         var box = this.addBox();
