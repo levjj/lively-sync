@@ -820,6 +820,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var x = this.addBox("X"), y = this.newBox(1, 2, "Y"), z = this.newBox(3, 4, "Z");
         x.a = y;
         this.assertSync(3);
+        x.b = z;
+        this.assertSync(4);
+        x.a = z;
+        this.assertSync(5);
+        delete x.b;
+        this.assertSync(6);
     },
     testArray: function() {
         var box = this.addBox();
