@@ -883,14 +883,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testAddSubmorph: function() {
         var box = this.addBox();
         box.addMorph(this.newBox(3, 3, "Y"));
-        this.sync();
         this.assertSync(3);
         var z = this.newBox(3, 3, "Z");
         box.addMorph(z);
-        this.sync();
         this.assertSync(4);
         z.addMorph(this.newBox(3, 3, "Z"));
-        this.sync();
         this.assertSync(5);
     },
     testRemoveSubmorph: function() {
