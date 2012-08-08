@@ -135,6 +135,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/shape/_Fill"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testBorderColor: function() {
+        this.rect.setBorderColor(Color.black);
+        this.rect.savedColor = Color.web.salmon.lighter();
+        var snapshotA = this.serialize(this.table);
+        this.rect.setBorderColor(this.rect.savedColor);
+        var snapshotB = this.serialize(this.table);
+        this.assertPatch(snapshotA, snapshotB);
+    },
     testAddMorph: function() {
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
