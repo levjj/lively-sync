@@ -901,28 +901,22 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testScripts: function() {
         var box = this.addBox();
         box.addScript(function tick() { return "tack"; });
-        this.sync();
         this.assertSync(3);
         box.addScript(function rot() { this.rotateBy(0.1); });
-        this.sync();
         this.assertSync(4);
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
         this.assertSync(4, true);
-        this.sync();
         this.assertSync(5);
         delete box.tick;
-        this.sync();
         this.assertSync(6);
         box.addScript(function rot() { this.rotateBy(2); });
-        this.sync();
         this.assertSync(7);
         box.rot();
         this.worldB.get("X").rot();
         this.worldC.get("X").rot();
         this.assertSync(7, true);
-        this.sync();
         this.assertSync(8);
     },
     testSimpleConnect: function() {
@@ -930,7 +924,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.a = 2;
         box.b = 4;
         connect(box, "a", box, "b");
-        this.sync();
         this.assertSync(3);
         box.a = 3;
         this.assertEquals(3, box.b);
@@ -939,10 +932,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.worldC.get("X").a = 3;
         this.assertEquals(3, this.worldC.get("X").b);
         this.assertSync(3, true);
-        this.sync();
         this.assertSync(4);
         box.a = 5;
-        this.sync();
         this.assertSync(5);
     },
     testGeometryConnect: function() {
