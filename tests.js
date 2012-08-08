@@ -837,6 +837,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.sync();
         this.assertSync(4);
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
+        for (var k in this.worldA.submorphs)
+            this.wcA.addObject(this.worldA.submorphs[k]);
         this.sync();
         this.assertSync(5);
     }
