@@ -738,12 +738,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     },
     testBorderColor: function() {
         var box = this.addBox();
-        box.setFill(Color.black);
+        box.setBorderColor(Color.black);
         this.sync();
         this.assertSync(3);
-        box.setFill(null);
+        box.savedColor = Color.web.salmon.lighter();
         this.sync();
         this.assertSync(4);
+        box.setBorederColor(box.savedColor);
+        this.sync();
+        this.assertSync(5);
     },
     testAddSubmorph: function() {
         var box = this.addBox();
