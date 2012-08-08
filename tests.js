@@ -794,12 +794,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.sync();
         this.assertSync(3);
     },
-    testAddObject: function() {
-        var box = this.addBox();
-        box.x = {id: "X"};
-        this.sync();
-        this.assertSync(3);
-    },
+
     testRemoveObject: function() {
         var box = this.addBox();
         box.x = {id: "X"};
