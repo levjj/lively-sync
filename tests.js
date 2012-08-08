@@ -115,7 +115,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotC = this.serialize(table);
         x.a = z;
         var snapshotD = this.serialize(table);
-        debugger;
         this.assertPatch({X: {a:{id:["Z"]}}}, snapshotC, snapshotD);
         this.assertPatch({X: {a:{id:["Z"]}},Z: [{}]}, snapshotB, snapshotD);
     },
