@@ -778,9 +778,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(1);
     },
     testAddObject: function() {
-        var snapshotA = this.serialize({});
-        var snapshotB = this.serialize({X: {}});
-        this.assertPatch({X: [{}]}, snapshotA, snapshotB);
+        this.wcA.addObject({id: "X"});
+        this.sync();
+        this.assertSync(2);
     },
     testRemoveObject: function() {
         var snapshotA = this.serialize({X: {}});
