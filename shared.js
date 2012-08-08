@@ -231,7 +231,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (obj && typeof obj == "object" && !Array.isArray(obj)) {
             Properties.forEachOwn(obj, function(name, val) {
                 if (this.isSmartRef(orig[name])) {
-                    obj[name] = this.createSmartRef(val.id[0]);
+                    obj[name] = [this.createSmartRef(val.id[0])];
                 } else {
                     this.recreateSmartRefs(val, orig[name]);
                 }
