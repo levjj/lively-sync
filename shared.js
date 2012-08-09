@@ -102,8 +102,78 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    reverse: function() {
-        jsondiffpatch.reverse(this.data);
+    applyPatch: function(o, pname, d, path) {
+        var p, nvalue, subpath = '', target;
+        
+        if (typeof pname != 'string') {
+            path = d;
+            d = pname;
+            pname = null;
+        }
+        else {
+            if (typeof o != 'object') {
+                pname = null;
+            }
+        }
+        
+        if (path) {
+            subpath += path;
+        }
+        subpath += '/';
+        if (pname !== null) {
+            subpath += pname;
+        }
+        
+        
+        if (typeof d == 'object') {
+            if (isArray(d)) {
+                // changed value
+                if (d.length < 3) {
+                    nvalue = d[d.length - 1];
+                    if (pname !== null) {
+                        o[pname] = nvalue;
+                    }
+                    return nvalue;
+                }
+                else {
+                    // undefined, delete value
+                    delete o[pname];
+                }
+            }
+            else {
+                if (d._t == 'a') {
+                    // array diff
+                    target = pname === null ? o : o[pname];
+                    if (typeof target != 'object' || !isArray(target)) {
+                        throw new Error('cannot apply patch at "' + subpath + '": array expected');
+                    }
+                    else {
+                        for (p in d) {
+                            if (p !== '_t' && d.hasOwnProperty(p)) {
+                                patch(target, p, d[p], subpath);
+                            }
+                        }
+                    }
+                    target.repair();
+                }
+                else {
+                    // object diff
+                    target = pname === null ? o : o[pname];
+                    if (typeof target != 'object' || isArray(target)) {
+                        throw new Error('cannot apply patch at "' + subpath + '": object expected');
+                    }
+                    else {
+                        for (p in d) {
+                            if (d.hasOwnProperty(p)) {
+                                applyPatch(target, p, d[p], subpath);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return o;
     },
     apply: function(snapshot) {
         this.applyPatch(snapshot.data, this.data);
