@@ -79,7 +79,8 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     diff: function(otherSnapshot) {
         var rawDiff = this.jsonDiff(this.data, otherSnapshot.data);
-        return users.cschuster.sync.Patch.fromDiff(rawDiff);
+        return new users.cschuster.sync.Diff(rawDiff);
+        //return users.cschuster.sync.Patch.fromDiff(rawDiff);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
