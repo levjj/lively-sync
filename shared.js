@@ -5,10 +5,9 @@
 
 if (typeof exports !== 'undefined') {
   module = require('./lk').module;
-  jsondiffpatch = require('./jsondiffpatch');
 }
 
-module('users.cschuster.sync.shared').requires('users.cschuster.sync.jsondiffpatch').toRun(function() {
+module('users.cschuster.sync.shared').requires().toRun(function() {
 
 Object.subclass('users.cschuster.sync.Snapshot', {
     initialize: function(json) {
