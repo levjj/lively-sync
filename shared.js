@@ -15,9 +15,71 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
+    arrayDiff: function(o, n) {
+        var adiff;
+        for (var i = 0; i < Math.max(n.length, o.length); i++) {
+            var idiff = this.jsonDiff(o[i], n[i]);
+            if (typeof idiff != 'undefined') {
+                if (typeof adiff == 'undefined') adiff = {_t: "a"};
+                adiff[i] = idiff;
+            }
+        }
+        return adiff;
+    },
+    objectDiff: function(o, n){
+        var odiff;
+        function addPropDiff(prop){
+            var pdiff;
+            if (!o.hasOwnProperty(prop)) {
+                pdiff = [n[prop]];
+            } else if (!n.hasOwnProperty(prop)) {
+                pdiff = [o[prop], 0, 0];
+            } else {
+                pdiff = this.jsonDiff(o[prop], n[prop]);
+            }
+            if (typeof pdiff != 'undefined') {
+                if (typeof odiff == 'undefined') {
+                    odiff = {};
+                }
+                odiff[prop] = pdiff;
+            }
+        };
+        for (var prop in n) {
+            if (n.hasOwnProperty(prop)) {
+                addPropDiff(prop);
+            }
+        }
+        for (var prop in o) {
+            if (o.hasOwnProperty(prop)) {
+                if (typeof n[prop] == 'undefined') {
+                    addPropDiff(prop);
+                }
+            }
+        }
+        return odiff;
+    },
+    jsonDiff: function(o, n){
+        if (o === n) return;
+        if ((o !== o) && (n !== n)) return; // both NaN
+        if (o && n && typeof o == "object" && typeof "n" == "object") {
+            return Array.isArray(n) ? this.arrayDiff(o, n): this.objectDiff(o, n);
+        } else {
+            var d = [];
+            if (typeof o != 'undefined') {
+                if (typeof n != 'undefined') {
+                    d.push(o, n); // old value changed to new value
+                } else {
+                    d.push(o, 0, 0); // old value has been removed
+                }
+            } else {
+                d.push(n); // new value is added
+            }
+            return d;
+        }
+    },
     diff: function(otherSnapshot) {
-        var rawDiff = jsondiffpatch.diff(this.data, otherSnapshot.data);
-        return new users.cschuster.sync.Diff(rawDiff);
+        var rawDiff = this.jsonDiff(this.data, otherSnapshot.data);
+        return users.cschuster.sync.Patch.fromDiff(rawDiff);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
