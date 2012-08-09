@@ -150,7 +150,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                     else {
                         for (p in d) {
                             if (p !== '_t' && d.hasOwnProperty(p)) {
-                                patch(target, p, d[p], subpath);
+                                this.applyPatch(target, p, d[p], subpath);
                             }
                         }
                     }
@@ -165,7 +165,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                     else {
                         for (p in d) {
                             if (d.hasOwnProperty(p)) {
-                                applyPatch(target, p, d[p], subpath);
+                                this.applyPatch(target, p, d[p], subpath);
                             }
                         }
                     }
