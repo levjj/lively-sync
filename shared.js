@@ -312,7 +312,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         }
     },
     recreate: function(snapshot) {
-        this.recreateSmartRefs(snapshot.data, this.data);
+        this.recreateSmartRefs(snapshot.data.registry, this.data);
     },
     toHierachicalPatch: function() {
         var newPatch = {};
