@@ -27,7 +27,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     objectDiff: function(o, n){
         var odiff;
-        function addPropDiff(prop){
+        var addPropDiff = function(prop){
             var pdiff;
             if (!o.hasOwnProperty(prop)) {
                 pdiff = [n[prop]];
@@ -42,7 +42,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 }
                 odiff[prop] = pdiff;
             }
-        };
+        }.bind(this);
         for (var prop in n) {
             if (n.hasOwnProperty(prop)) {
                 addPropDiff(prop);
