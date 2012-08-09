@@ -342,7 +342,8 @@ Object.subclass('users.cschuster.sync.Patch', {
                 }
             }
             var prop = parts.last();
-            if (!current.hasOwnProperty(prop)) current[prop] = val;
+            if (!current.hasOwnProperty(prop) || current[prop].id == key)
+                current[prop] = val;
         }
         return new users.cschuster.sync.Patch(newPatch);
     },
