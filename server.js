@@ -240,6 +240,7 @@ new users.cschuster.sync.Repository(function(repo) {
 });
 
 io.set('log level', 1);
+io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function (socket) {
     new users.cschuster.sync.Server(socket);
 });
