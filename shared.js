@@ -102,32 +102,10 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    applyPatch: function(o, pname, d, path) {
-        var p, nvalue, subpath = '', target;
-        
-        if (typeof pname != 'string') {
-            path = d;
-            d = pname;
-            pname = null;
-        }
-        else {
-            if (typeof o != 'object') {
-                pname = null;
-            }
-        }
-        
-        if (path) {
-            subpath += path;
-        }
-        subpath += '/';
-        if (pname !== null) {
-            subpath += pname;
-        }
-        
-        
+    applyPatch: function(o, pname, d) {
+        var p, nvalue, target;
         if (typeof d == 'object') {
-            if (isArray(d)) {
-                // changed value
+            if (Array.isArray(d)) { // changed value
                 if (d.length < 3) {
                     nvalue = d[d.length - 1];
                     if (pname !== null) {
@@ -135,8 +113,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                     }
                     return nvalue;
                 }
-                else {
-                    // undefined, delete value
+                else { // undefined, delete value
                     delete o[pname];
                 }
             }
@@ -144,13 +121,13 @@ Object.subclass('users.cschuster.sync.Diff', {
                 if (d._t == 'a') {
                     // array diff
                     target = pname === null ? o : o[pname];
-                    if (typeof target != 'object' || !isArray(target)) {
-                        throw new Error('cannot apply patch at "' + subpath + '": array expected');
+                    if (typeof target != 'object' || !Array.isArray(target)) {
+                        throw new Error('cannot apply patch: array expected');
                     }
                     else {
                         for (p in d) {
                             if (p !== '_t' && d.hasOwnProperty(p)) {
-                                this.applyPatch(target, p, d[p], subpath);
+                                this.applyPatch(target, p, d[p]);
                             }
                         }
                     }
@@ -159,20 +136,19 @@ Object.subclass('users.cschuster.sync.Diff', {
                 else {
                     // object diff
                     target = pname === null ? o : o[pname];
-                    if (typeof target != 'object' || isArray(target)) {
-                        throw new Error('cannot apply patch at "' + subpath + '": object expected');
+                    if (typeof target != 'object' || Array.isArray(target)) {
+                        throw new Error('cannot apply patch: object expected');
                     }
                     else {
                         for (p in d) {
                             if (d.hasOwnProperty(p)) {
-                                this.applyPatch(target, p, d[p], subpath);
+                                this.applyPatch(target, p, d[p]);
                             }
                         }
                     }
                 }
             }
         }
-        
         return o;
     },
     apply: function(snapshot) {
