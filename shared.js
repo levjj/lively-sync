@@ -103,48 +103,37 @@ Object.subclass('users.cschuster.sync.Diff', {
         this.data = json || {};
     },
     applyPatch: function(o, pname, d) {
-        var p, nvalue, target;
-        if (typeof d == 'object') {
-            if (Array.isArray(d)) { // changed value
-                if (d.length < 3) {
-                    nvalue = d[d.length - 1];
-                    if (pname !== null) {
-                        o[pname] = nvalue;
-                    }
-                    return nvalue;
+        if (typeof d !== 'object') return o;
+        if (Array.isArray(d)) { // changed value
+            if (d.length < 3) {
+                var nvalue = d.last();
+                if (pname !== null) {
+                    o[pname] = nvalue;
                 }
-                else { // undefined, delete value
-                    delete o[pname];
-                }
+                return nvalue;
             }
-            else {
-                if (d._t == 'a') {
-                    // array diff
-                    target = pname === null ? o : o[pname];
-                    if (typeof target != 'object' || !Array.isArray(target)) {
-                        throw new Error('cannot apply patch: array expected');
-                    }
-                    else {
-                        for (p in d) {
-                            if (p !== '_t' && d.hasOwnProperty(p)) {
-                                this.applyPatch(target, p, d[p]);
-                            }
-                        }
-                    }
-                    target.repair();
+            else { // undefined, delete value
+                delete o[pname];
+            }
+        } else { // path to changes value
+            var target = pname === null ? o : o[pname];
+            if (d._t == 'a') { // array diff
+                if (typeof target != 'object' || !Array.isArray(target)) {
+                    throw new Error('cannot apply patch: array expected');
                 }
-                else {
-                    // object diff
-                    target = pname === null ? o : o[pname];
-                    if (typeof target != 'object' || Array.isArray(target)) {
-                        throw new Error('cannot apply patch: object expected');
+                for (var p in d) {
+                    if (p !== '_t' && d.hasOwnProperty(p)) {
+                        this.applyPatch(target, p, d[p]);
                     }
-                    else {
-                        for (p in d) {
-                            if (d.hasOwnProperty(p)) {
-                                this.applyPatch(target, p, d[p]);
-                            }
-                        }
+                }
+                target.repair();
+            } else { // object diff
+                if (typeof target != 'object' || Array.isArray(target)) {
+                    throw new Error('cannot apply patch: object expected');
+                }
+                for (var p in d) {
+                    if (d.hasOwnProperty(p)) {
+                        this.applyPatch(target, p, d[p]);
                     }
                 }
             }
