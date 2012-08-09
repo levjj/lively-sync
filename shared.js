@@ -304,7 +304,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         if (obj && typeof obj == "object" && !Array.isArray(obj)) {
             Properties.forEachOwn(obj, function(name, val) {
                 var o = orig[name];
-                if (o && Object.isObject(o) && o.__isSmartRef__ && !Array.isArray(val)) {
+                if (o && typeof o == "object" && o.__isSmartRef__ && !Array.isArray(val)) {
                     obj[name] = [{__isSmartRef__: true, id: val.id.last()}];
                 } else {
                     this.recreateSmartRefs(val, o);
