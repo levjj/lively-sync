@@ -234,17 +234,6 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    recreateSmartRefs: function(obj, orig) {
-        if (obj && typeof obj == "object" && !Array.isArray(obj)) {
-            Properties.forEachOwn(obj, function(name, val) {
-                if (this.isSmartRef(orig[name]) && !Array.isArray(val)) {
-                    obj[name] = [this.createSmartRef(val.id.last())];
-                } else {
-                    this.recreateSmartRefs(val, orig[name]);
-                }
-            }, this);
-        }
-    },
     propagateDeletions: function(snapshot) {
         var toDelete = this.aggregateDeletions();
         for (var id in snapshot.data.registry) {
@@ -258,7 +247,6 @@ Object.subclass('users.cschuster.sync.Diff', {
         this.addMissingClassNames(this.data);
         this.addMissingSmartRefs();
         this.propagateDeletions(snapshot);
-        this.recreateSmartRefs(this.data, snapshot.data);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
