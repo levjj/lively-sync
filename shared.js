@@ -299,6 +299,21 @@ Object.subclass('users.cschuster.sync.Patch', {
     isEmpty: function() {
         return !this.data || Object.isEmpty(this.data);
     },
+    recreateSmartRefs: function(obj, orig) {
+        if (obj && typeof obj == "object" && !Array.isArray(obj)) {
+            Properties.forEachOwn(obj, function(name, val) {
+                var o = orig[name];
+                if (o && Object.isObject(o) && o.__isSmartRef__ && !Array.isArray(val)) {
+                    obj[name] = [{__isSmartRef__: true, id: val.id.last()}];
+                } else {
+                    this.recreateSmartRefs(val, o);
+                }
+            }, this);
+        }
+    },
+    recreate: function(snapshot) {
+        this.recreateSmartRefs(snapshot.data, this.data);
+    },
     toHierachicalPatch: function() {
         var newPatch = {};
         function removeAdds(obj) {
