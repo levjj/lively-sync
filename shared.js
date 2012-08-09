@@ -176,7 +176,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         return o;
     },
     apply: function(snapshot) {
-        this.applyPatch(snapshot.data, this.data);
+        this.applyPatch(snapshot.data, null, this.data, '');
     },
     aggregateDeletions: function() {
         var toDelete = [];
