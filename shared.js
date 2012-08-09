@@ -60,7 +60,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     jsonDiff: function(o, n){
         if (o === n) return;
         if ((o !== o) && (n !== n)) return; // both NaN
-        if (o && n && typeof o == "object" && typeof "n" == "object") {
+        if (o && n && typeof o == "object" && typeof n == "object") {
             return Array.isArray(n) ? this.arrayDiff(o, n): this.objectDiff(o, n);
         } else {
             var d = [];
