@@ -106,7 +106,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         jsondiffpatch.reverse(this.data);
     },
     apply: function(snapshot) {
-        jsondiffpatch.patch(snapshot.data, this.data);
+        this.applyPatch(snapshot.data, this.data);
     },
     aggregateDeletions: function() {
         var toDelete = [];
