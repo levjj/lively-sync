@@ -1,5 +1,35 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
+TestCase.subclass('users.cschuster.sync.tests.MapperTest',
+'running', {
+    setUp: function() {
+        this.mapper = new users.cschuster.sync.Mapper();
+        this.mapper.addMapping('X', 'Y');
+    }
+},
+'testing', {
+    testMapping: function() {
+        this.assertEquals('Y', this.mapper.map('X'));
+        this.assertEquals(undefined, this.mapper.map('Y'));
+        this.assertEquals(undefined, this.mapper.map('Z'));
+        this.assertEquals('Y/a', this.mapper.map('X/a'));
+        this.assertEquals('Y/b/c', this.mapper.map('X/b/c'));
+    },
+    testCoalesceOverlappingRules: function() {
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
+        this.mapper.addMapping('X/a', 'Y/a');
+        this.assertEquals('Y/a', this.mapper.map('X/a'));
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
+    },
+    testDoNotCoalesceDifferentRules: function() {
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
+        this.mapper.addMapping('X/a', 'Z');
+        this.assertEquals('Z', this.mapper.map('X/a'));
+        this.assertEqualState([{from: 'X', to: 'Y'},{from: 'X/a', to: 'Z'}],
+                              this.mapper.getRules());
+    }
+});
+
 lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
 'helper', {
     setUp: function($super) {
