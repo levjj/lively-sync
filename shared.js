@@ -274,7 +274,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
             if (Array.isArray(value) && value.length == 4) {
-                mapping.addMapping(value[1], key);
+                mapping.addRule(value[1], key);
                 this.data.registry[key] = value[2]; // insert additional patch
             }
         }
