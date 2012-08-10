@@ -107,11 +107,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         return odiff;
     },
-    jsonDiff: function(o, n){
+    jsonDiff: function(o, n, mapper){
         if (o === n) return;
         if ((o !== o) && (n !== n)) return; // both NaN
         if (o && n && typeof o == "object" && typeof n == "object") {
-            return Array.isArray(n) ? this.arrayDiff(o, n): this.objectDiff(o, n);
+            return Array.isArray(n)
+                ? this.arrayDiff(o, n, mapper)
+                : this.objectDiff(o, n, mapper);
         } else {
             var d = [];
             if (typeof o != 'undefined') {
