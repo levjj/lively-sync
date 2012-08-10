@@ -94,11 +94,11 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var result = [];
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
-                // find direct parent move (if there is one)
+                // find direct parent copy (if there is one)
                 var move = result
                     .select(function(ea) { return key.startsWith(ea.from); })
                     .max(function(ea) { return ea.from.length });
-                // do not add this move if it is just part of the parent move
+                // do not add this copy if it is just part of the parent copy
                 if (movesAndDeletes[key].to.startsWith(move.to))
                     result.push(movesAndDeletes[key]);
             }
