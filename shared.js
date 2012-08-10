@@ -75,7 +75,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         return adiff;
     },
-    objectDiff: function(o, n){
+    objectDiff: function(o, n, mapper) {
         var odiff;
         var addPropDiff = function(prop){
             var pdiff;
