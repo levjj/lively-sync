@@ -42,6 +42,7 @@ Object.subclass('users.cschuster.sync.Mapper', {
                 }
             }
         }
+        if (!added) this.rules.push({from: from, to: to});
         this.rulesLength = this.rules.length;
     },
     map: function(from) {
