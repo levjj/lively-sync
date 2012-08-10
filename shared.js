@@ -88,7 +88,10 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 result[n[key].id].to = key;
             }
         }
-        return result.select(function(ea) { return !!ea.to });
+        for (var key in result) {
+            if (!result[key].to) delete result[key];
+        }
+        return result;
     },
     diff: function(otherSnapshot) {
         var copyDiff = this.copyDiff(this.data, otherSnapshot.data);
