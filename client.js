@@ -230,7 +230,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         patch[key] = value[1]; // insert additional patch
                     }
                 } else {
-                    this.applyObjectPatch(obj[key], value);
+                    this.performCopyInstructions(obj[key], value);
                 }
             }
         }
