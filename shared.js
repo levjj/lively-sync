@@ -392,9 +392,11 @@ Object.subclass('users.cschuster.sync.Patch', {
         // recreates diff instructions from patch
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
-                if (obj.length == 2) {
+                if (obj.length == 2) { // delete
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
-                } else if (optSnapshotObj !== undefined) {
+                } else if (obj.length == 3) { // copy
+                    obj.push(0);
+                } else if (optSnapshotObj !== undefined) { // add or set
                     obj.unshift(optSnapshotObj);
                 }
             } else { // path object or array
