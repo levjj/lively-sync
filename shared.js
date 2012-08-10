@@ -275,6 +275,14 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return mapping;
     },
+    updateSmartRefs: function(obj, mapping) {
+        if (!obj || typeof obj != "object") return;
+        if (obj.__isSmartRef__) {
+            var newId = 23;
+        } else {
+            
+        }
+    },
     processCopyInstructions: function(snapshot) {
         var copyMapping = this.findAndRemoveCopyDiffs();
         for (var key in snapshot.registry) {
