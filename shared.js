@@ -174,6 +174,9 @@ Object.subclass('users.cschuster.sync.Diff', {
         return o;
     },
     apply: function(snapshot) {
+        // process copy instructions first
+        
+        // then apply raw diff
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
