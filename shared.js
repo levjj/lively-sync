@@ -64,10 +64,10 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    arrayDiff: function(o, n) {
+    arrayDiff: function(o, n, mapper) {
         var adiff;
         for (var i = 0; i < Math.max(n.length, o.length); i++) {
-            var idiff = this.jsonDiff(o[i], n[i]);
+            var idiff = this.jsonDiff(o[i], n[i], mapper);
             if (typeof idiff != 'undefined') {
                 if (typeof adiff == 'undefined') adiff = {_t: "a"};
                 adiff[i] = idiff;
