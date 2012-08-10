@@ -98,7 +98,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                     result.removeAt(i--);
                 }
             }
-            result.push(key);
+            result.push(entry);
         }
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
