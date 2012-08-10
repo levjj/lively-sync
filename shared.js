@@ -189,7 +189,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return o;
     },
-    findAndRemoveCopyDiffs: function(snapshot) {
+    findAndRemoveCopyDiffs: function() {
         var result = [];
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
