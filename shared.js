@@ -21,7 +21,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
             .max(function(ea) { return ea.from.length });
         // do not add this copy if it is just part of the parent copy
         if (move && to.startsWith(move.to)) return;
-        // add mapping
+        // add rule
         var added = false;
         var fromLength = from.length;
         for (var i = 0; i < this.rules.length; i++) {
