@@ -77,22 +77,6 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     objectDiff: function(o, n, mapper) {
         var odiff;
-        var addPropDiff = function(prop){
-            var pdiff;
-            if (!o.hasOwnProperty(prop)) {
-                pdiff = [n[prop]];
-            } else if (!n.hasOwnProperty(prop)) {
-                pdiff = [o[prop], 0, 0];
-            } else {
-                pdiff = this.jsonDiff(o[prop], n[prop], mapper);
-            }
-            if (typeof pdiff != 'undefined') {
-                if (typeof odiff == 'undefined') {
-                    odiff = {};
-                }
-                odiff[prop] = pdiff;
-            }
-        }.bind(this);
         for (var prop in n) {
             if (n.hasOwnProperty(prop)) {
                 addPropDiff(prop);
