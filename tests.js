@@ -181,7 +181,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected["X/b"] = [0, 0]; // delete X/b copy
         this.assertPatch(expected, snapshotB, snapshotD);
     },
-    testNestedReferencesWithPrimitiveProperties: function() {
+    testNestedReferencesWithProperties: function() {
         var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", p: {id: "Z", name: "z"}};
         var snapshotA = this.serialize({X:x});
         x.b = y;
