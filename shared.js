@@ -9,6 +9,20 @@ if (typeof exports !== 'undefined') {
 
 module('users.cschuster.sync.shared').requires().toRun(function() {
 
+Object.subclass('users.cschuster.sync.Mapper', {
+    initialize: function() {
+    },
+    addMapping: function(from, to) {
+        
+    },
+    map: function(from) {
+        
+    },
+    rules: function() {
+        
+    }   
+});
+
 Object.subclass('users.cschuster.sync.Snapshot', {
     initialize: function(json) {
         if (typeof json == 'string') json = JSON.parse(json);
