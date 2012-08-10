@@ -189,8 +189,16 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return o;
     },
-    findCopyDiffs: function() {
-        
+    findAndRemoveCopyDiffs: function(snapshot) {
+        var result = [];
+        for (var key in this.data.registry) {
+            var value = this.data.registry[key];
+            if (Array.isArray(value) && value.length == 4) {
+                result.push({from:value[1], to: key});
+                this.data.registry[key] = value[2]; // insert additional patch
+            }
+        }
+        return result;
     },
     processCopyInstructions: function() {
         var copies = this.findCopyDiffs();
