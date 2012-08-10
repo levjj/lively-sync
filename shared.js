@@ -189,6 +189,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return o;
     },
+    findCopyDiffs: function() {
+        
+    },
+    processCopy: function() {
+        
+    },
     apply: function(snapshot) {
         // process copy instructions first
         for (var key in this.data.registry) {
