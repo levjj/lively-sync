@@ -79,13 +79,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     copyDiff: function(o, n) {
         var result = {};
         // find all objects with ids that were moved or deleted
-        for (var key in o) {
+        for (var key in o.registry) {
             if (o[key].id && (!n.hasOwnProperty(key) || o[key].id != n[key].id)) {
                 result[o[key].id] = {from: key};
             }
         }
         // add the new key if they were moved
-        for (var key in n) {
+        for (var key in n.registry) {
             if (n[key].id && result[n[key].id]) {
                 result[n[key].id].to = key;
             }
