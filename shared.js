@@ -290,7 +290,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     apply: function(snapshot) {
-        this.processCopyInstructions(snapshot.data);
+        this.processCopyInstructions(snapshot.data, this.copyMapping());
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
