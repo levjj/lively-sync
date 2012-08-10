@@ -150,11 +150,11 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         return mapper;
     },
     diff: function(otherSnapshot) {
-        var copyMapper = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
+        var copyMapping = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
         // compute (remaining) raw diff
-        var rawDiff = this.jsonDiff(this.data, otherSnapshot.data, copyMapper);
+        var rawDiff = this.jsonDiff(this.data, otherSnapshot.data, copyMapping);
         // merge object diff and raw diff
-        copyMapper.getRules().each(function(rule) {
+        copyMapping.getRules().each(function(rule) {
             if (!rawDiff.registry.hasOwnProperty(rule.to)) rawDiff.registry[rule.to] = {};
             // generate copy instruction
             rawDiff.registry[rule.to] = [0, rule.from, rawDiff.registry[rule.to], 0];
