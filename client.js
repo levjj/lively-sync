@@ -224,10 +224,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         performCopyInstructions: function(obj, patch) {
             for (var key in patch) {
                 var value = patch[key];
-                if (Array.isArray(value) && value.length == 3) {
-                    var obj = this.objectAtPath(value[0]); // the object to copy
-                    snapshot.data.registry[key] = obj;
-                    patch[key] = value[1]; // insert additional patch
+                if (Array.isArray(value)) {
+                    if (value.length == 3) {
+                        obj[key] = this.objectAtPath(value[0]); // copy object
+                        patch[key] = value[1]; // insert additional patch
+                    }
+                } else {
+                    this.applyObjectPatch(obj[key], value);
                 }
             }
         }
