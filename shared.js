@@ -94,8 +94,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var result = [];
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
-                var move = result.find(function(ea) { return key.startsWith(ea.from); });
-                result.push(movesAndDeletes[key]);
+                // find direct parent move (if there is one)
+                var move = result
+                    .select(function(ea) { return key.startsWith(ea.from); })
+                    .max(function(ea) { return ea.from.length });
+                // do not add this move if it is just part of the parent move
+                if (movesAndDeletes[key].to.startsWith(move.to))
+                    result.push(movesAndDeletes[key]);
             }
         }
         return result;
