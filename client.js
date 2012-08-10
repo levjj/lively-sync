@@ -299,11 +299,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 select(function(v) { return Array.isArray(patch.data[v]) &&
                                             patch.data[v].length < 3 });
             var rawPatch = patch.toHierachicalPatch().data;
-            this.performCopyInstructions(rawPatch, "");
             this.serializer = ObjectGraphLinearizer.forNewLively();
             this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
             this.deserializeQueue = [];
             this.refPatchQueue = [];
+            this.performCopyInstructions(this.syncTable, rawPatch);
             this.applyObjectPatch(this.syncTable, rawPatch);
             newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
             this.refPatchQueue.each(function(ea) {
