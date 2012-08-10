@@ -253,10 +253,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         // returns true if that part of the diff is empty
         // after removing the smartrefs.
         if (Array.isArray(obj)) { // instruction
-            if (obj.length == 3) {
+            if (obj.length >= 3) {
                 // discard old value of delete instruction
                 // and remove whole instruction if it was a
                 // smartref
+                // if this was a copy instruction, simply
+                // remove first value and return false
                 return this.isSmartRef(obj.splice(0,1)[0], id);
              }
             // discard old value of set instruction
