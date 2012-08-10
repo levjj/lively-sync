@@ -202,6 +202,30 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected["X/b"] = [0, 0]; // delete X/b copy
         this.assertPatch(expected, snapshotB, snapshotD);
     },
+    testNestedReferencesWithNestedProperties: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", p:
+            {id: "Z", name: "z", q: {id: "Q", name: "q"}}};
+        var snapshotA = this.serialize({X:x});
+        x.b = y;
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X/b": [{id:"Y", name: "y"}],
+                          "X/b/p": [{id: "Z", name: "z"}],
+                          "X/b/p/q": [{id: "Q", name: "q"}]},
+                         snapshotA, snapshotB);
+        x.a = y;
+        var snapshotC = this.serialize({X:x});
+        var expected = {};
+        expected["X"]   = {b: {id: ["X/a"]}}; // X.b now points to ref(X/a)
+        expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
+        expected["X/b"] = [0, 0]; // delete X/b copy
+        this.assertPatch(expected, snapshotB, snapshotC);
+        delete x.b;
+        var snapshotD = this.serialize({X:x});
+        var expected = {};
+        expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
+        expected["X/b"] = [0, 0]; // delete X/b copy
+        this.assertPatch(expected, snapshotB, snapshotD);
+    },
     testArrayWithPrimitiveReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {name:"x",a:[]}, y = {name:"y"}, z = {name:"z"};
