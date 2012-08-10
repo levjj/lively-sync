@@ -104,7 +104,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotD = this.serialize({X: {name: "X"}});
         this.assertPatch({X: {a:[0,0]}}, snapshotC, snapshotD);
     },
-    testTopLevelReference: function() {
+    testTopLevelReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {id:"X", name:"x"}, y = {id:"y", name:"Y"}, z = {id:"Z", name:"z"};
         var table = {X:x,Y:y};
@@ -160,6 +160,16 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotF = this.serialize({X:x});
         this.assertPatch({X:{c:{id:["X/a"]}}, "X/a": ["X/c",{},0], "X/c": [0, 0]},
                          snapshotE, snapshotF);
+    },
+    testNestedReferencesWithPrimitiveProperties: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "z", p: {}};
+        var snapshotA = this.serialize({X:x});
+        x.b = y;
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X/b": [{id:"Y", name: "y"}], "X/b/p": [{}]}, snapshotA, snapshotB);
+        x.a = y;
+        var snapshotC = this.serialize({X:x});
+        this.assertPatch({"X/a": ["X/b", {}, 0], "X/b": {id:["X/a"]}}, snapshotB, snapshotC);
     },
     testArrayWithPrimitiveReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
