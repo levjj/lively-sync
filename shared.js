@@ -9,12 +9,12 @@ if (typeof exports !== 'undefined') {
 
 module('users.cschuster.sync.shared').requires().toRun(function() {
 
-Object.subclass('users.cschuster.sync.Mapper', {
+Object.subclass('users.cschuster.sync.Mapping', {
     initialize: function() {
         this.rules = [];
         this.rulesLength = 0;
     },
-    addMapping: function(from, to) {
+    addRule: function(from, to) {
         // find direct parent copy (if there is one)
         var move = this.rules
             .select(function(ea) { return from.startsWith(ea.from); })
