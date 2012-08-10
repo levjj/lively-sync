@@ -45,6 +45,7 @@ Object.subclass('users.cschuster.sync.Mapper', {
         this.rulesLength = this.rules.length;
     },
     map: function(from) {
+        // (rules are sorted by length of from so that the most specific rule comes last)
         var i = this.rulesLength;
         while (--i) {
             if (from.startsWith(this.rules[i].from)) {
