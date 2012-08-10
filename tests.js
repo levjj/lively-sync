@@ -250,7 +250,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testBorderColor: function() {
-        debugger;
         this.rect.setBorderColor(Color.black);
         this.rect.savedColor = Color.web.salmon.lighter();
         var snapshotA = this.serialize(this.table);
