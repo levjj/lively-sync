@@ -151,7 +151,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
                          snapshotA, snapshotC);
         x.c = y;
         var snapshotD = this.serialize({X:x});
-        this.assertPatch({"X": {c: ref("Y")}}, snapshotC, snapshotD);
+        this.assertPatch({"X": {c: ref("X/a")}}, snapshotC, snapshotD);
         delete x.a;
         var snapshotE = this.serialize({X:x});
         this.assertPatch({"X/a": [0,0], "X/c": ["X/a", {}, 0]}, snapshotC, snapshotD);
