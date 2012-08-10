@@ -222,6 +222,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.deserializeQueue.push(obj);
         },
         performCopyInstructions: function(patch, path) {
+            
             for (var key in patch.registry) {
                 var value = this.data.registry[key];
                 if (Array.isArray(value) && value.length == 4) {
