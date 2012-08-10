@@ -93,7 +93,10 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         // discard all objects not in the new snapshot
         var result = [];
         for (var key in movesAndDeletes) {
-            if (movesAndDeletes[key].to) result.push(movesAndDeletes[key]);
+            if (movesAndDeletes[key].to) {
+                var move = result.find(function(ea) { return key.startsWith(ea.from); });
+                result.push(movesAndDeletes[key]);
+            }
         }
         return result;
     },
