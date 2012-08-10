@@ -177,7 +177,12 @@ Object.subclass('users.cschuster.sync.Diff', {
     apply: function(snapshot) {
         // process copy instructions first
         for (var key in this.data.registry) {
-            
+            var value = this.data.registry[key];
+            if (Array.isArray(value) && value.length == 4) {
+                var obj = snapshot.data.registry[value[1]]; // the object to copy
+                snapshot.data.registry[key] = obj;
+                this.data.registry[key] = value[3];
+            }
         }
         // then apply raw diff
         this.applyPatch(snapshot.data, null, this.data);
