@@ -102,17 +102,16 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         // apply the copy diff
         var semiPatchedData = {id:"", registry: Object.clone(this.data.registry)};
         for (var key in this.data.registry) {
-            
-            for (var id in copyDiff) {
-                var from = copyDiff[id].from, to = copyDiff[id].to;
-                semiPatchedData.registry[to] = this.data.registry[from];
+            var move = copyDiff.find(function(ea) { return key.startsWith(ea.from); });
+            if (move) {
+                semiPatchedData.registry[move.to] = this.data.registry[move.from];
             }
         }
         // compute (remaining) raw diff
         var rawDiff = this.jsonDiff(semiPatchedData, otherSnapshot.data);
         // merge object diff and raw diff
-        for (var id in copyDiff) {
-            var from = copyDiff[id].from, to = copyDiff[id].to;
+        for (var i = 0; i <= copyDiff.length; i++) {
+            var from = copyDiff[i].from, to = copyDiff[i].to;
             if (!rawDiff.registry.hasOwnProperty(to)) rawDiff.registry[to] = {};
             // generate copy instruction
             rawDiff.registry[to] = [0, from, rawDiff.registry[to], 0];
