@@ -203,7 +203,14 @@ Object.subclass('users.cschuster.sync.Diff', {
     processCopyInstructions: function(snapshot) {
         var copies = this.findAndRemoveCopyDiffs();
         for (var key in snapshot.registry) {
-            
+            var move = copies
+                .select(function(ea) { return key.startsWith(ea.from); })
+                .max(function(ea) { return ea.from.length });
+            // if there is one, perform the copy
+            if (move) {
+                semiPatchedData.registry[move.to] = this.data.registry[move.from];
+            }
+
         }
     },
     apply: function(snapshot) {
