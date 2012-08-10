@@ -417,6 +417,11 @@ Object.subclass('users.cschuster.sync.Patch', {
                 Properties.forEachOwn(obj, function(name, val) {
                     this.convertToDiffInstruction(val, optSnapshotObj[name]);
                 }, this);
+                // adding _t back if this is an array
+                var isntArray = Properties.own(obj).find(function(name) {
+                    return isNaN(name);
+                });
+                if (!isntArray) obj._t = "a";
             }
         }
     },
