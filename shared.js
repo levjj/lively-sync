@@ -11,9 +11,35 @@ module('users.cschuster.sync.shared').requires().toRun(function() {
 
 Object.subclass('users.cschuster.sync.Mapper', {
     initialize: function() {
+        this.rules = [];
     },
     addMapping: function(from, to) {
-        
+        // find direct parent copy (if there is one)
+        var move = this.rules
+            .select(function(ea) { return from.startsWith(ea.from); })
+            .max(function(ea) { return ea.from.length });
+        // do not add this copy if it is just part of the parent copy
+        if (move && to.startsWith(move.to)) return;
+        // add mapping
+        var added = false;
+        var fromLength = from.length;
+        for (var i = 0; i < this.rules.length; i++) {
+            var rule = this.rules[i];
+            if (!added) {
+                // add new rule at the right positon (rules are sorted by length of from)
+                var ruleLength = rule.from.length;
+                if (ruleLength > fromLength || (ruleLength == fromLength && from < rule.from)) {
+                    this.rules.pushAt({from: from, to: to}, i);
+                    added = true;
+                }
+            } else {
+                // remove all mapping rules that are not implicit
+                if (rule.from.startsWith(from)) {
+                    var newTo = to + rule.to;
+                    this.rules.removeAt(i--);
+                }
+            }
+        }
     },
     map: function(from) {
         
