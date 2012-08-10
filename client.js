@@ -220,6 +220,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 }
             }
             this.deserializeQueue.push(obj);
+        },
+        performCopyInstructions: function(patch) {
+            
+            
         }
     },
     'updating', {
