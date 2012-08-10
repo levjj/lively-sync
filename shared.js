@@ -203,7 +203,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             // generate copy instruction
             rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
         });
-        return new users.cschuster.sync.Diff({id:"", registry: rawDiff});
+        return new users.cschuster.sync.Diff({registry: rawDiff});
     },
     toJSON: function() {
         return JSON.stringify(this.data);
