@@ -278,16 +278,10 @@ Object.subclass('users.cschuster.sync.Diff', {
     processCopyInstructions: function(snapshot) {
         var copyMapping = this.findAndRemoveCopyDiffs();
         for (var key in snapshot.registry) {
-            // find direct parent copy for each entry in this snapshot
-            var move = copies
-                .select(function(ea) { return key.startsWith(ea.from); })
-                .max(function(ea) { return ea.from.length });
-            // if there is one, perform the copy
-            if (move) {
-                var toKey = move.to + key.substring(move.from.length);
-                snapshot.registry[toKey] = snapshot.registry[key];
-            }
+            var toKey = copyMapping.map(key);
+            if (toKey) snapshot.registry[toKey] = snapshot.registry[key];
         }
+        this.updateSmartRefs(snapshot.registry, copyMapping);
     },
     apply: function(snapshot) {
         this.processCopyInstructions(snapshot.data);
