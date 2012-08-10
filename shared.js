@@ -202,6 +202,9 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     processCopyInstructions: function(snapshot) {
         var copies = this.findAndRemoveCopyDiffs(snapshot);
+        for (var key in snapshot.data.registry) {
+            
+        }
     },
     apply: function(snapshot) {
         this.processCopyInstructions(snapshot);
