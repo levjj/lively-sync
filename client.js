@@ -309,6 +309,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.performCopyInstructions(this.syncTable, rawPatch);
+            this.refPatchQueue.each(function(ea) { ea[0][ea[1]] = ea[2]; });
+            this.refPatchQueue = [];
             this.applyObjectPatch(this.syncTable, rawPatch);
             newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
             this.refPatchQueue.each(function(ea) {
