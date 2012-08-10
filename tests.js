@@ -753,7 +753,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcC.autoupdate = true;
         this.wcA.addObject(this.worldA.firstHand());
         this.sync();
-        this.snapshots = [];
+        this.snapshots = [users.cschuster.sync.Snapshot.empty()];
     },
     tearDown: function($super) {
         this.worldB.remove();
