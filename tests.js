@@ -815,6 +815,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
             this.assertNodeMatches(morphA.renderContext().morphNode,
                                    morphC.renderContext().morphNode, true);
         }
+        for (var i = 0; i < rev - 2; i++) {
+            
+        }
     }
 },
 'testing', {
