@@ -199,7 +199,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
-                    if (value.length == 3) { // copy
+                    if (value.length == 3) { // move
                         this.set(obj, key, value[2]);
                         patch[key] = value[1]; // insert raw patch
                         this.applyObjectPatch(obj[key], patch[key]);
@@ -225,17 +225,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.push(obj);
         },
-        performCopyInstructions: function(obj, patch) {
+        performMoveInstructions: function(obj, patch) {
             if (!obj || typeof obj != "object") return;
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) {
                     if (value.length == 3) {
-                        // defer actual copying object
+                        // defer actual moving object
                         value[2] = this.objectAtPath(value[0]);
                     }
                 } else {
-                    this.performCopyInstructions(obj[key], value);
+                    this.performMoveInstructions(obj[key], value);
                 }
             }
         }

@@ -16,11 +16,11 @@ Object.subclass('users.cschuster.sync.Mapping', {
         this.rulesLength = 0;
     },
     addToList: function(rules, from, to) {
-        // find direct parent copy (if there is one)
+        // find direct parent rule (if there is one)
         var move = rules
             .select(function(ea) { return from.startsWith(ea.from); })
             .max(function(ea) { return ea.from.length });
-        // do not add this copy if it is just part of the parent copy
+        // do not add this rule if it is just part of the parent rule
         if (move && to.startsWith(move.to)) return;
         // add rule
         var added = false;
@@ -175,7 +175,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         return odiff;
     },
-    copyMapping: function(o, n) {
+    moveMapping: function(o, n) {
         var movesAndDeletes = {};
         // find all objects with ids that were moved or deleted
         for (var key in o) {
@@ -189,7 +189,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 movesAndDeletes[n[key].id].to = key;
             }
         }
-        // aggregate copies and discard all objects not in the new snapshot
+        // aggregate moves and discard all deletes (objects not in the new snapshot)
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
@@ -199,13 +199,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         return mapping;
     },
     diff: function(otherSnapshot) {
-        var copyMapping = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
+        var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
         // compute (remaining) raw diff
-        var rawDiff = this.registryDiff(otherSnapshot.data.registry, copyMapping);
+        var rawDiff = this.registryDiff(otherSnapshot.data.registry, moveMapping);
         // merge object diff and raw diff
-        copyMapping.getRules().each(function(rule) {
+        moveMapping.getRules().each(function(rule) {
             if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
-            // generate copy instruction
+            // generate move instruction
             rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
         });
         return new users.cschuster.sync.Diff({registry: rawDiff});
@@ -269,7 +269,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return o;
     },
-    findAndRemoveCopyDiffs: function() {
+    findAndConvertMoveInstructions: function() {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
@@ -293,16 +293,16 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         }
     },
-    processCopyInstructions: function(snapshot) {
-        var copyMapping = this.findAndRemoveCopyDiffs();
+    processMoveInstructions: function(snapshot) {
+        var moveMapping = this.findAndConvertMoveInstructions();
         for (var key in snapshot.registry) {
-            var toKey = copyMapping.map(key);
+            var toKey = moveMapping.map(key);
             if (toKey) snapshot.registry[toKey] = snapshot.registry[key];
         }
-        this.updateSmartRefs(snapshot.registry, copyMapping);
+        this.updateSmartRefs(snapshot.registry, moveMapping);
     },
     apply: function(snapshot) {
-        this.processCopyInstructions(snapshot.data);
+        this.processMoveInstructions(snapshot.data);
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
@@ -375,7 +375,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                 // discard old value of delete instruction
                 // and remove whole instruction if it was a
                 // smartref
-                // if this was a copy instruction, simply
+                // if this was a move instruction, simply
                 // remove first value and return false
                 return this.isSmartRef(obj.splice(0,1)[0], id);
              }
@@ -525,7 +525,7 @@ Object.subclass('users.cschuster.sync.Patch', {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 2) { // delete
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
-                } else if (obj.length == 3) { // copy
+                } else if (obj.length == 3) { // move
                     obj.unshift(0);
                 } else if (optSnapshotObj !== undefined) { // add or set
                     obj.unshift(optSnapshotObj);
