@@ -99,7 +99,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     diff: function(otherSnapshot) {
         var copyDiff = this.copyDiff(this.data, otherSnapshot.data);
         // apply the copy diff
-        var semiPatchedData = {id:"", registry: this.data.registry.clone()};
+        var semiPatchedData = {id:"", registry: Object.clone(this.data.registry)};
         for (var id in copyDiff) {
             var from = copyDiff[id].from, to = copyDiff[id].to;
             semiPatchedData.registry[to] = this.data.registry[from];
