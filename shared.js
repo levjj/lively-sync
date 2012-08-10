@@ -104,7 +104,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             if (movesAndDeletes[key].to) {
                 // find direct parent copy (if there is one)
                 var move = result
-                    .select(function(ea) { return key.startsWith(ea.from); })
+                    .select(function(ea) { return movesAndDeletes[key].startsWith(ea.from); })
                     .max(function(ea) { return ea.from.length });
                 // do not add this copy if it is just part of the parent copy
                 if (!move || !movesAndDeletes[key].to.startsWith(move.to))
