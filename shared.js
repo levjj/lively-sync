@@ -164,7 +164,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         return result;
     },
     diff: function(otherSnapshot) {
-        var copyMapper = this.copyDiff(this.data.registry, otherSnapshot.data.registry);
+        var copyMapper = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
         // compute (remaining) raw diff
         var rawDiff = this.jsonDiff(this.data, otherSnapshot.data, copyMapper);
         // merge object diff and raw diff
