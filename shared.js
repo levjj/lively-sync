@@ -265,15 +265,15 @@ Object.subclass('users.cschuster.sync.Diff', {
         return o;
     },
     findAndRemoveCopyDiffs: function() {
-        var result = [];
+        var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
             if (Array.isArray(value) && value.length == 4) {
-                result.push({from:value[1], to: key});
+                mapping.addMapping(value[1], key);
                 this.data.registry[key] = value[2]; // insert additional patch
             }
         }
-        return result;
+        return mapping;
     },
     processCopyInstructions: function(snapshot) {
         var copyMapping = this.findAndRemoveCopyDiffs();
