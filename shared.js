@@ -116,7 +116,8 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 .max(function(ea) { return ea.from.length });
             // if there is one, perform the copy
             if (move) {
-                semiPatchedData.registry[move.to] = this.data.registry[move.from];
+                var toKey = move.to + key.substring(move.from.length);
+                semiPatchedData.registry[toKey] = this.data.registry[key];
             }
         }
         // compute (remaining) raw diff
