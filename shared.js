@@ -192,7 +192,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     findCopyDiffs: function() {
         
     },
-    processCopy: function() {
+    processCopyInstructions: function() {
         
     },
     apply: function(snapshot) {
