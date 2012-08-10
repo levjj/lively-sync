@@ -123,7 +123,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         // compute (remaining) raw diff
         var rawDiff = this.jsonDiff(semiPatchedData, otherSnapshot.data);
         // merge object diff and raw diff
-        for (var i = 0; i <= copyDiff.length; i++) {
+        for (var i = 0; i < copyDiff.length; i++) {
             var from = copyDiff[i].from, to = copyDiff[i].to;
             if (!rawDiff.registry.hasOwnProperty(to)) rawDiff.registry[to] = {};
             // generate copy instruction
