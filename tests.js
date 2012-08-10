@@ -9,16 +9,16 @@ TestCase.subclass('users.cschuster.sync.tests.MappingTest',
 },
 'testing', {
     testMapping: function() {
-        this.assertEquals('Y', this.mapper.map('X'));
-        this.assertEquals(undefined, this.mapper.map('Y'));
-        this.assertEquals(undefined, this.mapper.map('Z'));
-        this.assertEquals('Y/a', this.mapper.map('X/a'));
-        this.assertEquals('Y/b/c', this.mapper.map('X/b/c'));
-        this.assertEquals(undefined, this.mapper.unmap('X'));
-        this.assertEquals('X', this.mapper.unmap('Y'));
-        this.assertEquals(undefined, this.mapper.unmap('Z'));
-        this.assertEquals('X/a', this.mapper.unmap('Y/a'));
-        this.assertEquals('X/b/c', this.mapper.unmap('Y/b/c'));
+        this.assertEquals('Y', this.mapping.map('X'));
+        this.assertEquals(undefined, this.mapping.map('Y'));
+        this.assertEquals(undefined, this.mapping.map('Z'));
+        this.assertEquals('Y/a', this.mapping.map('X/a'));
+        this.assertEquals('Y/b/c', this.mapping.map('X/b/c'));
+        this.assertEquals(undefined, this.mapping.unmap('X'));
+        this.assertEquals('X', this.mapping.unmap('Y'));
+        this.assertEquals(undefined, this.mapping.unmap('Z'));
+        this.assertEquals('X/a', this.mapping.unmap('Y/a'));
+        this.assertEquals('X/b/c', this.mapping.unmap('Y/b/c'));
     },
     testCoalesceOverlappingRules: function() {
         this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
