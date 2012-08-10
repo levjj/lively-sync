@@ -816,7 +816,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
                                    morphC.renderContext().morphNode, true);
         }
         for (var i = 0; i < rev - 2; i++) {
-            var copy = Object.deepCopy(this.snapshots[i]);
+            var copy = this.snapshots[i].clone();
             var patch = copy.diff(this.wcA.last).toPatch();
             patch.apply(copy);
             this.assertEqualState(copy, this.wcA.last);
