@@ -228,8 +228,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (Array.isArray(value)) {
                     if (value.length == 3) {
                         // defer actual copying object
-                        this.refPatchQueue.push([obj, key, this.objectAtPath(value[0])]);
-                        patch[key] = value[1]; // insert additional patch
+                        value[2] = this.objectAtPath(value[0]);
                     }
                 } else {
                     this.performCopyInstructions(obj[key], value);
