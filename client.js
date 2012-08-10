@@ -221,9 +221,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.push(obj);
         },
-        performCopyInstructions: function(patch) {
-            
-            
+        performCopyInstructions: function(patch, path) {
+            for (var key in patch.registry) {
+                var value = this.data.registry[key];
+                if (Array.isArray(value) && value.length == 4) {
+                    var obj = snapshot.data.registry[value[1]]; // the object to copy
+                    snapshot.data.registry[key] = obj;
+                    this.data.registry[key] = value[2]; // insert additional patch
+                }
+            }
         }
     },
     'updating', {
