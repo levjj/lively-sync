@@ -876,6 +876,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         delete x.a;
         this.assertSync(6);
         x.a = y;
+        debugger;
         this.assertSync(7);
     },
     testArray: function() {
