@@ -278,9 +278,14 @@ Object.subclass('users.cschuster.sync.Diff', {
     updateSmartRefs: function(obj, mapping) {
         if (!obj || typeof obj != "object") return;
         if (obj.__isSmartRef__) {
-            var newId = 23;
+            var newId = mapping.map(obj.id);
+            if (newId) obj.id = newId;
         } else {
-            
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    this.updateSmartRefs(obj[key], mapping);
+                }
+            }
         }
     },
     processCopyInstructions: function(snapshot) {
