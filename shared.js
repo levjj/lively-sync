@@ -181,7 +181,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (Array.isArray(value) && value.length == 4) {
                 var obj = snapshot.data.registry[value[1]]; // the object to copy
                 snapshot.data.registry[key] = obj;
-                this.data.registry[key] = value[2];
+                this.data.registry[key] = value[2]; // insert additional patch
             }
         }
         // then apply raw diff
