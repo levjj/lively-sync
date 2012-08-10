@@ -110,7 +110,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         for (var id in copyDiff) {
             var from = copyDiff[id].from, to = copyDiff[id].to;
             if (!rawDiff.hasOwnProperty(to)) rawDiff[to] = {};
-            rawDiff[to] = [from, rawDiff[to], 0]; // generate copy instruction
+            rawDiff[to] = [from, rawDiff[to], 0, 0]; // generate copy instruction
         }
         return new users.cschuster.sync.Diff(rawDiff);
     },
