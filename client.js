@@ -207,7 +207,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
                         this.set(obj, key, this.recreateObject(value.last()));
                     }
-                } else {
+                } else { // path
                     var patchedValueObject = this.tryPatchValueObject(obj, key, value);
                     if (patchedValueObject) {
                         var newPatch = [patchedValueObject];
