@@ -90,8 +90,16 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 movesAndDeletes[n[key].id].to = key;
             }
         }
-        // discard all objects not in the new snapshot
+        // aggregate copies and discard all objects not in the new snapshot
         var result = [];
+        function addCopy(entry) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].from.startsWith(entry.from)) {
+                    result.removeAt(i--);
+                }
+            }
+            result.push(key);
+        }
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
                 // find direct parent copy (if there is one)
@@ -100,7 +108,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                     .max(function(ea) { return ea.from.length });
                 // do not add this copy if it is just part of the parent copy
                 if (!move || !movesAndDeletes[key].to.startsWith(move.to))
-                    result.push(movesAndDeletes[key]);
+                    addCopy(movesAndDeletes[key]);
             }
         }
         return result;
