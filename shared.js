@@ -75,21 +75,40 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         return adiff;
     },
+    propDiff: function(o, n, prop){
+        var pdiff;
+        if (!o.hasOwnProperty(prop)) {
+            pdiff = [n[prop]];
+        } else if (!n.hasOwnProperty(prop)) {
+            pdiff = [o[prop], 0, 0];
+        } else {
+            pdiff = this.jsonDiff(o[prop], n[prop], mapper);
+        }
+        if (typeof pdiff != 'undefined') {
+            if (typeof odiff == 'undefined') {
+                odiff = {};
+            }
+            odiff[prop] = pdiff;
+        }
+    },
     objectDiff: function(o, n, mapper) {
         var odiff;
         for (var prop in n) {
             if (n.hasOwnProperty(prop)) {
-                addPropDiff(prop);
+               this.propDiff(prop);
             }
         }
         for (var prop in o) {
             if (o.hasOwnProperty(prop)) {
                 if (typeof n[prop] == 'undefined') {
-                    addPropDiff(prop);
+                    this.propDiff(prop);
                 }
             }
         }
         return odiff;
+    },
+    registryDiff: function(otherRegistry, mapper) {
+        
     },
     jsonDiff: function(o, n, mapper){
         if (o === n) return;
