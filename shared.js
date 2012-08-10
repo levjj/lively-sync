@@ -276,7 +276,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         return result;
     },
     processCopyInstructions: function(snapshot) {
-        var copies = this.findAndRemoveCopyDiffs();
+        var copyMapping = this.findAndRemoveCopyDiffs();
         for (var key in snapshot.registry) {
             // find direct parent copy for each entry in this snapshot
             var move = copies
