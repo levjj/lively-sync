@@ -193,7 +193,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
-                mapping.addMapping(movesAndDeletes[key].from, movesAndDeletes[key].to);
+                mapping.addRule(movesAndDeletes[key].from, movesAndDeletes[key].to);
             }
         }
         return mapping;
