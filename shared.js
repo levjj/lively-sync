@@ -126,7 +126,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             return d;
         }
     },
-    copyDiff: function(o, n) {
+    copyMapping: function(o, n) {
         var movesAndDeletes = {};
         // find all objects with ids that were moved or deleted
         for (var key in o) {
@@ -141,13 +141,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             }
         }
         // aggregate copies and discard all objects not in the new snapshot
-        var mapper = new users.cschuster.sync.Mapper();
+        var mapping = new users.cschuster.sync.Mapping();
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
-                mapper.addMapping(movesAndDeletes[key].from, movesAndDeletes[key].to);
+                mapping.addMapping(movesAndDeletes[key].from, movesAndDeletes[key].to);
             }
         }
-        return mapper;
+        return mapping;
     },
     diff: function(otherSnapshot) {
         var copyMapping = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
