@@ -28,12 +28,12 @@ TestCase.subclass('users.cschuster.sync.tests.MappingTest',
         this.assertEqualState([{from: 'X', to: 'Y'}], this.mapping.getRules());
     },
     testDoNotCoalesceDifferentRules: function() {
-        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
-        this.mapper.addRule('X/a', 'Z');
-        this.assertEquals('Z', this.mapper.map('X/a'));
-        this.assertEquals('X/a', this.mapper.unmap('Z'));
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapping.getRules());
+        this.mapping.addRule('X/a', 'Z');
+        this.assertEquals('Z', this.mapping.map('X/a'));
+        this.assertEquals('X/a', this.mapping.unmap('Z'));
         this.assertEqualState([{from: 'X', to: 'Y'},{from: 'X/a', to: 'Z'}],
-                              this.mapper.getRules());
+                              this.mapping.getRules());
     }
 });
 
