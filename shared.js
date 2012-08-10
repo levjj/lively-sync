@@ -200,8 +200,8 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return result;
     },
-    processCopyInstructions: function() {
-        var copies = this.findCopyDiffs();
+    processCopyInstructions: function(snapshot) {
+        var copies = this.findAndRemoveCopyDiffs(snapshot);
     },
     apply: function(snapshot) {
         this.processCopyInstructions(snapshot);
