@@ -299,8 +299,10 @@ Object.subclass('users.cschuster.sync.Diff', {
             var toKey = moveMapping.map(key);
             if (toKey) {
                 snapshot.registry[toKey] = snapshot.registry[key];
-                delete snapshot.registry[key];
-                
+                delete snapshot.registry[key]; // delete entry in registry
+                var path = key.split('/');
+                var prop = path.pop();
+                delete snapshot.registry[path.join('/')][prop]; // delete implicit smartref
             }
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
