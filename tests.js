@@ -815,6 +815,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
             this.assertNodeMatches(morphA.renderContext().morphNode,
                                    morphC.renderContext().morphNode, true);
         }
+        for (var i = 0; i < rev - 2; i++) {
+            var copy = Object.deepCopy(this.snapshots[i]);
+            var patch = copy.diff(this.wcA.last).toPatch();
+            patch.apply(copy);
+            this.assertEqualState(copy, this.wcA.last);
+        }
     }
 },
 'testing', {
