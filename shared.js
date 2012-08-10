@@ -394,7 +394,7 @@ Object.subclass('users.cschuster.sync.Patch', {
                 if (obj.length == 2) { // delete
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
                 } else if (obj.length == 3) { // copy
-                    obj.push(0);
+                    obj.unshift(0);
                 } else if (optSnapshotObj !== undefined) { // add or set
                     obj.unshift(optSnapshotObj);
                 }
