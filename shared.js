@@ -155,8 +155,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 if (!this.data.registry.hasOwnProperty(unmappedKey)) {
                     odiff[key] = [otherRegistry[key]];
                 } else {
-                    odiff[key] = this.jsonDiff(this.data.registry[unmappedKey],
-                                               otherRegistry[key], mapping);
+                    var d = this.jsonDiff(this.data.registry[unmappedKey],
+                                          otherRegistry[key], mapping);
+                    if (d) odiff[key] = d;
                 }
             }
         }
