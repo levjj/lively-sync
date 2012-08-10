@@ -12,6 +12,7 @@ module('users.cschuster.sync.shared').requires().toRun(function() {
 Object.subclass('users.cschuster.sync.Mapper', {
     initialize: function() {
         this.rules = [];
+        this.rulesLength = 0;
     },
     addMapping: function(from, to) {
         // find direct parent copy (if there is one)
@@ -26,27 +27,34 @@ Object.subclass('users.cschuster.sync.Mapper', {
         for (var i = 0; i < this.rules.length; i++) {
             var rule = this.rules[i];
             if (!added) {
-                // add new rule at the right positon (rules are sorted by length of from)
+                // add new rule at the right positon
+                // (rules are sorted by length of from so that the most specific rule comes last)
                 var ruleLength = rule.from.length;
                 if (ruleLength > fromLength || (ruleLength == fromLength && from < rule.from)) {
                     this.rules.pushAt({from: from, to: to}, i);
                     added = true;
                 }
             } else {
-                // remove all mapping rules that are not implicit
-                if (rule.from.startsWith(from)) {
-                    var newTo = to + rule.to;
+                // remove all mapping rules that became implicit
+                if (rule.from.startsWith(from) &&
+                    rule.to == to + rule.from.substring(from.length)) {
                     this.rules.removeAt(i--);
                 }
             }
         }
+        this.rulesLength = this.rules.length;
     },
     map: function(from) {
-        
+        var i = this.rulesLength;
+        while (--i) {
+            if (from.startsWith(this.rules[i].from)) {
+                return this.rules[i].to + from.substring(this.rules[i].from.length);
+            }
+        }
     },
-    rules: function() {
-        
-    }   
+    getRules: function() {
+        return this.rules;
+    }
 });
 
 Object.subclass('users.cschuster.sync.Snapshot', {
