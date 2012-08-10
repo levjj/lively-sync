@@ -84,7 +84,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             } else if (!n.hasOwnProperty(prop)) {
                 pdiff = [o[prop], 0, 0];
             } else {
-                pdiff = this.jsonDiff(o[prop], n[prop]);
+                pdiff = this.jsonDiff(o[prop], n[prop], mapper);
             }
             if (typeof pdiff != 'undefined') {
                 if (typeof odiff == 'undefined') {
