@@ -141,27 +141,13 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             }
         }
         // aggregate copies and discard all objects not in the new snapshot
-        var result = [];
-        function addCopy(entry) {
-            for (var i = 0; i < result.length; i++) {
-                if (result[i].from.startsWith(entry.from)) {
-                    result.removeAt(i--);
-                }
-            }
-            result.push(entry);
-        }
+        var mapper = new users.cschuster.sync.Mapper();
         for (var key in movesAndDeletes) {
             if (movesAndDeletes[key].to) {
-                // find direct parent copy (if there is one)
-                var move = result
-                    .select(function(ea) { return movesAndDeletes[key].from.startsWith(ea.from); })
-                    .max(function(ea) { return ea.from.length });
-                // do not add this copy if it is just part of the parent copy
-                if (!move || !movesAndDeletes[key].to.startsWith(move.to))
-                    addCopy(movesAndDeletes[key]);
+                mapper.addMapping(movesAndDeletes[key].from, movesAndDeletes[key].to);
             }
         }
-        return result;
+        return mapper;
     },
     diff: function(otherSnapshot) {
         var copyMapper = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
