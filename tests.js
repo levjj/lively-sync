@@ -4,7 +4,6 @@ TestCase.subclass('users.cschuster.sync.tests.MapperTest',
 'running', {
     setUp: function() {
         this.mapper = new users.cschuster.sync.Mapper();
-        debugger;
         this.mapper.addMapping('X', 'Y');
     }
 },
