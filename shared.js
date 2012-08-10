@@ -164,29 +164,15 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         return result;
     },
     diff: function(otherSnapshot) {
-        var copyDiff = this.copyDiff(this.data.registry, otherSnapshot.data.registry);
-        // apply the copy diff
-        var semiPatchedData = {id:"", registry: Object.clone(this.data.registry)};
-        for (var key in this.data.registry) {
-            // find direct parent copy for each entry in this snapshot
-            var move = copyDiff
-                .select(function(ea) { return key.startsWith(ea.from); })
-                .max(function(ea) { return ea.from.length });
-            // if there is one, perform the copy
-            if (move) {
-                var toKey = move.to + key.substring(move.from.length);
-                semiPatchedData.registry[toKey] = this.data.registry[key];
-            }
-        }
+        var copyMapper = this.copyDiff(this.data.registry, otherSnapshot.data.registry);
         // compute (remaining) raw diff
-        var rawDiff = this.jsonDiff(semiPatchedData, otherSnapshot.data);
+        var rawDiff = this.jsonDiff(this.data, otherSnapshot.data, copyMapper);
         // merge object diff and raw diff
-        for (var i = 0; i < copyDiff.length; i++) {
-            var from = copyDiff[i].from, to = copyDiff[i].to;
-            if (!rawDiff.registry.hasOwnProperty(to)) rawDiff.registry[to] = {};
+        copyMapper.getRules().each(function(rule) {
+            if (!rawDiff.registry.hasOwnProperty(rule.to)) rawDiff.registry[rule.to] = {};
             // generate copy instruction
-            rawDiff.registry[to] = [0, from, rawDiff.registry[to], 0];
-        }
+            rawDiff.registry[rule.to] = [0, rule.from, rawDiff.registry[rule.to], 0];
+        });
         return new users.cschuster.sync.Diff(rawDiff);
     },
     toJSON: function() {
