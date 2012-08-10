@@ -105,7 +105,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         // apply the copy diff
         var semiPatchedData = {id:"", registry: Object.clone(this.data.registry)};
         for (var key in this.data.registry) {
-            var move = copyDiff.find(function(ea) { return key.startsWith(ea.from); });
+            var move = copyDiff
+                .select(function(ea) { return key.startsWith(ea.from); })
+                .max(function(ea) { return ea.from.length });
             if (move) {
                 semiPatchedData.registry[move.to] = this.data.registry[move.from];
             }
