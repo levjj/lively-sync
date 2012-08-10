@@ -64,10 +64,10 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    arrayDiff: function(o, n, mapper) {
+    arrayDiff: function(o, n, mapping) {
         var adiff;
         for (var i = 0; i < Math.max(n.length, o.length); i++) {
-            var idiff = this.jsonDiff(o[i], n[i], mapper);
+            var idiff = this.jsonDiff(o[i], n[i], mapping);
             if (typeof idiff != 'undefined') {
                 if (typeof adiff == 'undefined') adiff = {_t: "a"};
                 adiff[i] = idiff;
@@ -75,48 +75,52 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         return adiff;
     },
-    propDiff: function(o, n, prop){
+    smartRefDiff: function(o, n, mapping) {
+        var leftId = mapping.map(o.id) || o.id;
+        var idDiff = this.jsonDiff(leftId, n.id, mapping);
+        if (idDiff) return {id:[n.id]};
+    },
+    propDiff: function(o, n, prop, mapping){
         var pdiff;
         if (!o.hasOwnProperty(prop)) {
             pdiff = [n[prop]];
         } else if (!n.hasOwnProperty(prop)) {
             pdiff = [o[prop], 0, 0];
         } else {
-            pdiff = this.jsonDiff(o[prop], n[prop], mapper);
+            pdiff = this.jsonDiff(o[prop], n[prop], mapping);
         }
-        if (typeof pdiff != 'undefined') {
-            if (typeof odiff == 'undefined') {
-                odiff = {};
-            }
-            odiff[prop] = pdiff;
-        }
+        return pdiff;
     },
-    objectDiff: function(o, n, mapper) {
+    objectDiff: function(o, n, mapping) {
+        if (o.__isSmartRef__ && n.__isSmartRef__) {
+            return this.smartRefDiff(o, n, mapping);
+        }
         var odiff;
         for (var prop in n) {
             if (n.hasOwnProperty(prop)) {
-               this.propDiff(prop);
+                var pdiff = this.propDiff(o, n, prop, mapping);
+                if (pdiff && !odiff) odiff = {};
+                odiff[prop] = pdiff;
             }
         }
         for (var prop in o) {
             if (o.hasOwnProperty(prop)) {
-                if (typeof n[prop] == 'undefined') {
-                    this.propDiff(prop);
+                if (!n.hasOwnProperty(prop)) {
+                    var pdiff = this.propDiff(o, n, prop, mapping);
+                    if (pdiff && !odiff) odiff = {};
+                    odiff[prop] = pdiff;
                 }
             }
         }
         return odiff;
     },
-    registryDiff: function(otherRegistry, mapper) {
-        
-    },
-    jsonDiff: function(o, n, mapper){
+    jsonDiff: function(o, n, mapping){
         if (o === n) return;
         if ((o !== o) && (n !== n)) return; // both NaN
         if (o && n && typeof o == "object" && typeof n == "object") {
             return Array.isArray(n)
-                ? this.arrayDiff(o, n, mapper)
-                : this.objectDiff(o, n, mapper);
+                ? this.arrayDiff(o, n, mapping)
+                : this.objectDiff(o, n, mapping);
         } else {
             var d = [];
             if (typeof o != 'undefined') {
@@ -130,6 +134,29 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             }
             return d;
         }
+    },
+    registryDiff: function(otherRegistry, mapping) {
+        var odiff = {};
+        for (var key in otherRegistry) {
+            if (otherRegistry.hasOwnProperty(key)) {
+                var unmappedKey = mapping.unmap(key) || key;
+                if (!this.data.registry.hasOwnProperty(unmappedKey)) {
+                    odiff[key] = [otherRegistry[key]];
+                } else {
+                    odiff[key] = this.jsonDiff(this.data.registry[unmappedKey],
+                                               otherRegistry[key], mapping);
+                }
+            }
+        }
+        for (var key in this.data.registry) {
+            if (this.data.registry.hasOwnProperty(key)) {
+                var mappedKey = mapping.map(key) || key;
+                if (!otherRegistry.hasOwnProperty(mappedKey)) {
+                    odiff[mappedKey] = [this.data.registry[key], 0, 0];
+                }
+            }
+        }
+        return odiff;
     },
     copyMapping: function(o, n) {
         var movesAndDeletes = {};
@@ -157,14 +184,14 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     diff: function(otherSnapshot) {
         var copyMapping = this.copyMapping(this.data.registry, otherSnapshot.data.registry);
         // compute (remaining) raw diff
-        var rawDiff = this.jsonDiff(this.data, otherSnapshot.data, copyMapping);
+        var rawDiff = this.registryDiff(otherSnapshot.data.registry, copyMapping);
         // merge object diff and raw diff
         copyMapping.getRules().each(function(rule) {
-            if (!rawDiff.registry.hasOwnProperty(rule.to)) rawDiff.registry[rule.to] = {};
+            if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
             // generate copy instruction
-            rawDiff.registry[rule.to] = [0, rule.from, rawDiff.registry[rule.to], 0];
+            rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
         });
-        return new users.cschuster.sync.Diff(rawDiff);
+        return new users.cschuster.sync.Diff({id:"", registry: rawDiff});
     },
     toJSON: function() {
         return JSON.stringify(this.data);
