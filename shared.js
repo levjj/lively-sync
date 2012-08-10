@@ -273,8 +273,9 @@ Object.subclass('users.cschuster.sync.Diff', {
             return false;
         }
         // object or array
+        delete obj._t;
         Properties.forEachOwn(obj, function(key, value) {
-            if (key != "_t" && this.coalesceDiff(value, id + "/" + key)) {
+            if (this.coalesceDiff(value, id + "/" + key)) {
                 delete obj[key];
             }
         }, this);
