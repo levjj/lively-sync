@@ -62,7 +62,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
         var i = this.rulesLength;
         while (i--) {
             if (to.startsWith(this.invertedRules[i].from)) {
-                return this.rules[i].to + to.substring(this.rules[i].from.length);
+                return this.invertedRules[i].to + to.substring(this.invertedRules[i].from.length);
             }
         }
     },
