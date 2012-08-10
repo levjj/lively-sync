@@ -209,9 +209,9 @@ Object.subclass('users.cschuster.sync.Diff', {
                 .max(function(ea) { return ea.from.length });
             // if there is one, perform the copy
             if (move) {
-                snapshot.registry[move.to] = this.data.registry[move.from];
+                var toKey = move.to + key.substring(move.from.length);
+                snapshot.registry[toKey] = snapshot.registry[key];
             }
-
         }
     },
     apply: function(snapshot) {
