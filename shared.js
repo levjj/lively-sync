@@ -76,8 +76,22 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             return d;
         }
     },
+    copyDiff: function(o, n) {
+        var result = {};
+        for (var key in o) {
+            if (o[key].id && (!n.hasOwnProperty(key) || o[key].id != n[key].id)) {
+                result[o[key].id] = {from: key};
+            }
+        }
+        for (var key in n) {
+            if (n[key].id && result[n[key].id]) {
+                result[n[key].id].to = key;
+            }
+        }
+        return result.select(function(ea) { return !!ea.to });
+    },
     diff: function(otherSnapshot) {
-        var copyDiff = this.copyDiff(this.data.registry, otherSnapshot.data.registry);
+        var copyDiff = this.copyDiff(this.data, otherSnapshot.data);
         var semiPatchedData = {id:"", registry: this.data.registry.clone()};
         for (var id in copyDiff) {
             semiPatchedData.registry[copyDiff[id].to] = this.data.registry[copyDiff[id].from];
