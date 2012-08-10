@@ -17,7 +17,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
     },
     addToList: function(rules, from, to) {
         // find direct parent copy (if there is one)
-        var move = this.rules
+        var move = rules
             .select(function(ea) { return from.startsWith(ea.from); })
             .max(function(ea) { return ea.from.length });
         // do not add this copy if it is just part of the parent copy
@@ -25,25 +25,25 @@ Object.subclass('users.cschuster.sync.Mapping', {
         // add rule
         var added = false;
         var fromLength = from.length;
-        for (var i = 0; i < this.rules.length; i++) {
-            var rule = this.rules[i];
+        for (var i = 0; i < rules.length; i++) {
+            var rule = rules[i];
             if (!added) {
                 // add new rule at the right positon
                 // (rules are sorted by length of from so that the most specific rule comes last)
                 var ruleLength = rule.from.length;
                 if (ruleLength > fromLength || (ruleLength == fromLength && from < rule.from)) {
-                    this.rules.pushAt({from: from, to: to}, i);
+                    rules.pushAt({from: from, to: to}, i);
                     added = true;
                 }
             } else {
                 // remove all mapping rules that became implicit
                 if (rule.from.startsWith(from) &&
                     rule.to == to + rule.from.substring(from.length)) {
-                    this.rules.removeAt(i--);
+                    rules.removeAt(i--);
                 }
             }
         }
-        if (!added) this.rules.push({from: from, to: to});
+        if (!added) rules.push({from: from, to: to});
     },
     addRule: function(from, to) {
         this.addToList(this.rules, from, to);
