@@ -297,7 +297,10 @@ Object.subclass('users.cschuster.sync.Diff', {
         var moveMapping = this.findAndConvertMoveInstructions();
         for (var key in snapshot.registry) {
             var toKey = moveMapping.map(key);
-            if (toKey) snapshot.registry[toKey] = snapshot.registry[key];
+            if (toKey) {
+                snapshot.registry[toKey] = snapshot.registry[key];
+                delete snapshot.registry[key];
+            }
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
     },
