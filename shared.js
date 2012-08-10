@@ -99,7 +99,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                     .select(function(ea) { return key.startsWith(ea.from); })
                     .max(function(ea) { return ea.from.length });
                 // do not add this copy if it is just part of the parent copy
-                if (movesAndDeletes[key].to.startsWith(move.to))
+                if (move && movesAndDeletes[key].to.startsWith(move.to))
                     result.push(movesAndDeletes[key]);
             }
         }
