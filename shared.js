@@ -175,7 +175,9 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     apply: function(snapshot) {
         // process copy instructions first
-        
+        for (var key in this.data.registry) {
+            
+        }
         // then apply raw diff
         this.applyPatch(snapshot.data, null, this.data);
     },
