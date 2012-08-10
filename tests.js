@@ -780,7 +780,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcB.receiveSnapshot(this.wcA.rev, snapshot);
         var patch = Object.deepCopy(this.wcA.lastPatch.data);
         this.wcC.receivePatch(this.wcA.rev, patch);
-        this.snapshots[this.wcA.rev] = snapshot;
+        this.snapshots[this.wcA.rev] = this.wcA.last;
     },
     addBox: function(optID) {
         var box = this.newBox(5, 5, optID || "X");
