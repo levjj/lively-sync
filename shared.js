@@ -111,16 +111,20 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         for (var prop in n) {
             if (n.hasOwnProperty(prop)) {
                 var pdiff = this.propDiff(o, n, prop, mapping);
-                if (pdiff && !odiff) odiff = {};
-                odiff[prop] = pdiff;
+                if (pdiff) {
+                    if (!odiff) odiff = {};
+                    odiff[prop] = pdiff;
+                }
             }
         }
         for (var prop in o) {
             if (o.hasOwnProperty(prop)) {
                 if (!n.hasOwnProperty(prop)) {
                     var pdiff = this.propDiff(o, n, prop, mapping);
-                    if (pdiff && !odiff) odiff = {};
-                    odiff[prop] = pdiff;
+                    if (pdiff) {
+                        if (!odiff) odiff = {};
+                        odiff[prop] = pdiff;
+                    }
                 }
             }
         }
