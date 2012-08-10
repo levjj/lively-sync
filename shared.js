@@ -94,11 +94,12 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var copyDiff = this.copyDiff(this.data, otherSnapshot.data);
         var semiPatchedData = {id:"", registry: this.data.registry.clone()};
         for (var id in copyDiff) {
+            var from = copyDiff[id].from, to = copyDiff[id].to;
             semiPatchedData.registry[copyDiff[id].to] = this.data.registry[copyDiff[id].from];
         }
         var rawDiff = this.jsonDiff(semiPatchedData, otherSnapshot.data);
         for (var id in copyDiff) {
-            var from = copyDiff[id].from, to = copyDiff[id].from;
+            var from = copyDiff[id].from, to = copyDiff[id].to;
             if (!rawDiff.hasOwnProperty(to)) rawDiff[to] = {};
             rawDiff[to] = [from, rawDiff[to], 0]; // generate copy instruction
         }
