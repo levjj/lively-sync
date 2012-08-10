@@ -300,6 +300,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (toKey) {
                 snapshot.registry[toKey] = snapshot.registry[key];
                 delete snapshot.registry[key];
+                
             }
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
