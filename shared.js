@@ -11,10 +11,11 @@ module('users.cschuster.sync.shared').requires().toRun(function() {
 
 Object.subclass('users.cschuster.sync.Mapping', {
     initialize: function() {
-        this.rules = [];
+        this.rules = []; // sorted by 'from' key for fast map lookup
+        this.invertedRules = []; // sorted by 'to' key for fast unmap lookup
         this.rulesLength = 0;
     },
-    addRule: function(from, to) {
+    addToList: function(rules, from, to) {
         // find direct parent copy (if there is one)
         var move = this.rules
             .select(function(ea) { return from.startsWith(ea.from); })
@@ -43,14 +44,25 @@ Object.subclass('users.cschuster.sync.Mapping', {
             }
         }
         if (!added) this.rules.push({from: from, to: to});
+    },
+    addRule: function(from, to) {
+        this.addToList(this.rules, from, to);
+        this.addToList(this.invertedRules, to, from);
         this.rulesLength = this.rules.length;
     },
     map: function(from) {
-        // (rules are sorted by length of from so that the most specific rule comes last)
         var i = this.rulesLength;
         while (i--) {
             if (from.startsWith(this.rules[i].from)) {
                 return this.rules[i].to + from.substring(this.rules[i].from.length);
+            }
+        }
+    },
+    unmap: function(to) {
+        var i = this.rulesLength;
+        while (i--) {
+            if (to.startsWith(this.invertedRules[i].from)) {
+                return this.rules[i].to + to.substring(this.rules[i].from.length);
             }
         }
     },
