@@ -162,7 +162,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
                          snapshotE, snapshotF);
     },
     testNestedReferencesWithPrimitiveProperties: function() {
-        var x = {id:"X", name: "x"}, y = {id:"Y", name: "z", p: {}};
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", p: {}};
         var snapshotA = this.serialize({X:x});
         x.b = y;
         var snapshotB = this.serialize({X:x});
