@@ -208,7 +208,6 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     apply: function(snapshot) {
         this.processCopyInstructions(snapshot.data);
-        // then apply raw diff
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
