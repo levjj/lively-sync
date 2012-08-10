@@ -21,11 +21,11 @@ TestCase.subclass('users.cschuster.sync.tests.MappingTest',
         this.assertEquals('X/b/c', this.mapping.unmap('Y/b/c'));
     },
     testCoalesceOverlappingRules: function() {
-        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapping.getRules());
         this.mapper.addRule('X/a', 'Y/a');
-        this.assertEquals('Y/a', this.mapper.map('X/a'));
-        this.assertEquals('X/a', this.mapper.unmap('Y/a'));
-        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
+        this.assertEquals('Y/a', this.mapping.map('X/a'));
+        this.assertEquals('X/a', this.mapping.unmap('Y/a'));
+        this.assertEqualState([{from: 'X', to: 'Y'}], this.mapping.getRules());
     },
     testDoNotCoalesceDifferentRules: function() {
         this.assertEqualState([{from: 'X', to: 'Y'}], this.mapper.getRules());
