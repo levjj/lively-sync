@@ -3,8 +3,8 @@ module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.mo
 TestCase.subclass('users.cschuster.sync.tests.MappingTest',
 'running', {
     setUp: function() {
-        this.mapper = new users.cschuster.sync.Mapping();
-        this.mapper.addRule('X', 'Y');
+        this.mapping = new users.cschuster.sync.Mapping();
+        this.mapping.addRule('X', 'Y');
     }
 },
 'testing', {
