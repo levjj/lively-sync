@@ -1072,19 +1072,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         y.remove();
         box.addMorph(y);
         this.assertSync(4);
-    },
-    testSwapSubmorphsWithEdits: function() {
-        var box = this.addBox();
-        var y = this.newBox(3, 1, "Y");
-        var z = this.newBox(3, 2, "Z");
-        box.addMorph(y);
-        box.addMorph(z);
-        this.assertSync(3);
-        y.remove();
-        box.addMorph(y);
         y.setFill(Color.red);
         z.setBorderWidth(13);
-        this.assertSync(4);
+        this.assertSync(5);
     },
     testScripts: function() {
         var box = this.addBox();
