@@ -163,16 +163,30 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     patchMoveInstructions: function(mapping) {
         var result = {};
-        var toDelete = [];
+        var toDelete = {};
         var rules = this.mapping.getRules();
         if (rules.length == 0) return this.data.registry;
         for (var i = 0; i < rules.length; i++) {
-            
+            var path = rules[i].from.split('/');
+            var prop = path.pop();
+            var target = path.join('/');
+            if (!toDelete[target]) toDelete[target] = [];
+            toDelete[target].push(prop);
         }
         for (var key in this.data.registry) {
-        
+            var newKey = mapping.map(key) || key;
+            if (toDelete.hasOwnProperty(newKey)) {
+                var oldEntry = this.data.registry[key];
+                var newEntry = {};
+                for (var k in oldEntry) {
+                    if (!toDelete[newKey].include(k)) newEntry[k] = oldEntry[k];
+                }
+                result[newKey] = newEntry;
+            } else {
+                result[newKey] = this.data.registry[key];
+            }
         }
-        return result;
+        return {id:0, registry: result};
     },
     diff: function(otherSnapshot) {
         var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
