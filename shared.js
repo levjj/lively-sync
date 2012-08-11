@@ -565,7 +565,7 @@ Object.subclass('users.cschuster.sync.Patch', {
                 var isntArray = Properties.own(obj).find(function(name) {
                     return isNaN(name);
                 });
-                if (!isntArray) obj._t = "a";
+                if (!Object.isEmpty(obj) && !isntArray) obj._t = "a";
             }
         }
     },
