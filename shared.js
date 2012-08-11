@@ -151,30 +151,6 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             return d;
         }
     },
-    registryDiff: function(otherRegistry, mapping) {
-        var odiff = {};
-        for (var key in otherRegistry) {
-            if (otherRegistry.hasOwnProperty(key)) {
-                var unmappedKey = mapping.unmap(key) || key;
-                if (!this.data.registry.hasOwnProperty(unmappedKey)) {
-                    odiff[key] = [otherRegistry[key]];
-                } else {
-                    var d = this.jsonDiff(this.data.registry[unmappedKey],
-                                          otherRegistry[key], mapping);
-                    if (d) odiff[key] = d;
-                }
-            }
-        }
-        for (var key in this.data.registry) {
-            if (this.data.registry.hasOwnProperty(key)) {
-                var mappedKey = mapping.map(key) || key;
-                if (!otherRegistry.hasOwnProperty(mappedKey)) {
-                    odiff[mappedKey] = [this.data.registry[key], 0, 0];
-                }
-            }
-        }
-        return odiff;
-    },
     moveMapping: function(o, n) {
         var movesAndDeletes = {};
         // find all objects with ids that were moved or deleted
@@ -197,6 +173,12 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             }
         }
         return mapping;
+    },
+    patchMoveInstructions: function(mapping) {
+        var result = {};
+        for (var key in this.data.registry) {
+        }
+        return result;
     },
     diff: function(otherSnapshot) {
         var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
