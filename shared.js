@@ -298,7 +298,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         // collect moves
         for (var key in snapshot.registry) {
             var toKey = moveMapping.map(key);
-            if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: key});
+            if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: toKey});
         }
         // apply them all at once
         for (var i = 0; i < moves.length - 1; i++) {
