@@ -168,20 +168,26 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         if (rules.length == 0) return this.data.registry;
         for (var i = 0; i < rules.length; i++) {
             var path = rules[i].from.split('/');
-            var prop = path.pop();
-            var target = path.join('/');
+            var prop = [];
+            do {
+                prop.unshift(path.pop());
+                var target = path.join('/');
+            } while (!this.data.registry.hasOwnProperty(target));
             if (!toDelete[target]) toDelete[target] = [];
             toDelete[target].push(prop);
         }
         for (var key in this.data.registry) {
             var newKey = mapping.map(key) || key;
             if (toDelete.hasOwnProperty(newKey)) {
-                var oldEntry = this.data.registry[key];
-                var newEntry = {};
-                for (var k in oldEntry) {
-                    if (!toDelete[newKey].include(k)) newEntry[k] = oldEntry[k];
+                result[newKey] = Object.clone(this.data.registry[key]);
+                var target = result[newKey];
+                var path = toDelete[newKey];
+                for (var i = 0; i < path.length - 1; i++) {
+                    var newTarget = target[path[i]].clone();
+                    target[path[i]] = newTarget;
+                    target = newTarget;
                 }
-                result[newKey] = newEntry;
+                delete target[path.last()];
             } else {
                 result[newKey] = this.data.registry[key];
             }
