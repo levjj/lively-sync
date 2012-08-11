@@ -12,12 +12,11 @@ module('users.cschuster.sync.shared').requires().toRun(function() {
 Object.subclass('users.cschuster.sync.Mapping', {
     initialize: function() {
         this.rules = []; // sorted by 'from' key for fast map lookup
-        this.invertedRules = []; // sorted by 'to' key for fast unmap lookup
         this.rulesLength = 0;
     },
-    addToList: function(rules, from, to) {
+    addRule: function(from, to) {
         // find direct parent rule (if there is one)
-        var move = rules
+        var move = this.rules
             .select(function(ea) { return from.startsWith(ea.from); })
             .max(function(ea) { return ea.from.length });
         // do not add this rule if it is just part of the parent rule
@@ -25,14 +24,14 @@ Object.subclass('users.cschuster.sync.Mapping', {
         // add rule
         var added = false;
         var fromLength = from.length;
-        for (var i = 0; i < rules.length; i++) {
-            var rule = rules[i];
+        for (var i = 0; i < this.rules.length; i++) {
+            var rule = this.rules[i];
             if (!added) {
                 // add new rule at the right positon
                 // (rules are sorted by length of from so that the most specific rule comes last)
                 var ruleLength = rule.from.length;
                 if (ruleLength > fromLength || (ruleLength == fromLength && from < rule.from)) {
-                    rules.pushAt({from: from, to: to}, i);
+                    this.rules.pushAt({from: from, to: to}, i);
                     added = true;
                 }
             } else {
@@ -44,10 +43,6 @@ Object.subclass('users.cschuster.sync.Mapping', {
             }
         }
         if (!added) rules.push({from: from, to: to});
-    },
-    addRule: function(from, to) {
-        this.addToList(this.rules, from, to);
-        this.addToList(this.invertedRules, to, from);
         this.rulesLength = this.rules.length;
     },
     map: function(from) {
@@ -55,14 +50,6 @@ Object.subclass('users.cschuster.sync.Mapping', {
         while (i--) {
             if (from.startsWith(this.rules[i].from)) {
                 return this.rules[i].to + from.substring(this.rules[i].from.length);
-            }
-        }
-    },
-    unmap: function(to) {
-        var i = this.rulesLength;
-        while (i--) {
-            if (to.startsWith(this.invertedRules[i].from)) {
-                return this.invertedRules[i].to + to.substring(this.invertedRules[i].from.length);
             }
         }
     },
