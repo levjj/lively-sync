@@ -163,7 +163,14 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     patchMoveInstructions: function(mapping) {
         var result = {};
+        var toDelete = [];
+        var rules = this.mapping.getRules();
+        if (rules.length == 0) return this.data.registry;
+        for (var i = 0; i < rules.length; i++) {
+            
+        }
         for (var key in this.data.registry) {
+        
         }
         return result;
     },
