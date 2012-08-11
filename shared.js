@@ -306,10 +306,10 @@ Object.subclass('users.cschuster.sync.Diff', {
                     var target = path.join('/');
                 } while (!snapshot.registry.hasOwnProperty(target));
                 var target = snapshot.registry[path.join('/')];
-                for (var i = 0; i < prop.length - 1; i++) {
+                for (var i = 0; target && i < prop.length - 1; i++) {
                     target = target[prop[i]];
                 }
-                delete target[prop.last()]; // delete implicit smartref
+                if (target) delete target[prop.last()]; // delete implicit smartref
             }
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
