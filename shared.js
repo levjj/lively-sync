@@ -164,7 +164,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     patchMoveInstructions: function(mapping) {
         var result = {};
         var toDelete = {};
-        var rules = this.mapping.getRules();
+        var rules = mapping.getRules();
         if (rules.length == 0) return this.data.registry;
         for (var i = 0; i < rules.length; i++) {
             var path = rules[i].from.split('/');
