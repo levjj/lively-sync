@@ -294,23 +294,27 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     processMoveInstructions: function(snapshot) {
         var moveMapping = this.findAndConvertMoveInstructions();
+        var moves = [];
+        // collect moves
         for (var key in snapshot.registry) {
             var toKey = moveMapping.map(key);
-            if (toKey) {
-                snapshot.registry[toKey] = snapshot.registry[key];
-                delete snapshot.registry[key]; // delete entry in registry
-                var path = key.split('/');
-                var prop = [];
-                do {
-                    prop.unshift(path.pop());
-                    var target = path.join('/');
-                } while (!snapshot.registry.hasOwnProperty(target));
-                var target = snapshot.registry[path.join('/')];
-                for (var i = 0; target && i < prop.length - 1; i++) {
-                    target = target[prop[i]];
-                }
-                if (target) delete target[prop.last()]; // delete implicit smartref
+            if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: key});
+        }
+        // apply them all at once
+        for (var i = 0; i < moves.length - 1; i++) {
+            snapshot.registry[moves[i].to] = moves[i].obj;
+            delete snapshot.registry[moves[i].from]; // delete entry in registry
+            var path = moves[i].from.split('/');
+            var prop = [];
+            do {
+                prop.unshift(path.pop());
+                var target = path.join('/');
+            } while (!snapshot.registry.hasOwnProperty(target));
+            var target = snapshot.registry[path.join('/')];
+            for (var j = 0; target && j < prop.length - 1; j++) {
+                target = target[prop[j]];
             }
+            if (target) delete target[prop.last()]; // delete implicit smartref
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
     },
