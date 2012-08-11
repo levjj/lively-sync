@@ -14,11 +14,6 @@ TestCase.subclass('users.cschuster.sync.tests.MappingTest',
         this.assertEquals(undefined, this.mapping.map('Z'));
         this.assertEquals('Y/a', this.mapping.map('X/a'));
         this.assertEquals('Y/b/c', this.mapping.map('X/b/c'));
-        this.assertEquals(undefined, this.mapping.unmap('X'));
-        this.assertEquals('X', this.mapping.unmap('Y'));
-        this.assertEquals(undefined, this.mapping.unmap('Z'));
-        this.assertEquals('X/a', this.mapping.unmap('Y/a'));
-        this.assertEquals('X/b/c', this.mapping.unmap('Y/b/c'));
     },
     testCoalesceOverlappingRules: function() {
         this.assertEqualState([{from: 'X', to: 'Y'}], this.mapping.getRules());
