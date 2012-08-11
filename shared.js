@@ -38,11 +38,11 @@ Object.subclass('users.cschuster.sync.Mapping', {
                 // remove all mapping rules that became implicit
                 if (rule.from.startsWith(from) &&
                     rule.to == to + rule.from.substring(from.length)) {
-                    rules.removeAt(i--);
+                    this.rules.removeAt(i--);
                 }
             }
         }
-        if (!added) rules.push({from: from, to: to});
+        if (!added) this.rules.push({from: from, to: to});
         this.rulesLength = this.rules.length;
     },
     map: function(from) {
