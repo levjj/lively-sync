@@ -301,7 +301,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: toKey});
         }
         // apply them all at once
-        for (var i = 0; i < moves.length - 1; i++) {
+        for (var i = 0; i < moves.length; i++) {
             snapshot.registry[moves[i].to] = moves[i].obj;
             delete snapshot.registry[moves[i].from]; // delete entry in registry
             var path = moves[i].from.split('/');
