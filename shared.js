@@ -192,7 +192,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
         var semipatchedRegistry = this.patchMoveInstructions(moveMapping);
         // compute (remaining) raw diff
-        var rawDiff = this.jsonDiff(semipatchedRegistry, otherSnapshot.data.registry, moveMapping);
+        var rawDiff = this.jsonDiff(semipatchedRegistry, otherSnapshot.data.registry, moveMapping) || {};
         // merge object diff and raw diff
         moveMapping.getRules().each(function(rule) {
             if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
