@@ -186,7 +186,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 result[newKey] = this.data.registry[key];
             }
         }
-        return {id:0, registry: result};
+        return result;
     },
     diff: function(otherSnapshot) {
         var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
