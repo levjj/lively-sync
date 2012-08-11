@@ -391,16 +391,21 @@ Object.subclass('users.cschuster.sync.Diff', {
         // returns true if that part of the diff is empty
         // after removing the smartrefs.
         if (Array.isArray(obj)) { // instruction
-            if (obj.length >= 3) {
+            if (obj.length == 4) {
+                // remove first value of move instruction
+                // process diff part and return false
+                obj.shift();
+                this.coalesceDiff(obj[1], id);
+                return false;
+            }
+            if (obj.length == 3) {
                 // discard old value of delete instruction
                 // and remove whole instruction if it was a
                 // smartref
-                // if this was a move instruction, simply
-                // remove first value and return false
-                return this.isSmartRef(obj.splice(0,1)[0], id);
-             }
+                return this.isSmartRef(obj.shift(), id);
+            }
             // discard old value of set instruction
-            if (obj.length == 2) obj.splice(0,1);
+            if (obj.length == 2) obj.shift();
             // if the added or modified value is a smartref, remove it
             if (this.isSmartRef(obj[0], id)) return true;
             // else recursively remove smartref (and copy this
