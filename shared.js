@@ -304,7 +304,7 @@ Object.subclass('users.cschuster.sync.Diff', {
                 do {
                     prop.unshift(path.pop());
                     var target = path.join('/');
-                } while (!snapshot.hasOwnProperty(target));
+                } while (!snapshot.registry.hasOwnProperty(target));
                 var target = snapshot.registry[path.join('/')];
                 for (var i = 0; i < prop.length - 1; i++) {
                     target = target[prop[i]];
