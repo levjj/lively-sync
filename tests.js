@@ -228,6 +228,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotB, snapshotD);
     },
     testNestedReferencesWithNestedProperties: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", p:
             {id: "Z", name: "z", q: {id: "Q", name: "q"}}};
         var snapshotA = this.serialize({X:x});
@@ -240,16 +241,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         x.a = y;
         var snapshotC = this.serialize({X:x});
         var expected = {};
-        expected["X"]   = {b: {id: ["X/a"]}}; // X.b now points to ref(X/a)
+        expected["X"]   = {b: ref("X/a")}; // X.b now points to ref(X/a)
         expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
-        expected["X/b"] = [0, 0]; // delete X/b copy
         debugger;
         this.assertPatch(expected, snapshotB, snapshotC);
         delete x.b;
         var snapshotD = this.serialize({X:x});
         var expected = {};
         expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
-        expected["X/b"] = [0, 0]; // delete X/b copy
         this.assertPatch(expected, snapshotB, snapshotD);
     },
     testArrayWithPrimitiveReferences: function() {
