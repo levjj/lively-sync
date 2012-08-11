@@ -243,7 +243,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected["X"]   = {b: ref("X/a")}; // X.b now points to ref(X/a)
         expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
-        debugger;
         this.assertPatch(expected, snapshotB, snapshotC);
         delete x.b;
         var snapshotD = this.serialize({X:x});
