@@ -300,9 +300,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             var toKey = moveMapping.map(key);
             if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: toKey});
         }
-        // apply them all at once
+        // apply all 'deletions' at once
         for (var i = 0; i < moves.length; i++) {
-            snapshot.registry[moves[i].to] = moves[i].obj;
             delete snapshot.registry[moves[i].from]; // delete entry in registry
             var path = moves[i].from.split('/');
             var prop = [];
@@ -315,6 +314,10 @@ Object.subclass('users.cschuster.sync.Diff', {
                 target = target[prop[j]];
             }
             if (target) delete target[prop.last()]; // delete implicit smartref
+        }
+        // apply all 'additions' at once
+        for (var i = 0; i < moves.length; i++) {
+            snapshot.registry[moves[i].to] = moves[i].obj;
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
     },
