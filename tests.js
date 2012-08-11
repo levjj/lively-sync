@@ -400,6 +400,38 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected[this.rect.id + "/submorphs/1"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testSwapSubmorphs: function() {
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorphA = new lively.morphic.Box(bounds);
+        var submorphB = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorphA);
+        this.rect.addMorph(submorphB);
+        var snapshotA = this.serialize(this.table);
+        submorphA.remove();
+        this.rect.addMorph(submorphA);
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/submorphs/0"] = [this.rect.id + "/submorphs/1", {}, 0];
+        expected[this.rect.id + "/submorphs/1"] = [this.rect.id + "/submorphs/0", {}, 0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testSwapSubmorphsWithEdits: function() {
+        var bounds = pt(0,0).extent(pt(20,20));
+        var submorphA = new lively.morphic.Box(bounds);
+        var submorphB = new lively.morphic.Box(bounds);
+        this.rect.addMorph(submorphA);
+        this.rect.addMorph(submorphB);
+        var snapshotA = this.serialize(this.table);
+        submorphA.remove();
+        this.rect.addMorph(submorphA);
+        submorphA.halosEnabled = false;
+        submorphB.droppingEnabled = false;
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        expected[this.rect.id + "/submorphs/0"] = [this.rect.id + "/submorphs/1", {droppingEnables: [false]}, 0];
+        expected[this.rect.id + "/submorphs/1"] = [this.rect.id + "/submorphs/0", {halosEnabled: [false]}, 0];
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testDiffingDoesNotAffectSnapshot: function() {
         var snapshotA = this.serialize({});
         var snapshotB = this.serialize(this.table);
