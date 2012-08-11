@@ -293,7 +293,8 @@ Object.subclass('users.cschuster.sync.Diff', {
                 delete snapshot.registry[key]; // delete entry in registry
                 var path = key.split('/');
                 var prop = path.pop();
-                delete snapshot.registry[path.join('/')][prop]; // delete implicit smartref
+                var target = snapshot.registry[path.join('/')];
+                if (target) delete target[prop]; // delete implicit smartref
             }
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
