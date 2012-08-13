@@ -243,7 +243,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             return result;
         },
         applyMoveInstructions: function(patch) {
-            var moves = this.findAndConvertMoveInstructions(this.syncTable, patch);
+            var moves = this.findMoveInstructions(this.syncTable, patch);
             // apply all 'deletions' at once
             for (var i = 0; i < moves.length; i++) {
                 var fromPath = moves[i].from.path;
