@@ -230,44 +230,6 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    applyPatch: function(o, pname, d) {
-        if (typeof d !== 'object') return o;
-        if (Array.isArray(d)) { // changed value
-            if (d.length < 3) {
-                var nvalue = d.last();
-                if (pname !== null) {
-                    o[pname] = nvalue;
-                }
-                return nvalue;
-            }
-            else { // undefined, delete value
-                delete o[pname];
-            }
-        } else { // path to changes value
-            var target = pname === null ? o : o[pname];
-            if (d._t == 'a') { // array diff
-                if (typeof target != 'object' || !Array.isArray(target)) {
-                    throw new Error('cannot apply patch: array expected');
-                }
-                for (var p in d) {
-                    if (p !== '_t' && d.hasOwnProperty(p)) {
-                        this.applyPatch(target, p, d[p]);
-                    }
-                }
-                target.repair();
-            } else { // object diff
-                if (typeof target != 'object' || Array.isArray(target)) {
-                    throw new Error('cannot apply patch: object expected');
-                }
-                for (var p in d) {
-                    if (d.hasOwnProperty(p)) {
-                        this.applyPatch(target, p, d[p]);
-                    }
-                }
-            }
-        }
-        return o;
-    },
     findMoveInstructions: function() {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
@@ -319,11 +281,6 @@ Object.subclass('users.cschuster.sync.Diff', {
             snapshot.registry[moves[i].to] = moves[i].obj;
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
-    },
-    apply: function(snapshot) {
-        this.processMoveInstructions(snapshot.data);
-        this.prepareToPatch(snapshot.data);
-        this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
         var toDelete = [];
@@ -579,6 +536,49 @@ Object.subclass('users.cschuster.sync.Diff', {
         this.addMissingClassNames(this.data);
         this.addMissingSmartRefs();
         this.propagateDeletions(snapshot);
+    },
+    applyPatch: function(o, pname, d) {
+        if (typeof d !== 'object') return o;
+        if (Array.isArray(d)) { // changed value
+            if (d.length < 3) {
+                var nvalue = d.last();
+                if (pname !== null) {
+                    o[pname] = nvalue;
+                }
+                return nvalue;
+            }
+            else { // undefined, delete value
+                delete o[pname];
+            }
+        } else { // path to changes value
+            var target = pname === null ? o : o[pname];
+            if (d._t == 'a') { // array diff
+                if (typeof target != 'object' || !Array.isArray(target)) {
+                    throw new Error('cannot apply patch: array expected');
+                }
+                for (var p in d) {
+                    if (p !== '_t' && d.hasOwnProperty(p)) {
+                        this.applyPatch(target, p, d[p]);
+                    }
+                }
+                target.repair();
+            } else { // object diff
+                if (typeof target != 'object' || Array.isArray(target)) {
+                    throw new Error('cannot apply patch: object expected');
+                }
+                for (var p in d) {
+                    if (d.hasOwnProperty(p)) {
+                        this.applyPatch(target, p, d[p]);
+                    }
+                }
+            }
+        }
+        return o;
+    },
+    apply: function(snapshot) {
+        this.processMoveInstructions(snapshot.data);
+        this.prepareToPatch(snapshot.data);
+        this.applyPatch(snapshot.data, null, this.data);
     },
     toJSON: function() {
         return JSON.stringify(this.data);
