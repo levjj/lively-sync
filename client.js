@@ -223,7 +223,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.push(obj);
         },
-        findAndConvertMoveInstructions: function(obj, patch) {
+        findMoveInstructions: function(obj, patch) {
             var result = [];
             if (!obj || typeof obj != "object") return result;
             for (var key in patch) {
@@ -233,7 +233,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         // defer actual moving object
                         result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
                                      to: {obj: obj, prop: key}});
-                        patch[key] = value[1]; // insert raw patch
                     }
                 } else {
                     result.pushAll(this.findAndConvertMoveInstructions(obj[key], value));
