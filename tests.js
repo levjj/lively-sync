@@ -755,7 +755,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
                         targetMethodName:"b", targetObj: {__isSmartRef__:true, id: "X"},
                         __LivelyClassName__: "AttributeConnection",
                         __SourceModuleName__: "Global.lively.bindings"}]},
-    disconnectPatch: {}
+    disconnectPatch: {"X": {attributeConnections: [0,0],
+                            doNotCopyProperties: [0,0],
+                            doNotSerialize: [0,0]},
+                      "X/attributeConnections/0": [0,0]
+        }
 },
 'testing', {
     testMoveX: function() {
