@@ -615,16 +615,18 @@ Object.subclass('users.cschuster.sync.Patch', {
             }
             return obj;
         }
-        for (var key in this.data) {
+        var keys = Object.keys(this.data).sort();
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
             var val = this.data[key];
             var parts = key.split('/');
             var current = newPatch;
             var rawMode = false;
-            for (var i = 0; i < parts.length - 1; i++) {
-                if (!current[parts[i]]) {
-                    current[parts[i]] = {};
+            for (var j = 0; j < parts.length - 1; j++) {
+                if (!current[parts[j]]) {
+                    current[parts[j]] = {};
                 }
-                current = current[parts[i]];
+                current = current[parts[j]];
                 if (!rawMode && Array.isArray(current)) {
                     if (current.length == 1) { // add
                         rawMode = true;
