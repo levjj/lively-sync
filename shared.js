@@ -553,7 +553,8 @@ Object.subclass('users.cschuster.sync.Patch', {
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
                 } else if (obj.length == 3) { // move
                     obj.unshift(0);
-                    this.convertToDiffInstruction(obj[2], optSnapshotObj, optSnapshot);
+                    this.convertToDiffInstruction(obj[2],
+                        optSnapshot && optSnapshot.registry[obj[1]], optSnapshot);
                 } else if (optSnapshotObj !== undefined) { // add or set
                     obj.unshift(optSnapshotObj);
                 }
