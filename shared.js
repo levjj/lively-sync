@@ -395,14 +395,13 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return patch;
     },
-    convertToDiffInstruction: function(obj, snapshotObj, snapshot) {
+    convertToDiffInstruction: function(obj, snapshotObj) {
         // recreates diff instructions from patch
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
                 if (obj.length == 3) { // move
-                    obj.unshift(snapshotObj !== undefined ? snapshotObj : 0);
-                    var movedObj = snapshot.registry[obj[1]];
-                    this.convertToDiffInstruction(obj[2], movedObj, snapshot);
+                    obj.unshift(0);
+                    this.convertToDiffInstruction(obj[2], snapshotObj);
                 } else if (obj.length == 2) { // delete
                     obj.unshift(snapshotObj !== undefined ? snapshotObj : 0);
                 } else if (snapshotObj !== undefined) { // add or set
@@ -411,7 +410,7 @@ Object.subclass('users.cschuster.sync.Diff', {
             } else { // path object or array
                 // recursive call
                 Properties.forEachOwn(obj, function(name, val) {
-                    this.convertToDiffInstruction(val, snapshotObj[name], snapshot);
+                    this.convertToDiffInstruction(val, snapshotObj[name]);
                 }, this);
                 // adding _t back if this is an array
                 var isntArray = Properties.own(obj).find(function(name) {
