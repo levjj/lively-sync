@@ -549,6 +549,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     addMissingClassNames: function(obj) {
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
+                if (obj.length == 4) return this.addMissingClassNames(obj[2]);
                 if (obj.length == 3) return;
                 var o = obj.last();
                 if (o && typeof o == "object" &&
