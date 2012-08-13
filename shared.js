@@ -530,7 +530,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     prepareToPatch: function(snapshot) {
-        this.convertToDiffInstruction(this.data.registry, snapshot.registry, snapshot);
+        this.convertToDiffInstruction(this.data.registry, snapshot.registry);
         this.recreateSmartRefs(this.data.registry, snapshot.registry);
         this.addMissingClassNames(this.data);
         this.addMissingSmartRefs();
