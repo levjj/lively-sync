@@ -230,6 +230,24 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
+    recreateSmartRefs: function(obj, orig) {
+        if (obj && typeof obj == "object" && !Array.isArray(obj)) {
+            Properties.forEachOwn(obj, function(name, val) {
+                var o = orig[name];
+                if (o && typeof o == "object" && o.__isSmartRef__ && !Array.isArray(val)) {
+                    obj[name] = [{__isSmartRef__: true, id: val.id.last()}];
+                } else {
+                    if (Array.isArray(val) && val.length == 4) { // move
+                        val = val[2]; // continue with raw diff
+                    }
+                    this.recreateSmartRefs(val, o);
+                }
+            }, this);
+        }
+    },
+    recreate: function(snapshot) {
+        this.recreateSmartRefs(this.data, snapshot.registry);
+    },
     applyPatch: function(o, pname, d) {
         if (typeof d !== 'object') return o;
         if (Array.isArray(d)) { // changed value
@@ -323,6 +341,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     apply: function(snapshot) {
         this.processMoveInstructions(snapshot.data);
+        this.recreate(snapshot.data);
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
