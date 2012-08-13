@@ -32,7 +32,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 if (value.length > 1) { // delete
                     value.shift().remove();
                 }
-                if (value.length == 1) { // add or set
+                if (value.length == 1) { // add
                     parentMorph.addMorph(obj[key]);
                 }
             } else {
