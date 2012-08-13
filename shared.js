@@ -545,7 +545,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    convertToDiffInstruction: function(obj, optSnapshotObj) {
+    convertToDiffInstruction: function(obj, optSnapshotObj, optSnapshot) {
         // recreates diff instructions from patch
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
@@ -553,14 +553,14 @@ Object.subclass('users.cschuster.sync.Patch', {
                     obj.unshift(optSnapshotObj !== undefined ? optSnapshotObj : 0);
                 } else if (obj.length == 3) { // move
                     obj.unshift(0);
-                    this.convertToDiffInstruction(obj[2], optSnapshotObj);
+                    this.convertToDiffInstruction(obj[2], optSnapshotObj, optSnapshot);
                 } else if (optSnapshotObj !== undefined) { // add or set
                     obj.unshift(optSnapshotObj);
                 }
             } else { // path object or array
                 // recursive call
                 Properties.forEachOwn(obj, function(name, val) {
-                    this.convertToDiffInstruction(val, optSnapshotObj[name]);
+                    this.convertToDiffInstruction(val, optSnapshotObj[name], optSnapshot);
                 }, this);
                 // adding _t back if this is an array
                 var isntArray = Properties.own(obj).find(function(name) {
