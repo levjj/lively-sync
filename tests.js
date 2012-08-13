@@ -228,12 +228,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
     testNestedReferencesWithNestedProperties: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", p:
-            {id: "Z", name: "z", q: {id: "Q", name: "q"}}};
+            {id: "P", name: "p", q: {id: "Q", name: "q"}}};
         var snapshotA = this.serialize({X:x});
         x.b = y;
         var snapshotB = this.serialize({X:x});
         this.assertPatch({"X/b": [{id:"Y", name: "y"}],
-                          "X/b/p": [{id: "Z", name: "z"}],
+                          "X/b/p": [{id: "P", name: "p"}],
                           "X/b/p/q": [{id: "Q", name: "q"}]},
                          snapshotA, snapshotB);
         x.a = y;
@@ -247,6 +247,25 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {};
         expected["X/a"] = ["X/b", {}, 0]; // copy X/b to X/a
         this.assertPatch(expected, snapshotB, snapshotD);
+    },
+    testNestedReferencesMoveNestedProperties: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y"}, z = {id:"Z", name: "z"};
+        var snapshotA = this.serialize({Y:y});
+        y.a = z;
+        var snapshotB = this.serialize({Y:y});
+        this.assertPatch({"Y/a": [{id: "Z", name: "Z"}]}, snapshotA, snapshotB);
+        x.a = y;
+        var snapshotC = this.serialize({X:x,Y:y});
+        var expected = {};
+        expected["X"]   = [{id: "X", name: "x"}]; // X.b now points to ref(X/a)
+        expected["X/a"] = ["Y/a", {}, 0]; // copy Y/a to X/a
+        this.assertPatch(expected, snapshotB, snapshotC);
+        var snapshotD = this.serialize({Y:y});
+        var expected = {};
+        expected["X"] = [0, 0];
+        expected["Y/a"] = ["X/a", {}, 0]; // copy X/b to X/a
+        this.assertPatch(expected, snapshotC, snapshotD);
     },
     testArrayWithPrimitiveReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
