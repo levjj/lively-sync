@@ -68,7 +68,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         for (var key in patch) {
             var isAttributeConnections = key == "attributeConnections";
             var value = patch[key];
-            if (Array.isArray(value) && value.length == 3) { // delete
+            if (Array.isArray(value)) { // instruction
+                if (value.length != 3) continue; // delete
                 if (isAttributeConnections) {
                     disconnectAll(obj);
                 } else if (parentObj) {
