@@ -246,7 +246,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 var fromPath = moves[i].from.path;
                 var lastPart = fromPath.lastIndexOf('/');
                 var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
-                var prop = fromPath.substring(0, lastPart + 1);
+                var prop = fromPath.substring(lastPart + 1);
                 if (fromParent) delete fromParent[prop];
             }
             // apply all 'additions' at once
