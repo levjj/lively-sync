@@ -254,7 +254,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     processMoveInstructions: function(snapshot) {
-        var moveMapping = this.findAndConvertMoveInstructions();
+        var moveMapping = this.findMoveInstructions();
         var moves = [];
         // collect moves
         for (var key in snapshot.registry) {
