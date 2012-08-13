@@ -1011,7 +1011,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         x.b = z;
         this.assertSync(6);
         x.a = z;
-        debugger;
         this.assertSync(7);
         delete x.b;
         this.assertSync(8);
