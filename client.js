@@ -29,7 +29,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
                 if (!parentMorph) continue;
-                if (value.length == 3) { // delete
+                if (value.length == 2) { // delete
                     value.shift().remove();
                 } else { // add, set or move
                     var length = parentMorph.submorphs.length;
