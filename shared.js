@@ -442,7 +442,11 @@ Object.subclass('users.cschuster.sync.Diff', {
         // recreates diff instructions from patch
         if (typeof obj == "object") {
             if (Array.isArray(obj)) { // instruction
-                if (obj.length == 2) { // delete
+                if (obj.length == 3) { // move
+                    obj.unshift(snapshotObj !== undefined ? snapshotObj : 0);
+                    var movedObj = snapshot.registry[obj[1]];
+                    this.convertToDiffInstruction(obj[2], movedObj, snapshot);
+                } else if (obj.length == 2) { // delete
                     obj.unshift(snapshotObj !== undefined ? snapshotObj : 0);
                 } else if (snapshotObj !== undefined) { // add or set
                     obj.unshift(snapshotObj);
