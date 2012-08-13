@@ -540,15 +540,16 @@ Object.subclass('users.cschuster.sync.Diff', {
     applyPatch: function(o, pname, d) {
         if (typeof d !== 'object') return o;
         if (Array.isArray(d)) { // changed value
-            if (d.length < 3) {
+            if (d.length == 4) { // move
+                this.applyPatch(o, pname, d[2]);
+            } else if (d.length == 3) { // delete
+                delete o[pname];
+            } else { // add or set
                 var nvalue = d.last();
                 if (pname !== null) {
                     o[pname] = nvalue;
                 }
                 return nvalue;
-            }
-            else { // undefined, delete value
-                delete o[pname];
             }
         } else { // path to changes value
             var target = pname === null ? o : o[pname];
