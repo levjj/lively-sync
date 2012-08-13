@@ -243,15 +243,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var moves = this.findAndConvertMoveInstructions(this.syncTable, patch);
             // apply all 'deletions' at once
             for (var i = 0; i < moves.length; i++) {
-                var fromPath = moves[i].from[1];
+                var fromPath = moves[i].from.path;
                 var lastPart = fromPath.lastIndexOf('/');
                 var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
                 var prop = fromPath.substring(0, lastPart + 1);
-                delete fromParent[prop];
+                if (fromParent) delete fromParent[prop];
             }
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
-                this.set(obj, key, value[2]);
+                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
         }
     },
