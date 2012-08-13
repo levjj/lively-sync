@@ -201,6 +201,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 3) { // move
+                        value.unshift(0);
                         this.applyObjectPatch(obj[key], value[1]);
                     } else if (value.length == 2) { // delete
                         value.unshift(obj[key]);
