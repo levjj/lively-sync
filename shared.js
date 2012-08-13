@@ -576,7 +576,7 @@ Object.subclass('users.cschuster.sync.Patch', {
             var diffVal = this.data[key];
             var origVal = optSnapshot && optSnapshot.data.registry[key];
             raw.registry[key] = diffVal ;
-            this.convertToDiffInstruction(diffVal, origVal);
+            this.convertToDiffInstruction(diffVal, origVal, optSnapshot.data);
         }
         var diff = new users.cschuster.sync.Diff(raw);
         if (optSnapshot) diff.prepareToPatch(optSnapshot);
