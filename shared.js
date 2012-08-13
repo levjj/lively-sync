@@ -551,7 +551,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     prepareToPatch: function(snapshot) {
-        this.recreateSmartRefs(snapshot.data);
+        this.recreateSmartRefs(snapshot);
         this.addMissingClassNames(this.data);
         this.addMissingSmartRefs();
         this.propagateDeletions(snapshot);
