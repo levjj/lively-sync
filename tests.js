@@ -308,15 +308,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {"X":{a:{1:ref("X/a/0")}},"X/a/0":["X/a/1", {}, 0]};
         this.assertPatch(expected, snapshotC, snapshotD);
         x.a[0] = y;
-        var snapshotD = this.serialize({X:x});
+        var snapshotE = this.serialize({X:x});
         var expected = {"X":{a:{0:ref("X/a/0")}},
                         "X/a/0":[{id: "Y", name: "y"}],
                         "X/a/1": ["X/a/0", {}, 0]};
-        debugger;
-        this.assertPatch(expected, snapshotC, snapshotD);
+        this.assertPatch(expected, snapshotD, snapshotE);
         x.a.removeAt(0);
-        var snapshotE = this.serialize({X:x});
-        this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotD, snapshotE);
+        var snapshotF = this.serialize({X:x});
+        this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotE, snapshotF);
     },
     testIdenticalRectangle: function() {
         var snapshotA = this.serialize(this.table);
