@@ -591,24 +591,6 @@ Object.subclass('users.cschuster.sync.Patch', {
     isEmpty: function() {
         return !this.data || Object.isEmpty(this.data);
     },
-    recreateSmartRefs: function(obj, orig) {
-        if (obj && typeof obj == "object" && !Array.isArray(obj)) {
-            Properties.forEachOwn(obj, function(name, val) {
-                var o = orig[name];
-                if (o && typeof o == "object" && o.__isSmartRef__ && !Array.isArray(val)) {
-                    obj[name] = [{__isSmartRef__: true, id: val.id.last()}];
-                } else {
-                    if (Array.isArray(val) && val.length == 3) { // move
-                        val = val[1]; // continue with raw diff
-                    }
-                    this.recreateSmartRefs(val, o);
-                }
-            }, this);
-        }
-    },
-    recreate: function(snapshot) {
-        this.recreateSmartRefs(this.data, snapshot.data.registry);
-    },
     toHierachicalPatch: function() {
         var newPatch = {};
         function removeAdds(obj) {
