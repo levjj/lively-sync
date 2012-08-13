@@ -446,8 +446,9 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (!target) { // target not in diff, add empty object
             target = obj[prop] = {};
         } else if (Array.isArray(target)) { // instruction
-            // can only be add or set, so real target is always last element
-            target = target.last();
+            // if it is an add or set, the real target is always last element
+            // if is is a move instruction then the raw diff can be found at [1]
+            target = target.length < 3 ? target.last() : target[1];
             // callback for operation
             foundOperation();
         }
