@@ -341,7 +341,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     apply: function(snapshot) {
         this.processMoveInstructions(snapshot.data);
-        this.recreate(snapshot.data);
+        this.prepareToPatch(snapshot.data);
         this.applyPatch(snapshot.data, null, this.data);
     },
     aggregateDeletions: function() {
