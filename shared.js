@@ -497,9 +497,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         for (var key in this.data.registry) {
             if (Array.isArray(this.data.registry[key])) {
                 var instruction = this.data.registry[key];
-                if (instruction.length == 2 &&             // set
-                    // add smart ref if id was changed or if there is a new id
-                    !(instruction[1].id && instruction[0].id != instruction[1].id)) continue;
+                //if (instruction.length == 2) continue;   // set
                 var op = [this.createSmartRef(key)];       // add
                 if (instruction.length == 3) op.push(0,0); // delete
                 this.addMissingSmartRef(key, op);
