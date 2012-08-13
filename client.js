@@ -237,7 +237,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                                      to: {obj: obj, prop: key}});
                     }
                 } else {
-                    result.pushAll(this.findAndConvertMoveInstructions(obj[key], value));
+                    result.pushAll(this.findMoveInstructions(obj[key], value));
                 }
             }
             return result;
