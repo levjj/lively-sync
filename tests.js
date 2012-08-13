@@ -626,6 +626,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
             __LivelyClassName__:"AttributeConnection",
             __SourceModuleName__:"Global.lively.bindings"}];
         this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testSimpleDisconnect: function() {
+        connect(this.rect, 'a', this.rect, 'b');
+        this.rect.a = 2;
+        var snapshotA = this.serialize(this.table);
+        disconnect(this.rect, 'a', this.rect, 'b');
+        var snapshotB = this.serialize(this.table);
+        var expected = {};
+        this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
 lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchTest',
