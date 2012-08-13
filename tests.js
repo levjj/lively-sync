@@ -1104,7 +1104,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(4);
         z.remove();
         box.addMorph(z);
-        y.moveBy(pt(10, 10));
+        y.setClipMode("auto");
         y.setFill(Color.red);
         z.setBorderWidth(13);
         this.assertSync(5);
