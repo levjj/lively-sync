@@ -591,17 +591,12 @@ Object.subclass('users.cschuster.sync.Patch', {
             }
         }
     },
-    toDiff: function(optSnapshot) {
+    toDiff: function() {
         var raw = {registry:{}};
         for (var key in this.data) {
-            var diffVal = this.data[key];
-            var origVal = optSnapshot && optSnapshot.data.registry[key];
-            raw.registry[key] = diffVal ;
-            this.convertToDiffInstruction(diffVal, origVal, optSnapshot.data);
+            raw.registry[key] = this.data[key];
         }
-        var diff = new users.cschuster.sync.Diff(raw);
-        if (optSnapshot) diff.prepareToPatch(optSnapshot);
-        return diff;
+        return new users.cschuster.sync.Diff(raw);
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
