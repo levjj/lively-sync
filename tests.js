@@ -905,6 +905,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     testSimpleDisconnect: function() {
         connect(this.morph, 'a', this.morph, 'b');
         this.morph.a = 2;
+        debugger;
         this.patch(this.disconnectPatch);
         this.morph.a = 3;
         this.assertEquals(2, this.morph.b);
