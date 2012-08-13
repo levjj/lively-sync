@@ -234,7 +234,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         patch[key] = value[1]; // insert raw patch
                     }
                 } else {
-                    this.findAndConvertMoveInstructions(obj[key], value);
+                    result.pushAll(this.findAndConvertMoveInstructions(obj[key], value));
                 }
             }
             return result;
