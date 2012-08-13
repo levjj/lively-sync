@@ -27,7 +27,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     fixSceneGraph: function(obj, patch, parentMorph) {
         for (var key in patch) {
             var value = patch[key];
-            var isSubmorphArray = obj.isMorph && key == "submorphs";
+            var isSubmorphArray = obj && obj.isMorph && key == "submorphs";
             if (Array.isArray(value)) { // instruction
                 if (isSubmorphArray && value.length == 3) {
                     obj.removeAllMorphs();
