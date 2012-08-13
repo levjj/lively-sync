@@ -185,7 +185,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch({"X/c": ["X/a", {}, 0]}, snapshotD, snapshotE);
         x.a = y;
         var snapshotF = this.serialize({X:x});
-        debugger;
         this.assertPatch({X: {c: ref("X/a")}, "X/a": ["X/c",{},0]}, snapshotE, snapshotF);
     },
     testNestedReferencesWithPrimitiveProperties: function() {
