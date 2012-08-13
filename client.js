@@ -178,7 +178,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             } else if (existing instanceof lively.Closure) {
                 return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
             } else if (Array.isArray(patch.id) && existing && Object.isObject(existing) &&
-                       (!existing.hasOwnProperty(id) || existing.id != patch.id[0])) {
+                       (!existing.hasOwnProperty("id") || existing.id != patch.id[0])) {
                 return {__isSmartRef__: true, id: newVal("id")};
             } else if (key == '__serializedLivelyClosures__') {
                 var newClosures = {}
