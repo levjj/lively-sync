@@ -168,6 +168,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             if (patch.hasOwnProperty("__LivelyClassName__")) {
                 return false; // do not recreate value object if class was changed
+            } else if (Array.isArray(patch.id) && existing && Object.isObject(existing) &&
+                       (!existing.hasOwnProperty("id") || existing.id != patch.id[0])) {
+                return {__isSmartRef__: true, id: newVal("id")};
             } else if (existing instanceof lively.Point) {
                 return new lively.Point(newVal("x"), newVal("y"));
             } else if (existing instanceof lively.Rectangle) {
@@ -177,9 +180,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
             } else if (existing instanceof lively.Closure) {
                 return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
-            } else if (Array.isArray(patch.id) && existing && Object.isObject(existing) &&
-                       (!existing.hasOwnProperty("id") || existing.id != patch.id[0])) {
-                return {__isSmartRef__: true, id: newVal("id")};
             } else if (key == '__serializedLivelyClosures__') {
                 var newClosures = {}
                 Functions.own(obj).forEach(function(funcName) {
