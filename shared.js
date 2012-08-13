@@ -585,7 +585,6 @@ Object.subclass('users.cschuster.sync.Patch', {
         return diff;
     },
     apply: function(snapshot) {
-        this.recreate(snapshot);
         var diff = this.toDiff(snapshot);
         diff.apply(snapshot);
     },
