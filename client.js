@@ -202,7 +202,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (Array.isArray(value)) { // instruction
                     if (value.length == 3) { // move
                         value.unshift(0);
-                        this.applyObjectPatch(obj[key], value[1]);
+                        this.applyObjectPatch(obj[key], value[2]);
                     } else if (value.length == 2) { // delete
                         value.unshift(obj[key]);
                         this.set(obj, key, undefined);
