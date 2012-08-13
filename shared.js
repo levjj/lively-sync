@@ -272,9 +272,9 @@ Object.subclass('users.cschuster.sync.Diff', {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
-            if (Array.isArray(value) && value.length == 4) {
-                mapping.addRule(value[1], key);
-                this.data.registry[key] = value[2]; // insert additional patch
+            if (Array.isArray(value) && value.length == 3) {
+                mapping.addRule(value[0], key);
+                this.data.registry[key] = value[1]; // insert additional patch
             }
         }
         return mapping;
@@ -439,6 +439,28 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return patch;
     },
+    convertToDiffInstruction: function(obj, snapshotObj, snapshot) {
+        // recreates diff instructions from patch
+        if (typeof obj == "object") {
+            if (Array.isArray(obj)) { // instruction
+                if (obj.length == 2) { // delete
+                    obj.unshift(snapshotObj !== undefined ? snapshotObj : 0);
+                } else if (snapshotObj !== undefined) { // add or set
+                    obj.unshift(snapshotObj);
+                }
+            } else { // path object or array
+                // recursive call
+                Properties.forEachOwn(obj, function(name, val) {
+                    this.convertToDiffInstruction(val, snapshotObj[name], snapshot);
+                }, this);
+                // adding _t back if this is an array
+                var isntArray = Properties.own(obj).find(function(name) {
+                    return isNaN(name);
+                });
+                if (!Object.isEmpty(obj) && !isntArray) obj._t = "a";
+            }
+        }
+    },
     createSmartRef: function(id) {
         return {__isSmartRef__: true, id: id};
     },
@@ -548,7 +570,8 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     prepareToPatch: function(snapshot) {
-        this.recreateSmartRefs(this.data.registry, snapshot.registry);
+        this.convertToDiffInstruction(this.data.registry, snapshot.data.registry, snapshot.data);
+        this.recreateSmartRefs(this.data.registry, snapshot.data.registry);
         this.addMissingClassNames(this.data);
         this.addMissingSmartRefs();
         this.propagateDeletions(snapshot);
