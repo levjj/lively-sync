@@ -268,13 +268,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         return o;
     },
-    findAndConvertMoveInstructions: function() {
+    findMoveInstructions: function() {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
             if (Array.isArray(value) && value.length == 3) {
                 mapping.addRule(value[0], key);
-                this.data.registry[key] = value[1]; // insert additional patch
             }
         }
         return mapping;
