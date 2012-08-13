@@ -224,7 +224,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     }
                 }
             }
-            this.deserializeQueue.push(obj);
+            this.deserializeQueue.pushIfNotIncluded(obj);
         },
         findMoveInstructions: function(obj, patch) {
             var result = [];
