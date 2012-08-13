@@ -741,7 +741,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
                         sourceAttrName: "a", sourceObj: {__isSmartRef__:true, id: "X"},
                         targetMethodName:"b", targetObj: {__isSmartRef__:true, id: "X"},
                         __LivelyClassName__: "AttributeConnection",
-                        __SourceModuleName__: "Global.lively.bindings"}]}
+                        __SourceModuleName__: "Global.lively.bindings"}]},
+    disconnectPatch: {}
 },
 'testing', {
     testMoveX: function() {
@@ -884,6 +885,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
         this.patch(this.connectPatch);
         this.morph.a = 3;
         this.assertEquals(3, this.morph.b);
+    },
+    testSimpleDisconnect: function() {
+        connect(this.morph, 'a', this.morph, 'b');
+        this.morph.a = 2;
+        this.patch(this.disconnectPatch);
+        this.morph.a = 3;
+        this.assertEquals(2, this.morph.b);
+        this.assert(!this.morph.hasOwnProperty('attributeConnections'));
+        this.assert(!this.morph.hasOwnProperty('$$a'));
     }
 });
 lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsTest',
