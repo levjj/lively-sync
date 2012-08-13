@@ -246,7 +246,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     recreate: function(snapshot) {
-        this.recreateSmartRefs(this.data, snapshot.registry);
+        this.recreateSmartRefs(this.data.registry, snapshot.registry);
     },
     applyPatch: function(o, pname, d) {
         if (typeof d !== 'object') return o;
