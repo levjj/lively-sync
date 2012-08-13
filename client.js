@@ -177,7 +177,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
             } else if (existing instanceof lively.Closure) {
                 return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
-            } else if (existing && Object.isObejct(existing) && existing.__isSmartRef__) {
+            } else if (existing && Object.isObject(existing) && existing.__isSmartRef__) {
                 return {__idSmartRef__: true, id: newVal("id")};
             } else if (key == '__serializedLivelyClosures__') {
                 var newClosures = {}
