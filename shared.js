@@ -626,9 +626,13 @@ Object.subclass('users.cschuster.sync.Patch', {
                 }
                 current = current[parts[i]];
                 if (!rawMode && Array.isArray(current)) {
-                    rawMode = true;
-                    current = current[0];
-                    val = removeAdds(val);
+                    if (current.length == 1) { // add
+                        rawMode = true;
+                        current = current[0];
+                        val = removeAdds(val);
+                    } else { // move
+                        current = current[1];
+                    }
                 }
             }
             var prop = parts.last();
