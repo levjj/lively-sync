@@ -243,6 +243,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             // apply all 'deletions' at once
             for (var i = 0; i < moves.length; i++) {
                 // delete something;
+                var lastPart = moves[i].from.lastIndexOf('/');
+                var fromParent = moves[i].from.substring(0, lastPart);
+                var prop = 1;
             }
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
