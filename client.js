@@ -199,11 +199,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
-                    if (value.length == 3) { // move
-                        this.set(obj, key, value[2]);
-                        patch[key] = value[1]; // insert raw patch
-                        this.applyObjectPatch(obj[key], patch[key]);
-                    } else if (value.length == 2) { // delete
+                    if (value.length == 2) { // delete
                         value.unshift(obj[key]);
                         this.set(obj, key, undefined);
                         delete obj[key];
@@ -225,7 +221,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.push(obj);
         },
-        performMoveInstructions: function(obj, patch) {
+        findAndConvertMoveInstructions: function(obj, patch) {
             if (!obj || typeof obj != "object") return;
             for (var key in patch) {
                 var value = patch[key];
@@ -233,10 +229,22 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     if (value.length == 3) {
                         // defer actual moving object
                         value[2] = this.objectAtPath(value[0]);
+                        patch[key] = value[1]; // insert raw patch
                     }
                 } else {
-                    this.performMoveInstructions(obj[key], value);
+                    this.findAndConvertMoveInstructions(obj[key], value);
                 }
+            }
+        },
+        applyMoveInstructions: function(patch) {
+            var moves = this.findAndConvertMoveInstructions(this.syncTable, patch);
+            // apply all 'deletions' at once
+            for (var i = 0; i < moves.length; i++) {
+                // delete something;
+            }
+            // apply all 'additions' at once
+            for (var i = 0; i < moves.length; i++) {
+                this.set(obj, key, value[2]);
             }
         }
     },
@@ -311,7 +319,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
             this.deserializeQueue = [];
             this.refPatchQueue = [];
-            this.performMoveInstructions(this.syncTable, rawPatch);
+            this.applyMoveInstructions(rawPatch);
             this.applyObjectPatch(this.syncTable, rawPatch);
             newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
             this.refPatchQueue.each(function(ea) {
