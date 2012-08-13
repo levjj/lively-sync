@@ -29,10 +29,9 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
                 if (!parentMorph) continue;
-                if (value.length > 1) { // delete
+                if (value.length == 3) { // delete
                     value.shift().remove();
-                }
-                if (value.length == 1) { // add
+                } else { // add, set or move
                     var length = parentMorph.submorphs.length;
                     parentMorph.addMorph(obj[key],
                                          key < length ? parentMorph.submorphs[key + 1] : null);
