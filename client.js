@@ -254,7 +254,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
-                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj); // 
+                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
         }
     },
