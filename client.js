@@ -27,7 +27,11 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     fixSceneGraph: function(obj, patch, parentMorph) {
         for (var key in patch) {
             var value = patch[key];
+            var isSubmorphArray = obj.isMorph && key == "submorphs";
             if (Array.isArray(value)) { // instruction
+                if (isSubmorphArray && value.length == 3) {
+                    obj.removeAllMorphs();
+                }
                 if (!parentMorph) continue;
                 if (value.length == 3) { // delete
                     value.shift().remove();
@@ -37,7 +41,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                                          key < length ? parentMorph.submorphs[key + 1] : null);
                 }
             } else {
-                this.fixSceneGraph(obj[key], value, obj.isMorph && key == "submorphs" && obj);
+                this.fixSceneGraph(obj[key], value, isSubmorphArray && obj);
             }
         }
     },
@@ -54,17 +58,31 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 if (value.length == 3) { // delete
                     if (isClosureObj) this.removeAllClosures(obj);
                     if (parentObject) delete parentObject[key];
-                } else { // add or set
-                    //parentMorph.addScript(obj[key]);
                 }
             } else {
                 this.fixClosures(obj[key], value, isClosureObj && obj);
             }
         }
     },
+    fixConnections: function(obj, patch, parentObj) {
+        for (var key in patch) {
+            var isAttributeConnections = key == "attributeConnections";
+            var value = patch[key];
+            if (Array.isArray(value) && value.length == 3) { // delete
+                if (isAttributeConnections) {
+                    disconnectAll(obj);
+                } else if (parentObj) {
+                    value.shift().disconnect();
+                }
+            } else {
+                this.fixConnections(obj[key], value, isAttributeConnections && obj);
+            }
+        }
+    },
     updatedObj: function(key, obj, patch) {
         this.fixClosures(obj, patch);
         this.fixSceneGraph(obj, patch);
+        this.fixConnections(obj, patch);
     }
 },
 'deleting', {
