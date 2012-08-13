@@ -1106,6 +1106,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         y.setClipMode("auto");
         y.setFill(Color.red);
         z.setBorderWidth(13);
+        debugger;
         this.assertSync(5);
     },
     testScripts: function() {
