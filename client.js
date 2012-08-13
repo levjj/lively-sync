@@ -229,7 +229,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (Array.isArray(value)) {
                     if (value.length == 3) {
                         // defer actual moving object
-                        result.push({from: value[0], to: [obj, key]});
+                        result.push({from: [this.objectAtPath(value[0]), value[0]],
+                                     to: [obj, key]});
                         patch[key] = value[1]; // insert raw patch
                     }
                 } else {
