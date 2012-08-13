@@ -324,13 +324,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var newObjs = Object.keys(patch.data).
                 select(function(v) { return Array.isArray(patch.data[v]) &&
                                             patch.data[v].length < 3 });
-            var rawPatch = patch.toHierachicalPatch().data;
+            var hierachicalPatch = patch.toHierachicalPatch().data;
             this.serializer = ObjectGraphLinearizer.forNewLively();
             this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
             this.deserializeQueue = [];
             this.refPatchQueue = [];
-            this.applyMoveInstructions(rawPatch);
-            this.applyObjectPatch(this.syncTable, rawPatch);
+            this.applyMoveInstructions(hierachicalPatch);
+            this.applyObjectPatch(this.syncTable, hierachicalPatch);
             newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
             this.refPatchQueue.each(function(ea) {
                 this.patchRef(ea[0], ea[1], ea[2], newObjs);
@@ -339,9 +339,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
             }.bind(this));
             this.serializer.letAllPlugins('deserializationDone', []);
-            for (var key in rawPatch) {
+            for (var key in hierachicalPatch) {
                 var obj = this.objectAtPath(key);
-                var patch = rawPatch[key];
+                var patch = hierachicalPatch[key];
                 if (Array.isArray(patch)) { // instruction
                     if (patch.length == 3) { // delete
                         this.plugins.invoke('removedObj', key, oldTable[key]);
