@@ -111,11 +111,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     },
     'serialization', {
         objectAtPath: function(path) {
-            var parts = path.split('/');
-            var parent = null;
+            var parts = path.length == 0 ? "" : path.split('/');
             var current = this.syncTable;
             for (var i = 0; current && (i < parts.length); i++) {
-                parent = current;
                 current = current && current[parts[i]];
             }
             return current;
