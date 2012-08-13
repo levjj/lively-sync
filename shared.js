@@ -562,9 +562,9 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     propagateDeletions: function(snapshot) {
         var toDelete = this.aggregateDeletions();
-        for (var id in snapshot.data.registry) {
+        for (var id in snapshot.registry) {
             if (toDelete.some(function(s) {return id.startsWith(s)})) {
-                var op = [snapshot.data.registry[id], 0, 0];
+                var op = [snapshot.registry[id], 0, 0];
                 this.data.registry[id] = op;
             }
         }
