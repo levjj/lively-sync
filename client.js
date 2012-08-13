@@ -222,19 +222,21 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.deserializeQueue.push(obj);
         },
         findAndConvertMoveInstructions: function(obj, patch) {
-            if (!obj || typeof obj != "object") return;
+            var result = [];
+            if (!obj || typeof obj != "object") return result;
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) {
                     if (value.length == 3) {
                         // defer actual moving object
-                        value[2] = this.objectAtPath(value[0]);
+                        result.push({from: value[0], to: [obj, key]});
                         patch[key] = value[1]; // insert raw patch
                     }
                 } else {
                     this.findAndConvertMoveInstructions(obj[key], value);
                 }
             }
+            return result;
         },
         applyMoveInstructions: function(patch) {
             var moves = this.findAndConvertMoveInstructions(this.syncTable, patch);
