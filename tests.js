@@ -634,6 +634,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         disconnect(this.rect, 'a', this.rect, 'b');
         var snapshotB = this.serialize(this.table);
         var expected = {};
+        expected[this.rect.id] = {attributeConnections: [0,0],
+                                  doNotCopyProperties: [0,0],
+                                  doNotSerialize: [0,0]};
+        expected[this.rect.id + "/attributeConnections/0"] = [0,0];
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
