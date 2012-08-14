@@ -1189,6 +1189,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.rotateBy(1);
         this.assertSync(5);
     },
+    testConnections: function() {
+        var box = this.addBox();
+        box.a = 2;
+        box.b = function(v) { this.c = v; };
+        connect(box, "a", box, "b");
+        this.assertSync(3);
+        box.a = 3;
+    },
     testDragAndDrop: function() {
         var box = this.addBox();
         var h = this.worldA.firstHand();
