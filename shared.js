@@ -256,6 +256,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     processMoveInstructions: function(snapshot) {
         var moveMapping = this.findMoveInstructions();
         var moves = [];
+        var arraysToRepair = [];
         // collect moves
         for (var key in snapshot.registry) {
             var toKey = moveMapping.map(key);
@@ -275,12 +276,17 @@ Object.subclass('users.cschuster.sync.Diff', {
                 target = target[prop[j]];
             }
             if (target) delete target[prop.last()]; // delete implicit smartref
+            if (Array.isArray(target)) arraysToRepair.pushIfNotIncluded(target);
         }
         // apply all 'additions' at once
         for (var i = 0; i < moves.length; i++) {
             snapshot.registry[moves[i].to] = moves[i].obj;
         }
         this.updateSmartRefs(snapshot.registry, moveMapping);
+        // repair arrays
+        for (var i = 0; i < arraysToRepair.length; i++) {
+            arraysToRepair[i].repair();
+        }
     },
     aggregateDeletions: function() {
         var toDelete = [];
