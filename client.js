@@ -44,7 +44,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     this.fixSceneGraph(obj, value[2], parentMorph);
                 }
             } else if (parentMorph && Array.isArray(value.owner) && value.owner.length == 2) {
-                //value.owner[0].removeMorph(obj[key]); // previous owner
+                value.owner[0].removeMorph(obj[key]); // previous owner
             } else {
                 this.fixSceneGraph(obj[key], value, isSubmorphArray && obj);
             }
