@@ -86,7 +86,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (Array.isArray(value)) { // instruction
                 if (parentObj && value.length == 1) value.last().connect();
             } else {
-                this.fixConnections(obj[key], value, isAttributeConnections && obj);
+                this.addConnections(obj[key], value, isAttributeConnections && obj);
             }
         }
     },
