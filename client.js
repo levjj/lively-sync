@@ -293,12 +293,12 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (fromParent) delete fromParent[prop];
                 if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
             }
+            // repair all arrays
+            arraysToRepair.invoke('repair');
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
                 this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
-            // repair all arrays
-            arraysToRepair.invoke('repair');
         }
     },
     'updating', {
