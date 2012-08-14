@@ -196,8 +196,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
             } else if (existing instanceof AttributeConnection) {
                 if (!Array.isArray(obj)) return false;
-                obj.push([existing.clone(), 0, 0]);
-                return false;
+                var newCon = existing.clone();
+                this.applyObjectPatch(newCon, patch);
+                return newCon;
             } else if (existing instanceof lively.Closure) {
                 return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
             } else if (key == '__serializedLivelyClosures__') {
