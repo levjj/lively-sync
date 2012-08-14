@@ -960,7 +960,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var morph = new lively.morphic.Box(bounds);
         morph.id = id;
         morph.name = id;
-        morph.setFill(color);
+        //morph.setFill(color);
         return morph;
     },
     openInWorldA: function(morph) {
