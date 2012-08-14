@@ -103,13 +103,13 @@ Object.extend(Array.prototype, {
     max: function(iterator, context) {
         iterator = iterator ? iterator.bind(context) : Functions.K;
         var result, resultValue;
-        this.each(function(element, index) {
-            value = iterator(element, index);
+        for (var i = 0; i < this.length; i++) {
+            value = iterator(this[i], index);
             if (result == undefined || value >= resultValue) {
-                result = element;
+                result = this[i];
                 resultValue = value;
             }
-        });
+        }
         return result;
     },
     select: function(iterator, context) {
