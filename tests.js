@@ -1202,7 +1202,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(7);
         disconnect(boxX, "a", boxX, "b");
         this.assertSync(8);
-        disconnect(boxX, "a", boxX, "b")
+        box.a = 8;
+        this.assertSync(9);
+        disconnect(boxX, "a", boxY, "a")
+        this.assertSync(10);
     },
     testDragAndDrop: function() {
         var box = this.addBox();
