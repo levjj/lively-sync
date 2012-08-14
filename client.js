@@ -236,6 +236,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         },
         applyObjectPatch: function(obj, patch) {
+            if (obj === undefined) debugger;
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
