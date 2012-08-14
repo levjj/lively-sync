@@ -1236,6 +1236,21 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
             this.wcA.addObject(this.worldA.submorphs[i]);
         }
         this.assertSync(5);
+    },
+    testDragAndDropSubmorph: function() {
+        var boxX = this.addBox("X");
+        var boxY = this.addBox("Y");
+        boxY.moveBy(pt(10, 0));
+        var boxZ = this.newBox(3, 3, "Z");
+        boxX.addMorph(boxZ);
+        boxZ.moveBy(pt (1, 1));
+        this.assertSync(5);
+        var h = this.worldA.firstHand();
+        h.grabMorph(boxZ);
+        this.assertSync(6);
+        h.setPosition(pt(12,0));
+        this.assertSync(7);
+        h.dropContentsOn(boxY, {stop: Functions.Null});
+        this.assertSync(8);
     }
-});
-}) // end of module
+});}) // end of module
