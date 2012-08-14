@@ -160,7 +160,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (val && Object.isObject(val) && val.__isSmartRef__) {
                 return this.patchRef(obj, prop, val);
             }
-            if (obj.isMorph || obj instanceof lively.morphic.Shapes.Shape) {
+            if (obj.isMorph && obj.isRendered() ||
+                obj instanceof lively.morphic.Shapes.Shape && obj.hasOwnProperty('_renderContext')) {
                 var propName = prop.capitalize();
                 if (propName.startsWith('_')) propName = propName.substring(1);
                 var setter = obj['set' + propName];
