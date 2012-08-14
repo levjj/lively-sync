@@ -119,6 +119,9 @@ Object.extend(Array.prototype, {
             if (iterator.call(context, value, i)) results.push(value);
         }
         return results;
+    },
+    pushIfNotIncluded: function(item) {
+        if (!this.include(item)) this.push(item);
     }
 });
 
