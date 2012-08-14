@@ -1244,13 +1244,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var boxZ = this.newBox(3, 3, "Z");
         boxX.addMorph(boxZ);
         boxZ.moveBy(pt (1, 1));
-        this.assertSync(5);
+        this.assertSync(4);
         var h = this.worldA.firstHand();
         h.grabMorph(boxZ);
-        this.assertSync(6);
+        this.assertSync(5);
         h.setPosition(pt(12,0));
-        this.assertSync(7);
+        this.assertSync(6);
         h.dropContentsOn(boxY, {stop: Functions.Null});
-        this.assertSync(8);
+        this.assertSync(7);
     }
 });}) // end of module
