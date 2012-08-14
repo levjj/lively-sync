@@ -1198,11 +1198,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(5);
         connect(boxX, "a", boxY, "a");
         this.assertSync(6);
-        box.a = 3;
+        boxX.a = 3;
         this.assertSync(7);
         disconnect(boxX, "a", boxX, "b");
         this.assertSync(8);
-        box.a = 8;
+        boxX.a = 8;
         this.assertSync(9);
         disconnect(boxX, "a", boxY, "a")
         this.assertSync(10);
