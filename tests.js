@@ -1192,7 +1192,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testMultipleConnections: function() {
         var boxX = this.addBox("X"), boxY = this.addBox("Y");
         boxX.a = 2;
-        boxX.b = function(v) { this.c = v + 1; };
+        boxX.addScript(function b(v) { this.c = v + 1; });
         this.assertSync(4);
         connect(boxX, "a", boxX, "b");
         this.assertSync(5);
