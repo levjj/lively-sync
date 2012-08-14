@@ -71,8 +71,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (Array.isArray(value)) { // instruction
                 if (isAttributeConnections) {
                     if (value.length != 3) value.shift().invoke('disconnect');
-                } else if (parentObj) {
-                    if (value.length == 3 || value.length == 2) value.shift().disconnect();
+                } else if (parentObj && (value.length == 3 || value.length == 2)) {
+                    value.shift().disconnect();
                 }
             } else {
                 this.fixConnections(obj[key], value, isAttributeConnections && obj);
