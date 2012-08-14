@@ -282,6 +282,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         applyMoveInstructions: function(patch) {
             var moves = this.findMoveInstructions(this.syncTable, patch);
+            var arraysToRepair = [];
             // apply all 'deletions' at once
             for (var i = 0; i < moves.length; i++) {
                 var fromPath = moves[i].from.path;
@@ -289,11 +290,14 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
                 var prop = fromPath.substring(lastPart + 1);
                 if (fromParent) delete fromParent[prop];
+                if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
             }
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
                 this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
+            // repair all arrays
+            arraysToRepair.invoke('repair');
         }
     },
     'updating', {
