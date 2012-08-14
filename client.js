@@ -64,7 +64,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
-    fixConnections: function(obj, patch, parentObj) {
+    deleteConnections: function(obj, patch, parentObj) {
         for (var key in patch) {
             var isAttributeConnections = key == "attributeConnections";
             var value = patch[key];
@@ -75,6 +75,17 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     value.shift().disconnect();
                 }
             } else {
+                this.deleteConnections(obj[key], value, isAttributeConnections && obj);
+            }
+        }
+    },
+    addConnections: function(obj, patch, parentObj) {
+        for (var key in patch) {
+            var isAttributeConnections = key == "attributeConnections";
+            var value = patch[key];
+            if (Array.isArray(value)) { // instruction
+                if (parentObj && value.length == 1) value.last().connect();
+            } else {
                 this.fixConnections(obj[key], value, isAttributeConnections && obj);
             }
         }
@@ -82,7 +93,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     updatedObj: function(key, obj, patch) {
         this.fixClosures(obj, patch);
         this.fixSceneGraph(obj, patch);
-        this.fixConnections(obj, patch);
+        this.deleteConnections(obj, patch);
+        this.addConnections(obj, patch);
     }
 },
 'deleting', {
