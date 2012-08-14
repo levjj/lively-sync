@@ -70,7 +70,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
                 if (isAttributeConnections) {
-                    if (value.length != 3) value.shift().invoke('disconnect');
+                    if (value.length == 3) value.shift().invoke('disconnect');
                 } else if (parentObj && (value.length == 3 || value.length == 2)) {
                     value.shift().disconnect();
                 }
