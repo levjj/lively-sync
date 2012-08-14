@@ -31,8 +31,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (Array.isArray(value)) { // instruction
                 if (isSubmorphArray && value.length == 3) {
                     obj.removeAllMorphs();
-                }
-                if (parentMorph) {
+                } else if (parentMorph) {
                     if (value.length == 3) { // delete
                         value.shift().remove();
                     } else { // add, set or move
@@ -40,12 +39,11 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                         parentMorph.addMorph(obj[key],
                                              key < length ? parentMorph.submorphs[key + 1] : null);
                     }
-                }
-                if (value.length == 4) { // move
+                } else if (key == "owner" && value.length == 2) {
+                    value[0].removeMorph(obj[key]); // previous owner
+                } else if (value.length == 4) { // move
                     this.fixSceneGraph(obj, value[2], isSubmorphArray && obj);
                 }
-            } else if (parentMorph && Array.isArray(value.owner) && value.owner.length == 2) {
-                value.owner[0].removeMorph(obj[key]); // previous owner
             } else {
                 this.fixSceneGraph(obj[key], value, isSubmorphArray && obj);
             }
