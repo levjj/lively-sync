@@ -99,6 +99,26 @@ Object.extend(Array.prototype, {
             i++;
         }
         while (j++ < len) this.pop();
+    },
+    max: function(iterator, context) {
+        iterator = iterator ? iterator.bind(context) : Functions.K;
+        var result, resultValue;
+        this.each(function(element, index) {
+            value = iterator(element, index);
+            if (result == undefined || value >= resultValue) {
+                result = element;
+                resultValue = value;
+            }
+        });
+        return result;
+    },
+    select: function(iterator, context) {
+        var results = [];
+        for (var i = 0; i < this.length; i++) {
+            var value = this[i];
+            if (iterator.call(context, value, i)) results.push(value);
+        }
+        return results;
     }
 });
 
