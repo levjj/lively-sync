@@ -121,7 +121,7 @@ Object.extend(Array.prototype, {
         return results;
     },
     pushIfNotIncluded: function(item) {
-        if (!this.include(item)) this.push(item);
+        if (this.indexOf(item) < 0) this.push(item);
     }
 });
 
