@@ -1249,7 +1249,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(4);
         var h = this.worldA.firstHand();
         h.grabMorph(boxZ);
-        debugger;
         this.assertSync(5);
         h.setPosition(pt(12,0));
         this.assertSync(6);
