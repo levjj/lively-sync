@@ -954,7 +954,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     }
 },
 'helping', {
-    newBox: function(width, height, id) {
+    newBox: function(width, height, id, color) {
+        if (!color) color = Color.web.blue;
         var bounds = pt(0,0).extent(pt(width, height));
         var morph = new lively.morphic.Box(bounds);
         morph.id = id;
