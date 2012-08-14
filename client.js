@@ -194,6 +194,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                                             newVal("height"), newVal("width"));
             } else if (existing instanceof Color) {
                 return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
+            } else if (existing instanceof AttributeConnection) {
+                if (!Array.isArray(obj)) return false;
+                obj.push([existing.clone(), 0, 0]);
+                return false;
             } else if (existing instanceof lively.Closure) {
                 return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
             } else if (key == '__serializedLivelyClosures__') {
