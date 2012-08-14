@@ -1189,13 +1189,20 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         box.rotateBy(1);
         this.assertSync(5);
     },
-    testConnections: function() {
-        var box = this.addBox();
-        box.a = 2;
-        box.b = function(v) { this.c = v; };
-        connect(box, "a", box, "b");
-        this.assertSync(3);
+    testMultipleConnections: function() {
+        var boxX = this.addBox("X"), boxY = this.addBox("Y");
+        boxX.a = 2;
+        boxX.b = function(v) { this.c = v + 1; };
+        this.assertSync(4);
+        connect(boxX, "a", boxX, "b");
+        this.assertSync(5);
+        connect(boxX, "a", boxY, "a");
+        this.assertSync(6);
         box.a = 3;
+        this.assertSync(7);
+        disconnect(boxX, "a", boxX, "b");
+        this.assertSync(8);
+        disconnect(boxX, "a", boxX, "b")
     },
     testDragAndDrop: function() {
         var box = this.addBox();
