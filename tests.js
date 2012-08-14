@@ -1201,7 +1201,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         boxX.a = 3;
         this.assertSync(7);
         disconnect(boxX, "a", boxX, "b");
-        debugger;
         this.assertSync(8);
         boxX.a = 8;
         this.assertSync(9);
