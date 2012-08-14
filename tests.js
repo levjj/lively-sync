@@ -1242,7 +1242,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var boxX = this.addBox("X");
         var boxY = this.addBox("Y");
         boxY.moveBy(pt(10, 0));
-        var boxZ = this.newBox(3, 3, "Z", Color.white);
+        var boxZ = this.newBox(3, 3, "Z", Color.web.white);
         boxX.addMorph(boxZ);
         boxZ.moveBy(pt (1, 1));
         this.assertSync(4);
