@@ -127,12 +127,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         },
         loadSocketIO: function() {
-            if (!Global['io']) {
+            if (!document.getElementById('loadSocketIO')) {
                 var head = document.getElementsByTagName('head')[0];
                 var socketscript = document.createElement('script');
                 socketscript.type = 'text/javascript';
                 socketscript.src =
                     'http://lively-kernel.org/nodejs/SyncServer/socket.io/socket.io.js';
+                socketscript.id = 'loadSocketIO';
                 head.appendChild(socketscript);
             }
         },
