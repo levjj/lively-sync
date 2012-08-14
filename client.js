@@ -84,7 +84,9 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var isAttributeConnections = key == "attributeConnections";
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
-                if (parentObj && value.length == 1) value.last().connect();
+                if (parentObj && value.length == 1 && value.last() instanceof AttributeConnection) {
+                    value.last().connect();
+                }
             } else {
                 this.addConnections(obj[key], value, isAttributeConnections && obj);
             }
