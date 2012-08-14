@@ -644,8 +644,10 @@ Object.subclass('users.cschuster.sync.Patch', {
                 }
             }
             var prop = parts.last();
-            if (!current.hasOwnProperty(prop) || current[prop].id == key)
+            if (!current.hasOwnProperty(prop) || (current[prop].id &&
+                (current[prop].id == key || Array.isArray(current[prop].id) && current[prop].id[0] == key))) {
                 current[prop] = val;
+            }
         }
         return new users.cschuster.sync.Patch(newPatch);
     },
