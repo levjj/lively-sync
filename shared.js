@@ -18,7 +18,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
         // find direct parent rule (if there is one)
         var move = this.rules
             .select(function(ea) { return from.startsWith(ea.from); })
-            .max(function(ea) { return ea.from.length });
+            .max(function(ea) { return ea.from.length; });
         // do not add this rule if it is just part of the parent rule
         if (move && to.startsWith(move.to)) return;
         // add rule
