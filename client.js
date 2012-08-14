@@ -32,16 +32,17 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 if (isSubmorphArray && value.length == 3) {
                     obj.removeAllMorphs();
                 }
-                if (!parentMorph) continue;
-                if (value.length == 3) { // delete
-                    value.shift().remove();
-                } else { // add, set or move
-                    var length = parentMorph.submorphs.length;
-                    parentMorph.addMorph(obj[key],
-                                         key < length ? parentMorph.submorphs[key + 1] : null);
+                if (parentMorph) {
+                    if (value.length == 3) { // delete
+                        value.shift().remove();
+                    } else { // add, set or move
+                        var length = parentMorph.submorphs.length;
+                        parentMorph.addMorph(obj[key],
+                                             key < length ? parentMorph.submorphs[key + 1] : null);
+                    }
                 }
                 if (value.length == 4) { // move
-                    this.fixSceneGraph(obj, value[2], parentMorph);
+                    this.fixSceneGraph(obj, value[2], isSubmorphArray && obj);
                 }
             } else if (parentMorph && Array.isArray(value.owner) && value.owner.length == 2) {
                 value.owner[0].removeMorph(obj[key]); // previous owner
