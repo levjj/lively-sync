@@ -1283,6 +1283,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var ws = this.worldA.openWorkspace();
         this.assertSync(1);
         ws.textString = "var f = function(x) { return x; }";
+        debugger;
         this.assertSync(2);
     }
 });}) // end of module
