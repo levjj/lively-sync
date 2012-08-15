@@ -1270,8 +1270,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(6);
     },
     testOpenParts: function() {
-        var box = this.addBox("X");
-        this.worldA.openInspectorFor(box);
+        var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
+        this.assertSync(2);
+        this.worldA.openInspectorFor(rect);
         this.assertSync(3);
+        var ws = this.worldA.openWorkspace();
+        this.assertSync(4);
+        ws.targetMorph.textString = "var f = function(x) { return x; }";
+        this.assertSync(5);
     }
 });}) // end of module
