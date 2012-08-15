@@ -61,7 +61,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var path = optOwner ? (optOwner.id + "/submorphs/0") : rect.id;
         var width = rect.getExtent().x, height = rect.getExtent().y;
         var raw = {
-            "": {submorphs:[],scripts:[],derivationIds:[],
+            "": {submorphs:[],scripts:[],derivationIds:[],_ClipMode: "visible",
                  id:rect.id, droppingEnabled:true,halosEnabled:true,
                  __LivelyClassName__:"lively.morphic.Box",
                  __SourceModuleName__:"Global.lively.morphic.Core"},
