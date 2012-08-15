@@ -1269,4 +1269,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
         this.assertSync(6);
     },
+    testOpenParts: function() {
+        var box = this.addBox("X");
+        this.worldA.openInspectorFor(box);
+        this.assertSync(3);
+    }
 });}) // end of module
