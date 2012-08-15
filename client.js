@@ -19,7 +19,12 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     }
 },
 'adding', {
-    addedObj: function(key, obj) {
+    addedObj: function(key, obj, patch) {
+        var patchData = patch.length == 4 ? patch[2] : patch.last();
+        if (Array.isArray(patchData.owner)) {
+            var oldOwner = patchData.owner.first();
+            obj.owner = oldOwner; // neccessary for proper removing in addMorph
+        }
         this.world.addMorph(obj);
     }
 },
