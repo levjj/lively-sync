@@ -27,7 +27,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 obj.owner = oldOwner; // neccessary for proper removing in addMorph
             }
         }
-        var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
+        //var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
+        var firstHand;
         this.world.addMorph(obj, firstHand);
     }
 },
