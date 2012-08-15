@@ -455,7 +455,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotB = this.serialize(this.table);
         var expected = {};
         expected[otherMorph.id + "/submorphs/0"] = [this.rect.id + "/submorphs/0", {
-            owner: {id: [otherMorph.id]}
+            _Rotation: [0], _Scale: [1], owner: {id: [otherMorph.id]}
         }, 0];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
