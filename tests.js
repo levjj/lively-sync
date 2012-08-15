@@ -1256,7 +1256,16 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(7);
     },
     testDragAndDropParentmorph: function() {
-        // enter comment here
+        var box = this.addBox("X");
+        box.addMorph(this.newBox(3, 3, "Z", Color.web.white));
+        this.assertSync(3);
+        var h = this.worldA.firstHand();
+        h.grabMorph(box);
+        this.assertSync(5);
+        h.setPosition(pt(12,0));
+        this.assertSync(6);
+        h.dropContentsOn(this.worldA, {stop: Functions.Null});
+        this.assertSync(7);
     }
 
 });}) // end of module
