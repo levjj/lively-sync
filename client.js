@@ -394,7 +394,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     if (patch.length == 3) { // delete
                         this.plugins.invoke('removedObj', key, oldTable[key]);
                     } else { // add
-                        this.plugins.invoke('addedObj', key, this.syncTable[key]);
+                        this.plugins.invoke('addedObj', key, this.syncTable[key], patch);
                     }
                 } else { // set
                     this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
