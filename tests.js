@@ -1269,14 +1269,20 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
         this.assertSync(6);
     },
-    testOpenParts: function() {
+    testOpenPart: function() {
+        var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
+        this.assertSync(2);
+    },
+    testObjectInspector: function() {
         var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
         this.assertSync(2);
         this.worldA.openInspectorFor(rect);
         this.assertSync(3);
+    },
+    testWorkspace: function() {
         var ws = this.worldA.openWorkspace();
-        this.assertSync(4);
+        this.assertSync(2);
         ws.targetMorph.textString = "var f = function(x) { return x; }";
-        this.assertSync(5);
+        this.assertSync(3);
     }
 });}) // end of module
