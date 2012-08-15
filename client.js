@@ -20,16 +20,18 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'adding', {
     addedObj: function(key, obj, optPatch) {
+        var transform;
         if (optPatch) {
             var patchData = optPatch.length == 4 ? optPatch[2] : optPatch.last();
             if (Array.isArray(patchData.owner)) {
                 var oldOwner = patchData.owner.first();
                 obj.owner = oldOwner; // neccessary for proper removing in addMorph
-                debugger;
+                transform = obj.getTransform();
             }
         }
         var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
         this.world.addMorph(obj, firstHand);
+        if (transform) obj.setTransform(transform);
     }
 },
 'setting', {
