@@ -28,7 +28,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
         var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
-        var firstHand;
         this.world.addMorph(obj, firstHand);
     }
 },
