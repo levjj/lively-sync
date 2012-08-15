@@ -1268,6 +1268,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(5);
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
         this.assertSync(6);
-    }
+    },
 
 });}) // end of module
