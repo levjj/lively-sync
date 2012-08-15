@@ -1261,6 +1261,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(3);
         var h = this.worldA.firstHand();
         h.grabMorph(box);
+        this.wcA.removeObject(box);
         this.assertSync(5);
         h.setPosition(pt(12,0));
         this.assertSync(6);
