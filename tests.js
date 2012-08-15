@@ -1255,7 +1255,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         h.dropContentsOn(boxY, {stop: Functions.Null});
         this.assertSync(7);
     },
-    testDragAndDropParentmorph: function() {
+    testDragAndDropParentMorph: function() {
         var box = this.addBox("X");
         box.addMorph(this.newBox(3, 3, "Z", Color.web.white));
         this.assertSync(3);
