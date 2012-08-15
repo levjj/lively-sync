@@ -1275,9 +1275,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     },
     testObjectInspector: function() {
         var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
-        this.assertSync(2);
+        this.assertSync(1);
         this.worldA.openInspectorFor(rect);
-        this.assertSync(3);
+        this.assertSync(2);
     },
     testWorkspace: function() {
         var ws = this.worldA.openWorkspace();
