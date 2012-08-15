@@ -1284,7 +1284,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcA.addObject(ws.owner);
         this.assertSync(1);
         ws.textString = "var f = function(x) { return x; }";
-        debugger;
         this.assertSync(2);
     }
 });}) // end of module
