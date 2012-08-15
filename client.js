@@ -7,7 +7,7 @@ module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').to
 
 Object.subclass('users.cschuster.sync.Plugin', {
     setControl: function(control) { this.control = control; },
-    addedObj: function(key, obj, patch) {},
+    addedObj: function(key, obj, optPatch) {},
     updatedObj: function(key, obj, patch) {},
     removedObj: function(key, obj) {}
 });
