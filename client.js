@@ -25,6 +25,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (Array.isArray(patchData.owner)) {
                 var oldOwner = patchData.owner.first();
                 obj.owner = oldOwner; // neccessary for proper removing in addMorph
+                debugger;
             }
         }
         var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
