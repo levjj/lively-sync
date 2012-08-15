@@ -1281,6 +1281,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     },
     testWorkspace: function() {
         var ws = this.worldA.openWorkspace();
+        this.wcA.addObject(ws.owner);
         this.assertSync(1);
         ws.textString = "var f = function(x) { return x; }";
         debugger;
