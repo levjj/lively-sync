@@ -32,7 +32,7 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
     },
 
     testNestedObject: function() {
-        this.assertSerialize({});
+        this.assertSerialize({id: "foo", val: 23, child: {name: "bar", val: 42}});
     },
     testObjectWithCircularReferences: function() {
         this.assertSerialize({});
