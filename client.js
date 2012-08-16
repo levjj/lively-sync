@@ -137,7 +137,7 @@ lively.morphic.Text.addMethods({
 });
 
 lively.morphic.TextChunk.addMethods({
-    doNotSerializeForSync: ['_id']
+    doNotSerializeForSync: ['_id', 'debugMode']
 });
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
