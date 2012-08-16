@@ -110,7 +110,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(path);
     },
     testText: function() {
-        this.assertSerialize({});
+        var bounds = pt(0,0).extent(pt(40, 30));
+        var text = new lively.morphic.Text(bounds, "text");
+        this.openInWorldA(text);
+        this.assertSerialize(text);
     }
 });
 
