@@ -1075,6 +1075,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.worldB.remove();
         this.worldC.remove();
         $super();
+        lively.newId = this.oldIdFunc;
     }
 },
 'helping', {
