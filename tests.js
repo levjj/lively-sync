@@ -41,7 +41,9 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         this.assertSerialize(foo, bar);
     },
     testObjectWithScript: function() {
-        this.assertSerialize({});
+        var obj = {a: 3};
+        Object.addScript(obj, function f() { return this.a; });
+        this.assertSerialize(obj);
     },
     testBox: function() {
         this.assertSerialize({});
