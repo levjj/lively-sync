@@ -474,7 +474,7 @@ Object.extend(users.cschuster.sync.Snapshot, {
 
 users.cschuster.sync.Snapshot.addMethods({
     recreateObjects: function() {
-        return this.getSerializer().deserializeJso(this.data);
+        return this.constructor.getSerializer().deserializeJso(this.data);
     }
 });
 
