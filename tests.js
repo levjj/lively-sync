@@ -2,6 +2,16 @@ module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.mo
 
 TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
 'helping', {
+    newBox: function(id, width, height, color) {
+        var bounds = pt(0,0).extent(pt(width || 12, height || 8));
+        var morph = new lively.morphic.Box(bounds);
+        morph.id = id || "X";
+        if (id) morph.name = id;
+        if (color) morph.setFill(color);
+        return morph;
+    }
+},
+'assertions', {
     assertSerialize: function(/*args*/) {
         var table = {};
         var args = Array.from(arguments);
@@ -46,7 +56,7 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         this.assertSerialize(obj);
     },
     testMorph: function() {
-        this.assertSerialize({});
+        this.assertSerialize(this.newBox());
     },
     testMorphWithProperties: function() {
         this.assertSerialize({});
