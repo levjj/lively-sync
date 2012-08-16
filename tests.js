@@ -1,6 +1,6 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
-TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
+lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SerializationTest',
 'helping', {
     newBox: function(id, width, height, color) {
         var bounds = pt(0,0).extent(pt(width || 12, height || 8));
@@ -8,6 +8,7 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         morph.id = id || "X";
         if (id) morph.name = id;
         if (color) morph.setFill(color);
+        this.world.addMorph(morph);
         return morph;
     }
 },
@@ -21,6 +22,9 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         }
         var snapshotA = users.cschuster.sync.Snapshot.createFromObjects(table);
         var recreated = snapshotA.recreateObjects();
+        for (var key in recreated) {
+            if (recreated[key].isMorph) this.world.addMorph(recreated[key]);
+        }
         var snapshotB = users.cschuster.sync.Snapshot.createFromObjects(recreated);
         this.assertEqualState(snapshotA, snapshotB);
     }
