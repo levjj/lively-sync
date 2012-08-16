@@ -1274,9 +1274,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(6);
     },
     testText: function() {
-        var text = new lively.morphic.Text();
+        var bounds = pt(0,0).extent(pt(40, 30));
+        var text = new lively.morphic.Text(bounds, "text");
         this.openInWorldA(text);
         this.assertSync(2);
+        text.textString += "2"
+        this.assertSync(3);
     },
     testOpenPart: function() {
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
