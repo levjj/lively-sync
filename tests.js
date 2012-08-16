@@ -1054,7 +1054,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
 'running', {
     setUp: function($super) {
         $super();
-        this.oldIdFun = lively.newId;
+        this.oldIdFunc = lively.newId;
         lively.newId = function() { return 23; };
         this.worldA = this.world;
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
