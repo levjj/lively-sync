@@ -26,7 +26,9 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         this.assertSerialize({a: [1,2,3], b: [["foo"], ["bar"]]});
     },
     testTwoObjects: function() {
-        this.assertSerialize({name: "foo", val: 23}, {name: "bar", val: 42});
+        var foo = {name: "foo", val: 23};
+        var bar = {name: "bar", val: 42, ref: foo};
+        this.assertSerialize(foo, bar);
     },
 
     testNestedObject: function() {
