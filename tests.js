@@ -1355,16 +1355,16 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcA.addObject(rect);
         this.assertSync(2);
     },
-    testObjectInspector: function() {
-        var insp = this.worldA.openInspectorFor(this.newBox(10, 10, "X"));
-        this.wcA.addObject(insp);
-        this.assertSync(2);
-    },
     testWorkspace: function() {
         var ws = this.worldA.openWorkspace();
         this.wcA.addObject(ws.owner);
         this.assertSync(2);
         ws.textString = "var f = function(x) { return x; }";
         this.assertSync(3);
+    },
+    testObjectInspector: function() {
+        var insp = this.worldA.openInspectorFor(this.newBox(10, 10, "X"));
+        this.wcA.addObject(insp);
+        this.assertSync(2);
     }
 });}) // end of module
