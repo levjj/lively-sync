@@ -1274,6 +1274,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(6);
     },
     testText: function() {
+        var text = new lively.morphic.Text();
         
     },
     testOpenPart: function() {
