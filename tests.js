@@ -1273,6 +1273,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         h.dropContentsOn(this.worldA, {stop: Functions.Null});
         this.assertSync(6);
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
     testOpenPart: function() {
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
         this.wcA.addObject(rect);
