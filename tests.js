@@ -17,7 +17,7 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         this.assertSerialize({});
     },
     testObjectWithProperties: function() {
-        this.assertSerialize({});
+        this.assertSerialize({a: true, b: 23, c: "foo"});
     },
     testArrays: function() {
         this.assertSerialize({});
