@@ -2,10 +2,13 @@ module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.mo
 
 TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
 'helping', {
-    assertSerialize: function(obj) {
-        var id = obj.hasOwnProperty("id") ? obj.id : "X";
+    assertSerialize: function(/*args*/) {
         var table = {};
-        table[id] = obj;
+        var args = Array.from(arguments);
+        for (var i = 0; i < args.length; i++) {
+            var id = args[i].hasOwnProperty("id") ? args[i].id : "X";
+            table[id] = args[i];
+        }
         var snapshotA = users.cschuster.sync.Snapshot.createFromObjects(table);
         var recreated = snapshotA.recreateObjects();
         var snapshotB = users.cschuster.sync.Snapshot.createFromObjects(recreated);
