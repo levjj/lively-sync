@@ -24,7 +24,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         var recreated = snapshotA.recreateObjects();
         for (var key in recreated) {
             if (recreated[key].isMorph) this.world.addMorph(recreated[key]);
-            recreated[key].prop = "bla";
         }
         var snapshotB = users.cschuster.sync.Snapshot.createFromObjects(recreated);
         this.assertEqualState(snapshotA, snapshotB);
