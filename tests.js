@@ -1395,7 +1395,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var text = new lively.morphic.Text(bounds, "text");
         this.openInWorldA(text);
         this.assertSync(2);
-        text.textString += "2"
+        text.textString += "2";
         this.assertSync(3);
     },
     testOpenPart: function() {
