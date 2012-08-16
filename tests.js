@@ -1,12 +1,15 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
 TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
-'running', {
-    
-    
+'helping', {
+    assertSerialize: function(obj) {
+        
+    }
 },
 'testing', {
-
+    testEmptyObj: function() {
+        this.assertSerialize({});
+    }
 });
 
 TestCase.subclass('users.cschuster.sync.tests.MappingTest',
