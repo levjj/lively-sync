@@ -1278,6 +1278,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.wcA.addObject(rect);
         this.assertSync(2);
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
     testObjectInspector: function() {
         var insp = this.worldA.openInspectorFor(this.newBox(10, 10, "X"));
         this.wcA.addObject(insp);
