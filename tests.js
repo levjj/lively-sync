@@ -1400,15 +1400,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(2);
         text.textString += "2";
         this.assertSync(3);
-        this.replaceTextString("text3");
+        text.replaceTextString("text3");
         this.assertSync(4);
-        this.insertTextStringAt(2, "s");
+        text.insertTextStringAt(2, "s");
         this.assertSync(5);
-        this.insertRichTextAt("o", {color: Color.web.red}, 4);
+        text.insertRichTextAt("o", {color: Color.web.red}, 4);
         this.assertSync(6);
-        this.toggleBoldness(1, 2);
+        text.toggleBoldness(1, 2);
         this.assertSync(7);
-        this.setTextColor(Color.web.green);
+        text.setTextColor(Color.web.green);
         this.assertSync(8);
     },
     testOpenPart: function() {
