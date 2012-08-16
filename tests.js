@@ -20,7 +20,7 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         this.assertSerialize({a: true, b: 23, c: "foo"});
     },
     testArrays: function() {
-        this.assertSerialize({});
+        this.assertSerialize({a: [1,2,3], b: [["foo"], ["bar"]]});
     },
     testNestedObject: function() {
         this.assertSerialize({});
