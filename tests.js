@@ -3,6 +3,10 @@ module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.mo
 TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
 'helping', {
     assertSerialize: function(obj) {
+        var id = obj.hasOwnProperty("id") ? obj.id : "X";
+        var table = {};
+        table[id] = obj;
+        var snapshot = users.cschuster.sync.Snapshot.createFromObjects(table);
         
     }
 },
