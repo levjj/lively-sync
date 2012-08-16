@@ -1366,6 +1366,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         var insp = this.worldA.openInspectorFor(this.addBox());
         this.wcA.addObject(insp);
         this.sync(3);
-        // for now just test that it doesn't crash
+        this.assert(true, "for now just test that it doesn't crash");
     }
 });}) // end of module
