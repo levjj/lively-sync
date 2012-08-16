@@ -6,8 +6,10 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         var id = obj.hasOwnProperty("id") ? obj.id : "X";
         var table = {};
         table[id] = obj;
-        var snapshot = users.cschuster.sync.Snapshot.createFromObjects(table);
-        
+        var snapshotA = users.cschuster.sync.Snapshot.createFromObjects(table);
+        var recreated = snapshotA.recreateObjects();
+        var snapshotB = users.cschuster.sync.Snapshot.createFromObjects(recreated);
+        this.assertEqualState(snapshotA, snapshotB);
     }
 },
 'testing', {
