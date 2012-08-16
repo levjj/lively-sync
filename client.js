@@ -130,6 +130,23 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairA
     }
 });
 
+/* doNotSerializeForSync lists properties that are serialized but not synchronized */
+
+lively.morphic.Text.addMethods({
+    doNotSerializeForSync: ['cachedTextString', 'savedTextString']
+});
+
+lively.morphic.TextChunk.addMethods({
+    doNotSerializeForSync: ['_id']
+});
+
+lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
+'plugin interface', {
+    ignoreProp: function(obj, propName, value) {
+        return obj.doNotSerializeForSync && obj.doNotSerializeForSync.include(propName);
+    }
+});
+
 Object.subclass('users.cschuster.sync.WorkingCopy',
     'initializing', {
         initialize: function(keepHistory) {
