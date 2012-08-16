@@ -454,7 +454,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 );
 
 Object.extend(users.cschuster.sync.Snapshot, {
-    getSerializer: function(data) {
+    getSerializer: function() {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
         var p = new GenericFilter();
         p.addFilter(function(obj, prop, value) {
