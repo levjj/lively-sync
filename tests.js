@@ -40,11 +40,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize({a: [1,2,3], b: [["foo"], ["bar"]]});
     },
     testTwoObjects: function() {
+        this.assertSerialize({id: "foo", val: 23}, {id: "bar", val: 42});
+    },
+    testTwoObjectsWithReferences: function() {
         var foo = {id: "foo", val: 23};
         var bar = {id: "bar", val: 42, ref: foo};
         this.assertSerialize(foo, bar);
     },
-
     testNestedObject: function() {
         this.assertSerialize({id: "foo", val: 23, child: {id: "bar", val: 42}});
     },
@@ -63,25 +65,49 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(this.newBox());
     },
     testMorphWithProperties: function() {
-        this.assertSerialize({});
+        var morph = this.newBox();
+        morph.prop = "foo";
+        this.assertSerialize(morph);
     },
     testColoredMorph: function() {
-        this.assertSerialize({});
+        this.assertSerialize(this.newBox("X", 32, 16, Color.web.black));
     },
     testTwoMorphs: function() {
-        this.assertSerialize({});
+        this.assertSerialize(this.newBox("X"), this.newBox("Y"));
+    },
+    testTwoMorphsWithReferences: function() {
+        var x = this.newBox("X");
+        var y = this.newBox("Y");
+        x.ref = y;
+        this.assertSerialize(x, y);
     },
     testMorphWithSubmorphs: function() {
-        this.assertSerialize({});
+        var morph = this.newBox("X");
+        morph.addMorph(this.newBox("Y"));
+        morph.addMorph(this.newBox("Z"));
+        this.assertSerialize(morph);
     },
     testMorphWithScripts: function() {
-        this.assertSerialize({});
+        var morph = this.newBox("X");
+        morph.addScript(function foo() { this.moveBy(pt(12, 12)); });
+        this.assertSerialize(morph);
     },
-    testMorphWithConnections: function() {
-        this.assertSerialize({});
+    testMorphWithSimpleConnection: function() {
+        var x = this.newBox("X");
+        var y = this.newBox("X");
+        connect(x, "a", y, "b");
+        this.assertSerialize(x, y);
+    },
+    testMorphWithGeometricConnection: function() {
+        var x = this.newBox("X");
+        var y = this.newBox("X");
+        connect(x, "rotation", y, "setRotation");
+        this.assertSerialize(x, y);
     },
     testPolygon: function() {
-        this.assertSerialize({});
+        var path = lively.morphic.Morph.makePolygon([pt(4,0), pt(4,4), pt(0,4)], 1);
+        this.world.addMorph(path);
+        this.assertSerialize(path);
     },
     testText: function() {
         this.assertSerialize({});
