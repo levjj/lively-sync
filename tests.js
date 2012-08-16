@@ -45,22 +45,25 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
         Object.addScript(obj, function f() { return this.a; });
         this.assertSerialize(obj);
     },
-    testBox: function() {
+    testMorph: function() {
         this.assertSerialize({});
     },
-    testBoxWithProperties: function() {
+    testMorphWithProperties: function() {
         this.assertSerialize({});
     },
-    testColoredBox: function() {
+    testColoredMorph: function() {
         this.assertSerialize({});
     },
-    testTwoBoxes: function() {
+    testTwoMorphs: function() {
         this.assertSerialize({});
     },
-    testBoxWithSubmorphs: function() {
+    testMorphWithSubmorphs: function() {
         this.assertSerialize({});
     },
-    testBoxWithConnections: function() {
+    testMorphWithScripts: function() {
+        this.assertSerialize({});
+    },
+    testMorphWithConnections: function() {
         this.assertSerialize({});
     },
     testPolygon: function() {
