@@ -473,16 +473,6 @@ Object.extend(users.cschuster.sync.Snapshot, {
 });
 
 users.cschuster.sync.Snapshot.addMethods({
-    getSerializer: function(data) {
-        var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
-        var p = new GenericFilter();
-        p.addFilter(function(obj, prop, value) {
-            return value && Object.isObject(value) && value.isWorld;
-        });
-        serializer.addPlugins([p]);
-        serializer.showLog = false;
-        return serializer;
-    },
     recreateObjects: function() {
         return this.getSerializer().deserializeJso(this.data);
     }
