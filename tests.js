@@ -1276,14 +1276,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
     testText: function() {
         
     },
-
     testOpenPart: function() {
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
         this.wcA.addObject(rect);
         this.assertSync(2);
     },
-
-
     testObjectInspector: function() {
         var insp = this.worldA.openInspectorFor(this.newBox(10, 10, "X"));
         this.wcA.addObject(insp);
