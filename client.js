@@ -386,7 +386,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 select(function(v) { return Array.isArray(patch.data[v]) &&
                                             patch.data[v].length < 3 });
             var hierachicalPatch = patch.toHierachicalPatch().data;
-            this.serializer = ObjectGraphLinearizer.forNewLively();
+            this.serializer = users.cschuster.sync.Snapshot.getSerializer();
             this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
             this.deserializeQueue = [];
             this.refPatchQueue = [];
