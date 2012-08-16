@@ -1,5 +1,14 @@
 module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
 
+TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
+'running', {
+    
+    
+},
+'testing', {
+
+});
+
 TestCase.subclass('users.cschuster.sync.tests.MappingTest',
 'running', {
     setUp: function() {
