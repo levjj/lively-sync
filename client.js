@@ -460,7 +460,7 @@ Object.extend(users.cschuster.sync.Snapshot, {
         p.addFilter(function(obj, prop, value) {
             return value && Object.isObject(value) && value.isWorld;
         });
-        serializer.addPlugins([p, new users.cschuster.sync.SyncPlugin]);
+        serializer.addPlugins([p, new users.cschuster.sync.SyncPlugin()]);
         serializer.showLog = false;
         return serializer;
     },
