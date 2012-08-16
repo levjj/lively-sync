@@ -466,7 +466,7 @@ Object.extend(users.cschuster.sync.Snapshot, {
     },
     createFromObjects: function(object) {
         var s = new this();
-        var serializer = this.constructor.getSerializer();
+        var serializer = this.getSerializer();
         s.data = serializer.serializeToJso(object);
         return s;
     }
