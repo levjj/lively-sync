@@ -13,7 +13,46 @@ TestCase.subclass('users.cschuster.sync.tests.SerializationTest',
     }
 },
 'testing', {
-    testEmptyObj: function() {
+    testEmptyObject: function() {
+        this.assertSerialize({});
+    },
+    testObjectWithProperties: function() {
+        this.assertSerialize({});
+    },
+    testArrays: function() {
+        this.assertSerialize({});
+    },
+    testNestedObject: function() {
+        this.assertSerialize({});
+    },
+    testObjectWithCircularReferences: function() {
+        this.assertSerialize({});
+    },
+    testObjectWithScript: function() {
+        this.assertSerialize({});
+    },
+    testBox: function() {
+        this.assertSerialize({});
+    },
+    testBoxWithProperties: function() {
+        this.assertSerialize({});
+    },
+    testColoredBox: function() {
+        this.assertSerialize({});
+    },
+    testTwoBoxes: function() {
+        this.assertSerialize({});
+    },
+    testBoxWithSubmorphs: function() {
+        this.assertSerialize({});
+    },
+    testBoxWithConnections: function() {
+        this.assertSerialize({});
+    },
+    testPolygon: function() {
+        this.assertSerialize({});
+    },
+    testText: function() {
         this.assertSerialize({});
     }
 });
