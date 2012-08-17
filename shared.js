@@ -611,46 +611,6 @@ Object.subclass('users.cschuster.sync.Patch', {
     isEmpty: function() {
         return !this.data || Object.isEmpty(this.data);
     },
-    toHierachicalPatch: function() {
-        var newPatch = {};
-        function removeAdds(obj) {
-            if (!obj || typeof obj != 'object') return obj;
-            if (Array.isArray(obj) && obj.length == 1) return obj[0];
-            for (var key in obj) {
-                obj[key] = removeAdds(obj[key]);
-            }
-            return obj;
-        }
-        var keys = Object.keys(this.data).sort();
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            var val = this.data[key];
-            var parts = key.split('/');
-            var current = newPatch;
-            var rawMode = false;
-            for (var j = 0; j < parts.length - 1; j++) {
-                if (!current[parts[j]]) {
-                    current[parts[j]] = {};
-                }
-                current = current[parts[j]];
-                if (!rawMode && Array.isArray(current)) {
-                    if (current.length == 1) { // add
-                        rawMode = true;
-                        current = current[0];
-                        val = removeAdds(val);
-                    } else { // move
-                        current = current[1];
-                    }
-                }
-            }
-            var prop = parts.last();
-            if (!current.hasOwnProperty(prop) || current[prop].id == key ||
-                (Array.isArray(current[prop].id) && current[prop].id[0] == key)) {
-                current[prop] = val;
-            }
-        }
-        return new users.cschuster.sync.Patch(newPatch);
-    },
     toJSON: function() {
         return JSON.stringify(this.data);
     },
