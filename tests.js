@@ -399,6 +399,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected["Y/a"] = ["X/a", {}, 0]; // copy X/b to X/a
         this.assertPatch(expected, snapshotC, snapshotD);
     },
+    testWrapObject: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X", name: "x"};
+        var snapshotA = this.serialize({X:x});
+        var y = {id:"Y", name: "y", a: x};
+        var snapshotB = this.serialize({Y:y});
+        var expected = {"Y": [{id: "Y", name: "y"}], "Y/a": ["X", {}, 0]};
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testArrayWithPrimitiveReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {name:"x",a:[]}, y = {name:"y"}, z = {name:"z"};
