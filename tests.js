@@ -1148,7 +1148,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertEquals(Object.keys(leftTable).length, Object.keys(rightTable).length);
         for (var key in leftTable) {
             this.assertNodeMatches(leftTable[key].renderContext().morphNode,
-                                   rightTable[ley].renderContext().morphNode, true);
+                                   rightTable[key].renderContext().morphNode, true);
         }
     }
 },
