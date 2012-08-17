@@ -1113,6 +1113,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
     openInWorldA: function(morph) {
         this.worldA.addMorph(morph);
         this.wcA.addObject(morph);
+        return morph;
     },
     sync: function() {
         var res = this.wcA.commit();
