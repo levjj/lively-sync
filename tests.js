@@ -126,7 +126,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
     },
     testObjectInspector: function() {
         var box = this.newBox();
-        this.assertSerialize(this.worldA.openInspectorFor(box), box);
+        this.assertSerialize(this.world.openInspectorFor(box), box);
     }
 });
 
