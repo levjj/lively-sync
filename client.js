@@ -118,7 +118,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 if (Array.isArray(value) && value.length == 1) { // add
                     var length = parentText.textChunks.length;
                     obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
-                } else { // update
+                } else if (!Array.isArray(value) && value.hasOwnProperty("style")){ // update style
                     obj[key].styleText();
                 }
             } else if (!Array.isArray(value)) { // instruction
