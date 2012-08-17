@@ -127,7 +127,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         this.fixSceneGraph(obj, patch);
         this.deleteConnections(obj, patch);
         this.addConnections(obj, patch);
-        this.addTextChunks(obj, patch);
+        this.fixTextChunks(obj, patch);
     }
 },
 'deleting', {
