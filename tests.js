@@ -1201,8 +1201,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.removeObject(box);
         this.assertSync(3);
     },
-
-
     testSimpleProperty: function() {
         var box = this.addBox();
         box.a = 23;
@@ -1235,6 +1233,13 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(6);
         x.a = y;
         this.assertSync(7);
+    },
+    testWrap: function() {
+        var x = this.addBox("X");
+        this.wcA.removeObject(x);
+        var y = this.openInWorldA(this.newBox("Y"));
+        y.addMorph(x);
+        this.assertSync(3);
     },
     testArray: function() {
         var x = this.addBox(), y = this.newBox(1, 2, "Y"), z = this.newBox(3, 4, "Z");
