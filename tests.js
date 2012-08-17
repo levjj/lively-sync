@@ -1411,6 +1411,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         text.setTextColor(Color.web.green);
         this.assertSync(8);
         text.replaceTextString("text4");
+        debugger;
         this.assertSync(9);
     },
     testOpenPart: function() {
