@@ -34,10 +34,15 @@ users.cschuster.sync.Patch.addMethods({
     toHierachicalPatch: function() {
         var newPatch = {};
         function removeAdds(obj) {
-            if (!obj || typeof obj != 'object') return obj;
-            if (Array.isArray(obj) && obj.length == 1) return obj[0];
-            for (var key in obj) {
-                obj[key] = removeAdds(obj[key]);
+            if (!obj || !Object.isObject(obj)) return obj;
+            if (Array.isArray(obj)) {
+                if (obj.length == 1) { // add
+                    return obj[0];
+                } else if (obj.length == 3) { // move
+                    
+                }
+            } else {
+                for (var key in obj) obj[key] = removeAdds(obj[key]);
             }
             return obj;
         }
