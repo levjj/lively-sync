@@ -233,6 +233,9 @@ lively.morphic.TextChunk.addMethods({
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
 'plugin interface', {
+    deserializeObj: function() {
+        
+    },
     ignoreProp: function(obj, propName, value) {
         return obj.doNotSerializeForSync && obj.doNotSerializeForSync.include(propName);
     }
