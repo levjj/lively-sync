@@ -114,12 +114,10 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         for (var key in patch) {
             var isTextChunks = obj && obj.isText && key == "textChunks";
             var value = patch[key];
-            if (Array.isArray(value)) { // instruction
-                if (parentText && value.length == 1 && obj[key] instanceof lively.morphic.TextChunk) {
-                    var length = parentText.textChunks.length;
-                    obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
-                }
-            } else {
+            if (parentText && obj[key] instanceof lively.morphic.TextChunk) {
+                var length = parentText.textChunks.length;
+                obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
+            } else if (!Array.isArray(value)) { // instruction
                 this.addTextChunks(obj[key], value, isTextChunks && obj);
             }
         }
