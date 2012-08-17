@@ -110,11 +110,27 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
+    addTextChunks: function(obj, patch, parentText) {
+        for (var key in patch) {
+            var isTextChunks = obj && obj.isText && key == "textChunks";
+            var value = patch[key];
+            if (Array.isArray(value)) { // instruction
+                if (parentText && value.length == 1 && value.last() instanceof lively.morphic.TextChunk) {
+                    var length = parentText.textChunks.length;
+                    parentText.addMorph(obj[key],
+                                        key < length ? parentText.textChunks[key + 1] : null);
+                }
+            } else {
+                this.addTextChunks(obj[key], value, isTextChunks && obj);
+            }
+        }
+    },
     updatedObj: function(key, obj, patch) {
         this.fixClosures(obj, patch);
         this.fixSceneGraph(obj, patch);
         this.deleteConnections(obj, patch);
         this.addConnections(obj, patch);
+        this.addTextChunks(obj, patch);
     }
 },
 'deleting', {
