@@ -1399,7 +1399,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.openInWorldA(text);
         this.assertSync(2);
         text.textString += "2";
-        debugger;
         this.assertSync(3);
         text.replaceTextString("text3");
         this.assertSync(4);
@@ -1411,6 +1410,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertSync(7);
         text.setTextColor(Color.web.green);
         this.assertSync(8);
+        text.replaceTextString("text4");
+        this.assertSync(9);
     },
     testOpenPart: function() {
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
