@@ -118,7 +118,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 var length = parentText.textChunks.length;
                 obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
             } else if (!Array.isArray(value)) { // instruction
-                this.addTextChunks(obj[key], value, isTextChunks && obj);
+                this.fixTextChunks(obj[key], value, isTextChunks && obj);
             }
         }
     },
