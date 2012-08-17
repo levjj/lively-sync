@@ -1129,16 +1129,17 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
         this.assertEquals(rev, this.wcC.rev);
         this.assertEqualState(this.wcA.last, this.wcB.last);
         this.assertEqualState(this.wcA.last, this.wcC.last);
-        var a = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
-        var b = users.cschuster.sync.Snapshot.createFromObjects(this.wcB.syncTable);
-        var c = users.cschuster.sync.Snapshot.createFromObjects(this.wcC.syncTable);
-        if (!dirty)
-            this.assertEqualState(this.wcA.last, a);
-        this.assertEqualState(a, b);
-        this.assertEqualState(a, c);
+        this.assertPatchingPreviousSnapshots(rev);
+        var snapshot = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
+        if (!dirty) this.assertEqualState(snapshot, this.wcA.last);
+        this.assertIdenticalToSnapshot(snapshot, this.wcB.syncTable);
+        this.assertIdenticalToSnapshot(snapshot, this.wcC.syncTable);
         this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
         this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
-        this.assertPatchingPreviousSnapshots(rev);
+    },
+    assertIdenticalToSnapshot: function(leftSnapshot, rightTable) {
+        var rightSnapshot = users.cschuster.sync.Snapshot.createFromObjects(rightTable);
+        this.assertEqualState(leftSnapshot, rightSnapshot);
     },
     assertIdenticalDOM: function(leftTable, rightTable) {
         this.assertEquals(Object.keys(leftTable).length, Object.keys(rightTable).length);
