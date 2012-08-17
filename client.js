@@ -124,6 +124,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             } else if (!Array.isArray(value)) { // instruction
                 this.fixTextChunks(obj[key], value, isTextChunks && obj);
             }
+            if (isTextChunks) delete obj.cachedTextString; // cleaning up cachedTextString
         }
     },
     updatedObj: function(key, obj, patch) {
