@@ -115,7 +115,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var isTextChunks = obj && obj.isText && key == "textChunks";
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
-                if (parentText && value.length == 1 && value.last() instanceof lively.morphic.TextChunk) {
+                if (parentText && value.length == 1 && obj[key] instanceof lively.morphic.TextChunk) {
                     var length = parentText.textChunks.length;
                     obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
                 }
