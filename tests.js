@@ -1142,6 +1142,36 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPrimitivesTest',
+'asserting', {
+    assertSync: function($super, rev, dirty) {
+        $super(rev, dirty);
+        var snapshot = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
+        if (!dirty) this.assertEqualState(snapshot, this.wcA.last);
+        this.assertIdenticalToSnapshot(snapshot, this.wcB.syncTable);
+        this.assertIdenticalToSnapshot(snapshot, this.wcC.syncTable);
+        this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
+        this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
+    },
+    assertIdenticalToSnapshot: function(leftSnapshot, rightTable) {
+        var rightSnapshot = users.cschuster.sync.Snapshot.createFromObjects(rightTable);
+        this.assertEqualState(leftSnapshot, rightSnapshot);
+    },
+    assertIdenticalDOM: function(leftTable, rightTable) {
+        this.assertEquals(Object.keys(leftTable).length, Object.keys(rightTable).length);
+        for (var key in leftTable) {
+            this.assertNodeMatches(leftTable[key].renderContext().morphNode,
+                                   rightTable[key].renderContext().morphNode, true);
+        }
+    },
+    assertPatchingPreviousSnapshots: function(rev) {
+        for (var i = 0; i < rev - 2; i++) {
+            var copy = this.snapshots[i].clone();
+            var patch = copy.diff(this.wcA.last).toPatch();
+            patch.apply(copy);
+            this.assertEqualState(copy, this.wcA.last);
+        }
+    }
+},
 'testing', {
     testEmptyWorlds: function() {
         this.assertSync(1);
