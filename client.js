@@ -114,14 +114,18 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         for (var key in patch) {
             var isTextChunks = obj && obj.isText && key == "textChunks";
             var value = patch[key];
-            if (parentText && obj[key] instanceof lively.morphic.TextChunk) {
-                if (Array.isArray(value) && value.length == 1) { // add
-                    var length = parentText.textChunks.length;
-                    obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
-                } else if (!Array.isArray(value) && value.hasOwnProperty("style")){ // update style
+            if (parentText) {
+                if (Array.isArray(value)) { 
+                    if (value.length == 1) { // add
+                        var length = parentText.textChunks.length;
+                        obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
+                    } else if (value.length == 3) { // remove
+                        value[0].remove();
+                    }
+                } else if (value.hasOwnProperty("style")){ // update style
                     obj[key].styleText();
                 }
-            } else if (!Array.isArray(value)) { // instruction
+            } else if (!Array.isArray(value)) { // recursion
                 this.fixTextChunks(obj[key], value, isTextChunks && obj);
             }
             // cleaning up cachedTextString if one of the chunks changed
