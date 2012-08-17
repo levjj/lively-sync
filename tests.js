@@ -119,10 +119,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(this.world.openPartItem("Rectangle", "PartsBin/Basic"));
     },
     testWorkspace: function() {
-        var bounds = pt(0,0).extent(pt(40, 30));
-        var text = new lively.morphic.Text(bounds, "text");
-        this.world.addMorph(text);
-        this.assertSerialize(text);
+        var ws = this.world.openWorkspace();
+        this.assertSerialize(ws.owner);
+        ws.textString = "var f = function(x) { return x; }";
+        this.assertSerialize(ws.owner);
     },
     testObjectInspector: function() {
         var bounds = pt(0,0).extent(pt(40, 30));
