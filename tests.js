@@ -1448,17 +1448,45 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.addObject(rect);
         this.assertSync(2);
     },
-    testWorkspace: function() {
+    testWindow: function() {
+        var box = this.addBox("X");
+        this.worldA.internalAddWindow(box, box.name, pt(40, 20));
+        this.wcA.removeObject(box);
+        this.wcA.addObject(box.owner);
+        this.assertSync(3);
+    }
+});
+
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlowTest',
+'asserting', {
+    assertSync: function($super, rev, dirty) {
+        $super(rev, dirty);
+        /* additional assertions */
+    }
+},
+'testing', {
+    testTextEditing: function() {
         var ws = this.worldA.openWorkspace();
         this.wcA.addObject(ws.owner);
         this.assertSync(2);
         ws.textString = "var f = function(x) { return x; }";
         this.assertSync(3);
     },
-    testObjectInspector: function() {
+    testInspecting: function() {
         var insp = this.worldA.openInspectorFor(this.addBox());
         this.wcA.addObject(insp);
         this.sync(3);
         this.assert(true, "for now just test that it doesn't crash");
     }
-});}) // end of module
+});
+
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.RobustnessTest',
+'testing', {
+    testMovingMorphAround: function() {
+        
+    }
+});
+
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.MultimasterTest');
+
+}) // end of module
