@@ -17,8 +17,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         var table = {};
         var args = Array.from(arguments);
         for (var i = 0; i < args.length; i++) {
-            var id = args[i].hasOwnProperty("id") ? args[i].id : "X";
-            table[id] = args[i];
+            table[args[i].id || "X"] = args[i];
         }
         var snapshotA = users.cschuster.sync.Snapshot.createFromObjects(table);
         var recreated = snapshotA.recreateObjects();
