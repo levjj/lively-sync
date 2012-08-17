@@ -1399,13 +1399,13 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.openInWorldA(text);
         this.assertSync(2);
         text.textString += "2";
+        debugger;
         this.assertSync(3);
         text.replaceTextString("text3");
         this.assertSync(4);
         text.insertTextStringAt(2, "s");
         this.assertSync(5);
         text.insertRichTextAt("o", {color: Color.web.red}, 4);
-        debugger;
         this.assertSync(6);
         text.toggleBoldness(1, 2);
         this.assertSync(7);
