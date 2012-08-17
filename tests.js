@@ -1137,18 +1137,21 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
         this.assertEqualState(a, c);
         this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
         this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
-        for (var i = 0; i < rev - 2; i++) {
-            var copy = this.snapshots[i].clone();
-            var patch = copy.diff(this.wcA.last).toPatch();
-            patch.apply(copy);
-            this.assertEqualState(copy, this.wcA.last);
-        }
+        this.assertPatchingPreviousSnapshots(rev);
     },
     assertIdenticalDOM: function(leftTable, rightTable) {
         this.assertEquals(Object.keys(leftTable).length, Object.keys(rightTable).length);
         for (var key in leftTable) {
             this.assertNodeMatches(leftTable[key].renderContext().morphNode,
                                    rightTable[key].renderContext().morphNode, true);
+        }
+    },
+    assertPatchingPreviousSnapshots: function(rev) {
+        for (var i = 0; i < rev - 2; i++) {
+            var copy = this.snapshots[i].clone();
+            var patch = copy.diff(this.wcA.last).toPatch();
+            patch.apply(copy);
+            this.assertEqualState(copy, this.wcA.last);
         }
     }
 },
