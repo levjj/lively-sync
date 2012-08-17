@@ -114,6 +114,18 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         var text = new lively.morphic.Text(bounds, "text");
         this.world.addMorph(text);
         this.assertSerialize(text);
+    },
+    testWorkspace: function() {
+        var bounds = pt(0,0).extent(pt(40, 30));
+        var text = new lively.morphic.Text(bounds, "text");
+        this.world.addMorph(text);
+        this.assertSerialize(text);
+    },
+    testObjectInspector: function() {
+        var bounds = pt(0,0).extent(pt(40, 30));
+        var text = new lively.morphic.Text(bounds, "text");
+        this.world.addMorph(text);
+        this.assertSerialize(text);
     }
 });
 
