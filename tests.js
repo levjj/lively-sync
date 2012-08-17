@@ -1135,22 +1135,20 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsT
             this.assertEqualState(this.wcA.last, a);
         this.assertEqualState(a, b);
         this.assertEqualState(a, c);
-        this.assertEquals(this.wcA.syncTable.length, this.wcB.syncTable.length);
-        this.assertEquals(this.wcA.syncTable.length, this.wcC.syncTable.length);
-        for (var key in this.wcA.syncTable) {
-            var morphA = this.wcA.syncTable[key];
-            var morphB = this.wcB.syncTable[key];
-            var morphC = this.wcC.syncTable[key];
-            this.assertNodeMatches(morphA.renderContext().morphNode,
-                                   morphB.renderContext().morphNode, true);
-            this.assertNodeMatches(morphA.renderContext().morphNode,
-                                   morphC.renderContext().morphNode, true);
-        }
+        this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
+        this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
         for (var i = 0; i < rev - 2; i++) {
             var copy = this.snapshots[i].clone();
             var patch = copy.diff(this.wcA.last).toPatch();
             patch.apply(copy);
             this.assertEqualState(copy, this.wcA.last);
+        }
+    },
+    assertIdenticalDOM: function(leftTable, rightTable) {
+        this.assertEquals(Object.keys(leftTable).length, Object.keys(rightTable).length);
+        for (var key in leftTable) {
+            this.assertNodeMatches(leftTable[key].renderContext().morphNode,
+                                   rightTable[ley].renderContext().morphNode, true);
         }
     }
 },
