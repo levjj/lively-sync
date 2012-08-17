@@ -1062,7 +1062,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
         this.assert(!this.morph.hasOwnProperty('$$a'));
     }
 });
-lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncWorldsTest',
+
+lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
+'running', {
+    setUp: function($super) {
+        $super();
+    }
+});
+
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPrimitivesTest',
 'running', {
     setUp: function($super) {
         $super();
