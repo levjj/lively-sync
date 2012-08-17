@@ -110,7 +110,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
-    addTextChunks: function(obj, patch, parentText) {
+    fixTextChunks: function(obj, patch, parentText) {
         for (var key in patch) {
             var isTextChunks = obj && obj.isText && key == "textChunks";
             var value = patch[key];
