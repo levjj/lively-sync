@@ -62,12 +62,11 @@ users.cschuster.sync.Patch.addMethods({
                     if (current.length == 1) { // add
                         rawMode = true;
                         current = current[0];
-                        val = removeAdds(val);
                     } else { // move
                         current = current[1];
                     }
                 }
-                if (rawMode && current.__isMoveInstruction__) {
+                if (rawMode && current.__isMoveInstruction__) { // move instruction in raw obj
                     rawMode = false;
                     current = current.diff;
                 }
@@ -75,7 +74,7 @@ users.cschuster.sync.Patch.addMethods({
             var prop = parts.last();
             if (!current.hasOwnProperty(prop) || current[prop].id == key ||
                 (Array.isArray(current[prop].id) && current[prop].id[0] == key)) {
-                current[prop] = val;
+                current[prop] = rawMode ? removeAdds(val) : val;
             }
         }
         return new users.cschuster.sync.Patch(newPatch);
