@@ -113,7 +113,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         var text = new lively.morphic.Text(bounds, "text");
         this.world.addMorph(text);
         this.assertSerialize(text);
-        debugger;
         text.beLabel();
         this.assertSerialize(text);
     },
