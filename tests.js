@@ -1238,7 +1238,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
     testWrap: function() {
         var x = this.addBox("X");
         this.wcA.removeObject(x);
-        var y = this.openInWorldA(this.newBox("Y"));
+        var y = this.openInWorldA(this.newBox(20, 30, "Y"));
         y.addMorph(x);
         debugger;
         this.assertSync(3);
