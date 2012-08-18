@@ -407,6 +407,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         },
         findMoveInstructionsInRawObject: function(obj, result) {
             for (var key in obj) {
+                if (!obj.hasOwnProperty(key)) return;
                 var value = obj[key];
                 if (!value || !Object.isObject(value)) continue;
                 if (value.__isMoveInstruction__) {
