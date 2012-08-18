@@ -238,7 +238,8 @@ lively.morphic.TextChunk.addMethods({
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
 'plugin interface', {
-    deserializeObj: function() {
+    deserializeObj: function(persistentCopy) {
+        if (!persistentCopy.__isMoveInstruction__) return;
         
     },
     ignoreProp: function(obj, propName, value) {
