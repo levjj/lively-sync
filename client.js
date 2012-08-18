@@ -399,9 +399,22 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.pushIfNotIncluded(obj);
         },
-        findMoveInstructions: function(obj, patch) {
-            var result = [];
-            if (!obj || typeof obj != "object") return result;
+        findMoveInstructionsInRawObject: function(obj, patch, result) {
+            if (!obj || !Object.isObject(obj)) return;
+            for (var key in patch) {
+                var value = patch[key];
+                if (!value || !Object.isObject(value)) continue;
+                if (value.__isMoveInstruction__) {
+                    var movedObj = this.objectAtPath(value.from);
+                    result.push({from: {obj: movedObj, path: value.from}});
+                    this.findMoveInstructions(movedObj, value.diff, result);
+                } else {
+                    this.findMoveInstructionsInRawObject(obj[key], value, result);
+                }
+            }
+        },
+        findMoveInstructions: function(obj, patch, result) {
+            if (!obj || typeof obj != "object") return;
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) {
@@ -409,15 +422,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         // defer actual moving object
                         result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
                                      to: {obj: obj, prop: key}});
+                    } else if (value.lenth == 1) {
+                        this.findMoveInstructionsInRawObject(obj[key], value[0], result);
                     }
                 } else {
-                    result.pushAll(this.findMoveInstructions(obj[key], value));
+                    this.findMoveInstructions(obj[key], value, result);
                 }
             }
-            return result;
         },
         applyMoveInstructions: function(patch) {
-            var moves = this.findMoveInstructions(this.syncTable, patch);
+            var moves = [];
+            this.findMoveInstructions(this.syncTable, patch, moves);
             var arraysToRepair = [];
             // apply all 'deletions' at once
             for (var i = 0; i < moves.length; i++) {
