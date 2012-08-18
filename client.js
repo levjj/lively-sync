@@ -188,10 +188,10 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             var isTextChunks = obj && obj.isText && key == "textChunks";
             var value = patch[key];
             if (parentText) {
-                if (Array.isArray(value)) { 
+                if (Array.isArray(value)) {
                     if (value.length == 1) { // add
                         var length = parentText.textChunks.length;
-                        obj[key].addTo(parentText, key < length ? parentText.textChunks[key + 1] : null);
+                        obj[key].addTo(parentText, key < length ? parentText.textChunks[key+1] : null);
                     } else if (value.length == 3) { // remove
                         value[0].remove();
                     }
