@@ -529,6 +529,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var hierachicalPatch = patch.toHierachicalPatch().data;
             this.serializer = users.cschuster.sync.Snapshot.getSerializer();
             this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
+            this.serializer.wc = this;
             this.deserializeQueue = [];
             this.refPatchQueue = [];
             this.applyMoveInstructions(hierachicalPatch);
