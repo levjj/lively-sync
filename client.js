@@ -240,7 +240,12 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlu
 'plugin interface', {
     deserializeObj: function(persistentCopy) {
         if (!persistentCopy.__isMoveInstruction__) return;
-        
+        var obj = persistentCopy.from;
+        this.serializer.wc.applyObjectPatch(obj, persistentCopy.diff);
+        delete persistentCopy.from;
+        delete persistentCopy.diff;
+        delete persistentCopy.__isMoveInstruction__;
+        return obj;
     },
     ignoreProp: function(obj, propName, value) {
         return obj.doNotSerializeForSync && obj.doNotSerializeForSync.include(propName);
