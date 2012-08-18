@@ -1240,6 +1240,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.removeObject(x);
         var y = this.openInWorldA(this.newBox("Y"));
         y.addMorph(x);
+        debugger;
         this.assertSync(3);
     },
     testArray: function() {
