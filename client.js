@@ -429,7 +429,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                         // defer actual moving object
                         result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
                                      to: {obj: obj, prop: key}});
-                    } else if (value.length == 1) {
+                    } else if (value.length == 1 && value[0] && Object.isObject(value[0])) {
                         this.findMoveInstructionsInRawObject(value[0], result);
                     }
                 } else {
