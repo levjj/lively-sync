@@ -67,6 +67,10 @@ users.cschuster.sync.Patch.addMethods({
                         current = current[1];
                     }
                 }
+                if (rawMode && current.__isMoveInstruction__) {
+                    rawMode = false;
+                    current = current.diff;
+                }
             }
             var prop = parts.last();
             if (!current.hasOwnProperty(prop) || current[prop].id == key ||
