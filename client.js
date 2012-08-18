@@ -39,7 +39,7 @@ users.cschuster.sync.Patch.addMethods({
                 if (obj.length == 1) { // add
                     return obj[0];
                 } else if (obj.length == 3) { // move
-                    
+                    return {__isMoveInstruction__: true, from: obj[0], diff: obj[1]};
                 }
             } else {
                 for (var key in obj) obj[key] = removeAdds(obj[key]);
