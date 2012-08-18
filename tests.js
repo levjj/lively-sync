@@ -113,8 +113,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         var text = new lively.morphic.Text(bounds, "text");
         this.world.addMorph(text);
         this.assertSerialize(text);
-        text.setFixedWidth(true);
-        this.assertSerialize(text);
     },
     testPart: function() {
         this.assertSerialize(this.world.openPartItem("Rectangle", "PartsBin/Basic"));
