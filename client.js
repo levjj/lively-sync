@@ -405,9 +405,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.pushIfNotIncluded(obj);
         },
-        findMoveInstructionsInRawObject: function(patch, result) {
-            for (var key in patch) {
-                var value = patch[key];
+        findMoveInstructionsInRawObject: function(obj, result) {
+            for (var key in obj) {
+                var value = obj[key];
                 if (!value || !Object.isObject(value)) continue;
                 if (value.__isMoveInstruction__) {
                     var movedObj = this.objectAtPath(value.from);
