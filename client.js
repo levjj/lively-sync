@@ -405,8 +405,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             this.deserializeQueue.pushIfNotIncluded(obj);
         },
-        findMoveInstructionsInRawObject: function(obj, patch, result) {
-            if (!obj || !Object.isObject(obj)) return;
+        findMoveInstructionsInRawObject: function(patch, result) {
             for (var key in patch) {
                 var value = patch[key];
                 if (!value || !Object.isObject(value)) continue;
@@ -416,7 +415,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     value.from = movedObj;
                     this.findMoveInstructions(movedObj, value.diff, result);
                 } else {
-                    this.findMoveInstructionsInRawObject(obj[key], value, result);
+                    this.findMoveInstructionsInRawObject(value, result);
                 }
             }
         },
