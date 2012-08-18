@@ -408,6 +408,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 if (value.__isMoveInstruction__) {
                     var movedObj = this.objectAtPath(value.from);
                     result.push({from: {obj: movedObj, path: value.from}});
+                    value.from = movedObj;
                     this.findMoveInstructions(movedObj, value.diff, result);
                 } else {
                     this.findMoveInstructionsInRawObject(obj[key], value, result);
