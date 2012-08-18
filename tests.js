@@ -1468,7 +1468,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.worldA.internalAddWindow(box, box.name, pt(40, 20));
         this.wcA.removeObject(box);
         this.wcA.addObject(box.owner);
-        debugger;
         this.assertSync(3);
     }
 });
