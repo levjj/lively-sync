@@ -448,8 +448,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             arraysToRepair.invoke('repair');
             // apply all 'additions' at once
             for (var i = 0; i < moves.length; i++) {
-                if (moves[i].to)
+                if (moves[i].to) {
                     this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
+                }
             }
         }
     },
