@@ -1607,7 +1607,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
                                   this.assertProperty(pt(50, 20), this.morph, "getExtent");
     },
     testMasterReziesWhileSlaveRotates: function() {
-        this.morphInC(this.morph).setExtent(pt(50, 20));
+        this.morph.setExtent(pt(50, 20));
                                                                 this.morph.rotateBy(1);
                                   this.assertSync();
                                   this.assertProperty(pt(50, 20), this.morph, "getExtent");
