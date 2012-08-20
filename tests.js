@@ -1530,9 +1530,11 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
 },
 'helping', {
     morphInB: function(morph) {
+        if (!morph) morph = this.morph;
         return this.worldB.get(morph.name);
     },
     morphInC: function(morph) {
+        if (!morph) morph = this.morph;
         return this.worldC.get(morph.name);
     },
     grabMaster: function() {
@@ -1608,10 +1610,19 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     },
     testMasterReziesWhileSlaveRotates: function() {
         this.morph.setExtent(pt(50, 20));
-                                                                this.morph.rotateBy(1);
+                                                                this.morphInC().rotateBy(1);
                                   this.assertSync();
                                   this.assertProperty(pt(50, 20), this.morph, "getExtent");
-                                  this.assertEquals(1, this.morphInC(this.morph).getRotation());
+                                  this.assertEquals(1, this.morphInC().getRotation());
+    },
+    testMasterReziesWhileSlaveDeletes: function() {
+        this.morph.setExtent(pt(50, 20));
+                                                                this.morphInC().remove();
+                                  this.assertSync();
+                                  this.assertEquals(null, this.morphInC().owner);
+        this.moveMaster(15, 60);
+                                  this.assertSync();
+                                  this.assertHandPosition(15, 60);
     }
 });
 
