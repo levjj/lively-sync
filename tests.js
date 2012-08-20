@@ -1618,7 +1618,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     testMasterReziesWhileSlaveDeletes: function() {
         this.morph.setExtent(pt(50, 20));
                                                                 this.morphInC().remove();
-        debugger;
                                   this.assertSync();
                                   this.assertEquals(null, this.morphInC());
         this.moveMaster(15, 60);
