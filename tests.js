@@ -1569,7 +1569,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         this.moveMaster(45, 15);
                                   this.assertSync();
                                   this.assertHandPosition(45, 15);
-                                  this.assertMorphPosition(40, 10);
+                                  this.assertMorphPosition(-5, -5);
         this.dropOnWorldMaster();
                                   this.assertMorphPosition(40, 10);
                                   this.assertSync();
