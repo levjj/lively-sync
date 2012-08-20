@@ -1528,8 +1528,14 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     }
 },
 'helping', {
+    morphInB: function() {
+        return this.worldB.get(this.morph.name);
+    },
     morphInC: function() {
         return this.worldC.get(this.morph.name);
+    },
+    handInB: function() {
+        return this.worldB.get(this.worldA.firstHand().name);
     },
     handInC: function() {
         return this.worldC.get(this.worldA.firstHand().name);
