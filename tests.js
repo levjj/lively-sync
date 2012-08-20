@@ -1509,6 +1509,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     },
     assertMorphPosition: function(x, y) {
         this.assert(pt(x,y).equals(this.morph.getPosition()));
+        this.assert(pt(x,y).equals(this.morphInB().getPosition()));
         this.assert(pt(x,y).equals(this.morphInC().getPosition()));
     },
     assertHandPosition: function(x, y) {
