@@ -1502,7 +1502,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
     }
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.RobustnessTest',
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.InteractionTest',
 'asserting', {
     assertSync: function($super) {
         $super(this.rev++, false);
