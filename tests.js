@@ -1623,6 +1623,17 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         this.moveMaster(15, 60);
                                   this.assertSync();
                                   this.assertHandPosition(15, 60);
+    },
+    testMasterRotatesSubmorphWhichWasDeletedOnClient: function() {
+        this.morph.addMorph(this.newBox(15, 20, "Y"));
+                                  this.assertSync();
+        this.morph.submorphs.first().setRotation(1);
+                                                                this.morphInC().remove();
+                                  this.assertSync();
+                                  this.assertEquals(null, this.morphInC());
+        this.moveMaster(15, 60);
+                                  this.assertSync();
+                                  this.assertHandPosition(15, 60);
     }
 });
 
