@@ -1523,8 +1523,8 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         $super();
         this.morph = this.newBox(20, 20, "X", Color.web.yellow);
         this.openInWorldA(this.morph);
-        this.sync();
-        this.rev = 2;
+        this.rev = 1;
+        this.assertSync();
     }
 },
 'helping', {
@@ -1570,7 +1570,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
 },
 'testing', {
     testMasterMovesMorphAroundFastSync: function() {
-                                  this.assertSync();
         this.moveMaster(5, 5);
                                   this.assertSync();
                                   this.assertHandPosition(5, 5);
@@ -1588,12 +1587,18 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
                                   this.assertHandPosition(15, 60);
     },
     testMasterMovesMorphAroundSlowSync: function() {
-                                  this.assertSync();
         this.moveMaster(5, 5);
         this.grabMaster();
         this.moveMaster(45, 15);
         this.dropOnWorldMaster();
         this.moveMaster(15, 60);
+                                  this.assertSync();
+                                  this.assertHandPosition(15, 60);
+                                  this.assertMorphPosition(40, 10);
+    },
+    testMasterRotatesAndReziesFastSync: function() {
+        this.morph.rotateBy(1);
+        this.morph.setExtent(pt(50, 20));
                                   this.assertSync();
                                   this.assertHandPosition(15, 60);
                                   this.assertMorphPosition(40, 10);
