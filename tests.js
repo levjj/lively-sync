@@ -1629,6 +1629,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
                                   this.assertSync();
         this.morph.submorphs.first().setRotation(1);
                                                                 this.morphInC().remove();
+        debugger;
                                   this.assertSync();
                                   this.assertEquals(null, this.morphInC());
         this.moveMaster(15, 60);
