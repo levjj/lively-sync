@@ -1503,13 +1503,33 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.RobustnessTest',
+'asserting', {
+    assertSync: function($super) {
+        $super(this.rev++, false);
+    },
+    assertMorphPosition: function(x, y) {
+        this.assert(pt(x,y).equals(this.morph.getPosition()));
+        this.assert(pt(x,y).equals(this.morphInC().getPosition()));
+    },
+    assertHandPosition: function(x, y) {
+        this.assert(pt(x,y).equals(this.worldA.firstHand().getPosition()));
+        this.assert(pt(x,y).equals(this.handInC().getPosition()));
+    }
+},
 'running', {
     setUp: function($super) {
         $super();
         this.morph = this.addBox();
+        this.rev = 2;
     }
 },
 'helping', {
+    morphInC: function() {
+        return this.worldC.get(this.morph.name);
+    },
+    handInC: function() {
+        return this.worldC.get(this.worldA.firstHand().name);
+    },
     grabMaster: function() {
         var h = this.worldA.firstHand();
         h.grabMorph(this.morph);
@@ -1517,8 +1537,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Robustn
     },
     grabSlave: function() {
         var h = this.worldC.firstHand();
-        var morph = this.worldC.get(this.morph.name);
-        h.grabMorph(morph);
+        h.grabMorph(this.morphC());
     },
     moveMaster: function(x, y) {
         this.worldA.firstHand().setPosition(pt(x, y));
@@ -1540,14 +1559,34 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Robustn
     },
 },
 'testing', {
-    testMasterMovesMorphAround: function() {
-        this.assertSync(2);
+    testMasterMovesMorphAroundFastSync: function() {
+                                  this.assertSync();
         this.moveMaster(5, 5);
-        this.assertSync(3);
+                                  this.assertSync();
+                                  this.assertHandPosition(5, 5);
         this.grabMaster();
-        this.assertSync(4);
+                                  this.assertSync();
+        this.moveMaster(45, 15);
+                                  this.assertSync();
+                                  this.assertHandPosition(45, 15);
+                                  this.assertMorphPosition(40, 10);
+        this.dropOnWorldMaster();
+                                  this.assertMorphPosition(40, 10);
+                                  this.assertSync();
+        this.moveMaster(15, 60);
+                                  this.assertSync();
+                                  this.assertHandPosition(15, 60);
+    },
+    testMasterMovesMorphAroundSlowSync: function() {
+                                  this.assertSync();
         this.moveMaster(5, 5);
-        this.assertSync(5);
+        this.grabMaster();
+        this.moveMaster(45, 15);
+        this.dropOnWorldMaster();
+        this.moveMaster(15, 60);
+                                  this.assertSync();
+                                  this.assertHandPosition(15, 60);
+                                  this.assertMorphPosition(40, 10);
     }
 });
 
