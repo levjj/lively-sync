@@ -1514,6 +1514,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     },
     assertHandPosition: function(x, y) {
         this.assert(pt(x,y).equals(this.worldA.firstHand().getPosition()));
+        this.assert(pt(x,y).equals(this.handInB().getPosition()));
         this.assert(pt(x,y).equals(this.handInC().getPosition()));
     }
 },
