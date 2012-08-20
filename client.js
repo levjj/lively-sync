@@ -381,6 +381,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         },
         applyObjectPatch: function(obj, patch) {
+            if (!obj || !Object.isObject(obj)) {
+                return this.cannotApplyPatch(obj, patch);
+            }
             for (var key in patch) {
                 var value = patch[key];
                 if (Array.isArray(value)) { // instruction
