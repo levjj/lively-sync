@@ -1540,8 +1540,14 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Robustn
     },
 },
 'testing', {
-    testMovingMorphAround: function() {
-        
+    testMasterMovesMorphAround: function() {
+        this.assertSync(2);
+        this.moveMaster(5, 5);
+        this.assertSync(3);
+        this.grabMaster();
+        this.assertSync(4);
+        this.moveMaster(5, 5);
+        this.assertSync(5);
     }
 });
 
