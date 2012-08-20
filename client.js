@@ -231,8 +231,16 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairA
 
 /* doNotSerializeForSync lists properties that are serialized but not synchronized */
 
-lively.morphic.Text.addMethods({
+lively.morphic.Text.addMethods(
+'serialization', {
     doNotSerializeForSync: ['cachedTextString', 'savedTextString']
+},
+'rendering', {
+    onRenderFinishedHTML: function($super, ctx) {
+        $super(ctx);
+        this.fit();
+        this.fit.bind(this).delay(0);
+    }
 });
 
 lively.morphic.TextChunk.addMethods({
