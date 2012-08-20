@@ -1631,7 +1631,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         y.setRotation(1);
                                                                 this.morphInC(y).remove();
                                   this.assertSync();
-                                  this.assertEquals([], this.morphInC().submorphs);
+                                  this.assertEqualState([], this.morphInC().submorphs);
         this.moveMaster(15, 60);
                                   this.assertSync();
                                   this.assertHandPosition(15, 60);
