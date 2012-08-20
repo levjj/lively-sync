@@ -1594,7 +1594,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     testMasterRotatesAndReziesFastSync: function() {
         this.morph.rotateBy(1);
                                   this.assertSync();
-                                  this.assertProperty("1", this.morph, "getRotation");
+                                  this.assertProperty(1, this.morph, "getRotation");
         this.morph.setExtent(pt(50, 20));
                                   this.assertSync();
                                   this.assertProperty(pt(50, 20), this.morph, "getExtent");
@@ -1603,7 +1603,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         this.morph.rotateBy(1);
         this.morph.setExtent(pt(50, 20));
                                   this.assertSync();
-                                  this.assertProperty("1", this.morph, "getRotation");
+                                  this.assertProperty(1, this.morph, "getRotation");
                                   this.assertProperty(pt(50, 20), this.morph, "getExtent");
     }
 });
