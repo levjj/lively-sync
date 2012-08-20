@@ -465,6 +465,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         }
     },
+    'error handling', {
+        cannotApplyPatch: function(obj, patch) {
+            console.error("Cannot apply patch!");
+        }
+    },
     'updating', {
         connect: function(autoupdate) {
             this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
