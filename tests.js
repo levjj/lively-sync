@@ -1507,15 +1507,16 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     assertSync: function($super) {
         $super(this.rev++, false);
     },
+    assertProperty: function(expected, morph, prop) {
+        this.assertEqualState(expected, morph[prop]());
+        this.assertEqualState(expected, this.morphInB(morph)[prop]());
+        this.assertEqualState(expected, this.morphInC(morph)[prop]());
+    },
     assertMorphPosition: function(x, y) {
-        this.assert(pt(x,y).equals(this.morph.getPosition()));
-        this.assert(pt(x,y).equals(this.morphInB().getPosition()));
-        this.assert(pt(x,y).equals(this.morphInC().getPosition()));
+        this.assertProperty(pt(x, y), this.morph, "getPosition");
     },
     assertHandPosition: function(x, y) {
-        this.assert(pt(x,y).equals(this.worldA.firstHand().getPosition()));
-        this.assert(pt(x,y).equals(this.handInB().getPosition()));
-        this.assert(pt(x,y).equals(this.handInC().getPosition()));
+        this.assertProperty(pt(x, y), this.worldA.firstHand(), "getPosition");
     }
 },
 'running', {
@@ -1523,22 +1524,16 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
         $super();
         this.morph = this.newBox(20, 20, "X", Color.web.yellow);
         this.openInWorldA(this.morph);
-        this.rev = 1;
+        this.rev = 2;
         this.assertSync();
     }
 },
 'helping', {
-    morphInB: function() {
-        return this.worldB.get(this.morph.name);
+    morphInB: function(morph) {
+        return this.worldB.get(morph.name);
     },
-    morphInC: function() {
-        return this.worldC.get(this.morph.name);
-    },
-    handInB: function() {
-        return this.worldB.get(this.worldA.firstHand().name);
-    },
-    handInC: function() {
-        return this.worldC.get(this.worldA.firstHand().name);
+    morphInC: function(morph) {
+        return this.worldC.get(morph.name);
     },
     grabMaster: function() {
         var h = this.worldA.firstHand();
@@ -1598,10 +1593,18 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     },
     testMasterRotatesAndReziesFastSync: function() {
         this.morph.rotateBy(1);
+                                  this.assertSync();
+                                  this.assertProperty("1", this.morph, "getRotation");
         this.morph.setExtent(pt(50, 20));
                                   this.assertSync();
-                                  this.assertHandPosition(15, 60);
-                                  this.assertMorphPosition(40, 10);
+                                  this.assertProperty(pt(50, 20), this.morph, "getExtent");
+    },
+    testMasterRotatesAndReziesSlowSync: function() {
+        this.morph.rotateBy(1);
+        this.morph.setExtent(pt(50, 20));
+                                  this.assertSync();
+                                  this.assertProperty("1", this.morph, "getRotation");
+                                  this.assertProperty(pt(50, 20), this.morph, "getExtent");
     }
 });
 
