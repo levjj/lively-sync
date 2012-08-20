@@ -1503,6 +1503,42 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.RobustnessTest',
+'running', {
+    setUp: function($super) {
+        $super();
+        this.morph = this.addBox();
+    }
+},
+'helping', {
+    grabMaster: function() {
+        var h = this.worldA.firstHand();
+        h.grabMorph(this.morph);
+        this.wcA.removeObject(this.morph);
+    },
+    grabSlave: function() {
+        var h = this.worldC.firstHand();
+        var morph = this.worldC.get(this.morph.name);
+        h.grabMorph(morph);
+    },
+    moveMaster: function(x, y) {
+        this.worldA.firstHand().setPosition(pt(x, y));
+    },
+    moveSlave: function(x, y) {
+        this.worldC.firstHand().setPosition(pt(x, y));
+    },
+    dropOnMaster: function(otherMorph) {
+        var h = this.worldA.firstHand();
+        h.dropContentsOn(otherMorph, {stop: Functions.Null});
+    },
+    dropOnWorldMaster: function() {
+        this.dropOnMaster(this.worldA);
+        this.wcA.addObject(this.morph);
+    },
+    dropOnSlave: function(otherMorph) {
+        var h = this.worldC.firstHand();
+        h.dropContentsOn(otherMorph, {stop: Functions.Null});
+    },
+},
 'testing', {
     testMovingMorphAround: function() {
         
