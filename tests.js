@@ -1519,7 +1519,9 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
 'running', {
     setUp: function($super) {
         $super();
-        this.morph = this.addBox();
+        this.morph = this.newBox(20, 20, "X");
+        this.openInWorldA(this.morph);
+        this.sync();
         this.rev = 2;
     }
 },
