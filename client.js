@@ -463,7 +463,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var i = 0; i < moves.length; i++) {
             if (moves[i].to) { // moves without 'to' are added on-demand
                                // (this is needed for new objects which are not yet created)
-                this.deserializeQueue.pushIfNotIncluded(obj);
+                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
         }
     }
@@ -634,11 +634,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     changeHand: function(activate) {
-        var hand = lively.morphic.World.current().firstHand();
+        var hand = this.world().firstHand();
         if (activate) {
             jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
                 .appendTo(jQuery("body"));
-            if (!this.newHand) { this.newHand = true; hand.setNewId(); }
             var color = this.colorTable[hand.id.substring(0, 1)];
             hand.setFill(color);
             hand.setBorderColor(color.invert());
@@ -654,8 +653,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
     },
     startSyncing: function() {
+        if (!this.newHand) { this.newHand = true; this.world().firstHand().setNewId(); }
         this.changeHand(true);
-        SyncNewMorphs.wc = this;
         SyncNewMorphs.beGlobal();
         this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
     },
