@@ -479,6 +479,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     cannotApplyPatch: function(obj, patch) {
         debugger;
         console.error("Cannot apply patch!");
+    },
+    cannotFindObject: function(path) {
+        debugger;
+        console.error("Cannot find object!");
     }
 },
 'updating', {
