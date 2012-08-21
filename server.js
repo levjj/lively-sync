@@ -12,7 +12,6 @@ require('./shared');
 
 var CONNECTION_STRING = "tcp://syncproto:steam@localhost/syncproto";
 var DIFFS_PER_SNAPSHOT = 100;
-var DEMO = 'demo';
 
 module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
 
@@ -55,6 +54,13 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     release: function() {
         this.mutex[this.channel].release();
+    },
+    
+    initial: function(cb) {
+        this.db.query("SELECT data FROM history WHERE obj = $1 AND rev = $2", ["demo", 1], function(err, result) {
+            var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
+            this._createSnapshot(1, snapshot, function() { cb(snapshot); });
+        });
     },
     
     checkout: function(rev, cb) {
@@ -126,23 +132,29 @@ Object.subclass('users.cschuster.sync.Repository', {
         });
     },
     
-    _createSnapshot: function(head, patch, cb) {
-        this.checkout(head, function(snapshot) {
-            patch.apply(snapshot);
-            console.log("creating snapshot for revision " + (head + 1));
-            this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
-                          [this.channel, head + 1, "snapshot", snapshot.toJSON(), this.username], cb);
-        }.bind(this));
+    _createSnapshot: function(rev, snapshot, cb) {
+        console.log("creating snapshot for revision " + rev);
+        this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
+                      [this.channel, rev, "snapshot", snapshot.toJSON(), this.username],
+                      cb);
+    },
+    
+    _createPatch: function(rev, patch, cb) {
+        console.log("creating patch for revision " + rev);
+        this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
+                      [this.channel, rev, "patch", patch.toJSON(), this.username],
+                      cb);
     },
     
     commit: function(head, patch, cb) {
         this.latestSnapshotRevBefore(head, function(latest) {
             if (head - latest > DIFFS_PER_SNAPSHOT) {
-                this._createSnapshot(head, patch, cb);
+                this.checkout(head, function(snapshot) {
+                    patch.apply(snapshot);
+                    this._createSnapshot(head + 1, snapshot, cb);
+                }.bind(this));
             } else {
-                console.log("creating patch for revision " + (head + 1));
-                this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
-                              [this.channel, head + 1, "patch", patch.toJSON(), this.username], cb);
+                this._createPatch(head + 1, patch, cb);
             }
         }.bind(this));
     },
@@ -198,12 +210,17 @@ Object.subclass('users.cschuster.sync.Server', {
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
-                repo.checkout(head, function(snapshot) {
+                var success = function(snapshot) {
                     this.socket.emit('snapshot', head, snapshot.data);
                     this.socket.join(channel);
                     this.socket.broadcast.to(channel).emit('joined', this.username);
                     repo.release();
-                }.bind(this));
+                }.bind(this);
+                if (isNaN(head)) {
+                    repo.initial(success);
+                } else {
+                    repo.checkout(head, success);
+                }
             }.bind(this));
         }.bind(this));
     },
