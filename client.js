@@ -645,7 +645,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     changeHand: function(activate) {
-        var hand = this.world().firstHand();
+        var hand = lively.morphic.World.current().firstHand();
         if (activate) {
             jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
                 .appendTo(jQuery("body"));
