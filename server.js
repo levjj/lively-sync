@@ -230,6 +230,7 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(channel, true, function(repo) {
             repo.reset(function() {
                 repo.checkout(1, function(snapshot) {
+                    this.socket.emit('snapshot', 1, snapshot.data);
                     this.socket.broadcast.to(channel).emit('snapshot', 1, snapshot.data);
                     repo.release();
                 }.bind(this));
