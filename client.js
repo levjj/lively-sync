@@ -475,9 +475,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var i = 0; i < moves.length; i++) {
             if (moves[i].to) { // moves without 'to' are added on-demand
                                // (this is needed for new objects which are not yet created)
-                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
-            }
-        }
+            this.deserializeQueue.pushIfNotIncluded(obj);
+        },
     }
 },
 'error handling', {
@@ -589,7 +588,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.socket.emit('checkout', this.channel, this.rev);
         } else {
             this.loadSnapshot(this.snapshots[rev]);
-        }
+        },
     }
 },
 'syncing', {
