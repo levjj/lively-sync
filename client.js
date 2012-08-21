@@ -286,6 +286,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         plugin.setControl(this);
     }
 },
+'accessing', {
+    isConnected: function() {
+        return !!this.socket;
+    }
+},
 'serialization', {
     objectAtPath: function(path) {
         var parts = path.length == 0 ? "" : path.split('/');
