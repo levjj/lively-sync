@@ -233,7 +233,7 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairA
 
 lively.morphic.Text.addMethods(
 'serialization', {
-    doNotSerializeForSync: ['cachedTextString', 'savedTextString']
+    doNotSerializeForSync: ['textString', 'cachedTextString']
 });
 
 lively.morphic.TextChunk.addMethods({
