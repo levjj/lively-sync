@@ -38,25 +38,28 @@ Object.subclass('users.cschuster.sync.Mutex', {
 });
 
 Object.subclass('users.cschuster.sync.Repository', {
-    mutex: new users.cschuster.sync.Mutex(),
+    mutex: {},
     
-    initialize: function(exclusive, cb) {
-        if ('undefined' == typeof cb) { cb = exclusive; exclusive = false; }
+    initialize: function(channel, exclusive, cb) {
+        this.channel = channel;
         pg.connect(CONNECTION_STRING, function(err, db) {
             if (err) return console.error(err);
             this.db = db;
-            if (exclusive) return this.mutex.lock(cb.bind(this, this));
+            if (exclusive) {
+                if (!this.mutex[channel]) this.mutex[channel] = new users.cschuster.sync.Mutex();
+                return this.mutex[channel].lock(cb.bind(this, this));
+            }
             cb(this);
         }.bind(this));
     },
     
     release: function() {
-        this.mutex.release();
+        this.mutex[this.channel].release();
     },
     
     checkout: function(rev, cb) {
         this.latestSnapshotRevBefore(rev, function(from) {
-            this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [DEMO, from, rev], function(err, result) {
+            this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [this.channel, from, rev], function(err, result) {
                 try {
                 if (err) return console.error(err);
                 if (result.rows.length < 1) return console.error("checkout: no revision between " + from + " and " + rev);
@@ -81,7 +84,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _storedPatch: function(fromRev, toRev, cb) {
-        this.db.query("SELECT type, data FROM history WHERE obj = $1 AND rev = $2", [DEMO, rev], function(err, result) {
+        this.db.query("SELECT type, data FROM history WHERE obj = $1 AND rev = $2", [this.channel, rev], function(err, result) {
             if (err) return console.error(err);
             if (result.rows.length != 1) return console.error("stored patch: expected one result");
             var data = JSON.parse(results.row[0].data);
@@ -108,7 +111,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     head: function(cb) {
-        this.db.query("SELECT MAX(rev) AS head FROM history WHERE obj = $1", [DEMO], function(err, result) {
+        this.db.query("SELECT MAX(rev) AS head FROM history WHERE obj = $1", [this.channel], function(err, result) {
             if (err) return console.error(err);
             if (result.rows.length != 1) return console.error("head: expected one result");
             cb(result.rows[0].head);
@@ -116,7 +119,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     latestSnapshotRevBefore: function(rev, cb) {
-        this.db.query("SELECT MAX(rev) AS latest FROM history WHERE obj = $1 AND type = 'snapshot' AND rev <= $2", [DEMO, rev], function(err, result) {
+        this.db.query("SELECT MAX(rev) AS latest FROM history WHERE obj = $1 AND type = 'snapshot' AND rev <= $2", [this.channel, rev], function(err, result) {
             if (err) return console.error(err);
             if (result.rows.length != 1) return console.error("latest snapshot: expected one result");
             cb(result.rows[0].latest);
@@ -127,8 +130,8 @@ Object.subclass('users.cschuster.sync.Repository', {
         this.checkout(head, function(snapshot) {
             patch.apply(snapshot);
             console.log("creating snapshot for revision " + (head + 1));
-            this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)",
-                          [DEMO, head + 1, "snapshot", snapshot.toJSON()], cb);
+            this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4)",
+                          [this.channel, head + 1, "snapshot", snapshot.toJSON(), this.username], cb);
         }.bind(this));
     },
     
@@ -138,13 +141,14 @@ Object.subclass('users.cschuster.sync.Repository', {
                 this._createSnapshot(head, patch, cb);
             } else {
                 console.log("creating patch for revision " + (head + 1));
-                this.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "patch", patch.toJSON()], cb);
+                this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4)",
+                              [this.channel, head + 1, "patch", patch.toJSON(), this.username], cb);
             }
         }.bind(this));
     },
     
-    reset: function() {
-        this.db.query("DELETE FROM history WHERE rev > 1");
+    reset: function(cb) {
+        this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], cb);
     }
 });
 
@@ -152,18 +156,22 @@ Object.subclass('users.cschuster.sync.Repository', {
 Object.subclass('users.cschuster.sync.Server', {
     initialize: function(socket) {
         this.socket = socket;
+        this.username = 'anonymous';
         this.socket.on('checkout', this.checkout.bind(this));
         this.socket.on('update', this.update.bind(this));
-        this.socket.on('commit', this.commitPatch.bind(this));
+        this.socket.on('join', this.join.bind(this));
+        this.socket.on('reset', this.reset.bind(this));
+        this.socket.on('commit', this.commit.bind(this));
     },
     
-    withRepo: function(exclusive, cb) {
-        new users.cschuster.sync.Repository(exclusive, function(repo) {
+    withRepo: function(channel, exclusive, cb) {
+        new users.cschuster.sync.Repository(channel, exclusive, function(repo) {
+            repo.username = this.username;
             cb(repo);
         }.bind(this));
     },
     
-    checkout: function (rev) {
+    checkout: function(channel, rev) {
         console.log("checking out rev " + rev);
         this.withRepo(false, function(repo) {
             repo.checkout(rev, function(snapshot) {
@@ -172,40 +180,53 @@ Object.subclass('users.cschuster.sync.Server', {
         }.bind(this));
     },
     
-    update: function (fromRev) {
+    update: function(channel, fromRev) {
         console.log("requested update from rev " + fromRev);
-        this.withRepo(false, function(repo) {
+        this.withRepo(channel, false, function(repo) {
             repo.head(function (head) {
-                if (!fromRev || (fromRev < head - DIFFS_PER_SNAPSHOT)) {
+                if (!fromRev || fromRev != head) {
                     repo.checkout(head, function(snapshot) {
                         this.socket.emit('snapshot', head, snapshot.data);
-                    }.bind(this));
-                } else {
-                    repo.patch(fromRev, head, function(patch) {
-                        this.socket.emit('patch', head, patch.data);
                     }.bind(this));
                 }
             }.bind(this));
         }.bind(this));
     },
     
-    commitSnapshot: function (oldRev, snapshot) {
-        console.log("commiting from rev " + oldRev);
-        this.withRepo(true, function(repo) {
+    join: function(channel, username) {
+        console.log(username + " joins channel " + channel);
+        this.username = username || 'anonymous';
+        this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
-                this.socket.broadcast.emit('snapshot', head + 1, snapshot);
-                repo.db.query("INSERT INTO history(obj, rev, type, data) VALUES($1, $2, $3, $4)", [DEMO, head + 1, "snapshot", snapshot], function() {
-                    repo.release();
-                });
+                if (!fromRev || fromRev != head) {
+                    repo.checkout(head, function(snapshot) {
+                        this.socket.emit('snapshot', head, snapshot.data);
+                        this.socket.join(channel);
+                        this.socket.broadcast.to(channel).emit('joined', this.username);
+                        repo.release();
+                    }.bind(this));
+                }
             }.bind(this));
         }.bind(this));
     },
     
-    commitPatch: function (oldRev, patch) {
-        this.withRepo(true, function(repo) {
+    reset: function(channel) {
+        console.log("resetting channel " + channel);
+        this.withRepo(channel, true, function(repo) {
+            repo.reset(function() {
+                repo.checkout(1, function(snapshot) {
+                    this.socket.broadcast.to(channel).emit('snapshot', 1, snapshot.data);
+                    repo.release();
+                }.bind(this));
+            }.bind(this));
+        }.bind(this));
+    },
+    
+    commit: function(channel, oldRev, patch) {
+        this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
                 if (oldRev == head) {
-                    this.socket.broadcast.emit('patch', head + 1, patch);
+                    this.socket.broadcast.to(channel).emit('patch', head + 1, patch);
                     repo.commit(head, new users.cschuster.sync.Patch(patch), function() {
                         repo.release();
                     });
@@ -235,13 +256,9 @@ Object.subclass('users.cschuster.sync.Server', {
     }
 });
 
-new users.cschuster.sync.Repository(function(repo) {
-    repo.reset(); // delete old data
-});
-
 io.set('log level', 1);
 io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
     new users.cschuster.sync.Server(socket);
 });
 
