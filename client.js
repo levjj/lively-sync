@@ -590,6 +590,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 },
 'syncing', {
     reset: function(obj) {
+        if (this.isSyncing()) this.stopSyncing();
         if (this.socket) this.socket.emit('reset', this.channel);
     },
     addObject: function(obj) {
