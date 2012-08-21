@@ -474,16 +474,18 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
     },
     'updating', {
-        connect: function(autoupdate) {
+        connect: function() {
             this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
             this.socket.on("snapshot", this.receiveSnapshot.bind(this));
             this.socket.on("patch", this.receivePatch.bind(this));
-            this.autoupdate = autoupdate;
-            if (this.autoupdate) {
+        },
+        join: function(channel) {
+            if (this.channel == channel) {
                 if (this.snapshots) this.loadRev(Object.keys(this.snaphots).last());
-                this.socket.emit('update', this.rev);
+            } else {
+                this.channel = channel;
             }
-            console.log("connected");
+            this.socket.emit('join', this.channel, $world.getUserName());
         },
         disconnect: function() {
             if (this.socket) this.socket.disconnect();
@@ -495,7 +497,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         receiveSnapshot: function(rev, snapshot) {
             console.log('received snapshot for rev ' + rev);
             if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-            if (!this.autoupdate && this.rev != rev) return;
             if (this.snapshots) {
                 this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
             } else {
@@ -507,7 +508,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         receivePatch: function(rev, patch) {
             console.log("received patch for rev " + rev);
             if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-            if (!this.autoupdate && this.rev != rev) return;
             patch = new users.cschuster.sync.Patch(patch);
             var last;
             if (this.snapshots) {
@@ -574,7 +574,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (this.rev == rev) return;
             this.rev = rev;
             if (!this.snapshots || !this.snapshots[rev]) {
-                this.socket.emit('checkout', this.rev);
+                this.socket.emit('checkout', this.channel, this.rev);
             } else {
                 this.loadSnapshot(this.snapshots[rev]);
             }
@@ -592,7 +592,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var last = this.last || this.snapshots[this.rev];
             var patch = last.diff(current).toPatch();
             if (patch.isEmpty()) return null;
-            if (this.socket) this.socket.emit('commit', this.rev, patch);
+            if (this.socket) this.socket.emit('commit', this.channel, this.rev, patch);
             if (this.snapshots) {
                 this.snapshots[this.rev + 1] = current;
                 this.patches[this.rev + 1] = patch;
