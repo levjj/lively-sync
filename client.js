@@ -660,15 +660,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             hand.setBorderWidth(1);
             this.addObject(hand);
             var name = lively.morphic.World.current().getUserName();
-            if (name) {
-                var nameTag = '<div class="nameTag" style="font-size: 8px; ';
-                nameTag += 'color: ' + color.toCSSString() + ' ';
-                nameTag += 'text-shadow: 0 0 6px ' + color.invert().toCSSString() + ' ';
-                nameTag += '">' + name + "</div>";
-                jQuery(hand.jQueryNode()).append(nameTag);
-            }
         } else {
-            jQuery(hand.jQueryNode()).find('.nameTag').remove();
             jQuery("#nohand").remove();
             hand.setFill(Color.red);
             hand.setBounds(pt(0, 0).extent(pt(2, 2)));
