@@ -478,6 +478,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 },
 'error handling', {
     cannotApplyPatch: function(obj, patch) {
+        debugger;
         console.error("Cannot apply patch!");
     }
 },
