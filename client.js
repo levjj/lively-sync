@@ -289,6 +289,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 'accessing', {
     isConnected: function() {
         return !!this.socket;
+    },
+    isSyncing: function() {
+        return !!this.commitTimeout;
     }
 },
 'serialization', {
@@ -586,6 +589,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     }
 },
 'syncing', {
+    reset: function(obj) {
+        if (this.socket) this.socket.emit('reset', this.channel);
+    },
     addObject: function(obj) {
         this.syncTable[obj.id] = obj;
     },
