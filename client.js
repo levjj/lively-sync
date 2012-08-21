@@ -485,6 +485,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 'error handling', {
     cannotApplyPatch: function(obj, patch) {
         debugger;
+        for (var key in patch) {
+            if (patch.hasOwnProperty(key)) delete patch[key];
+        }
         console.error("Cannot apply patch!");
     },
     cannotFindObject: function(path) {
