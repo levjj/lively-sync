@@ -616,7 +616,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         },
         startSyncing: function() {
-            this.commitTimeout = setTimeout(this.commit.bind(this), 1000);
+            this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
         },
         stopSyncing: function() {
             clearTimeout(this.commitTimeout);
