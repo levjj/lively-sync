@@ -323,10 +323,12 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         if (!newObjs) {
             this.refPatchQueue.push([object, prop, smartRef.id]);
         } else {
+            var ref = this.objectAtPath(smartRef);
+            if (!ref) return;
             if (newObjs.include(object)) {
-                object[prop] = this.objectAtPath(smartRef);
+                object[prop] = ref;
             } else {
-                this.set(object, prop, this.objectAtPath(smartRef));
+                this.set(object, prop, ref);
             }
         }
     },
@@ -426,6 +428,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (!value || !Object.isObject(value)) continue;
             if (value.__isMoveInstruction__) {
                 var movedObj = this.objectAtPath(value.from);
+                if (!movedObj) continue;
                 result.push({from: {obj: movedObj, path: value.from}});
                 value.from = movedObj;
                 this.findMoveInstructions(movedObj, value.diff, result);
@@ -441,8 +444,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (Array.isArray(value)) {
                 if (value.length == 3) {
                     // defer actual moving object
-                    result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
-                                 to: {obj: obj, prop: key}});
+                    var fromObj = this.objectAtPath(value[0]);
+                    if (fromObj) {
+                        result.push({from: {obj: fromObj, path: value[0]},
+                                     to: {obj: obj, prop: key}});
+                    }
                 } else if (value.length == 1 && value[0] && Object.isObject(value[0])) {
                     this.findMoveInstructionsInRawObject(value[0], result);
                 }
@@ -460,6 +466,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var fromPath = moves[i].from.path;
             var lastPart = fromPath.lastIndexOf('/');
             var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
+            if (fromParent) continue;
             var prop = fromPath.substring(lastPart + 1);
             if (fromParent) delete fromParent[prop];
             if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
@@ -569,6 +576,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.serializer.letAllPlugins('deserializationDone', []);
         for (var key in hierachicalPatch) {
             var obj = this.objectAtPath(key);
+            if (!obj) continue;
             var patch = hierachicalPatch[key];
             if (Array.isArray(patch)) { // instruction
                 if (patch.length == 3) { // delete
