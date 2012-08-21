@@ -198,14 +198,12 @@ Object.subclass('users.cschuster.sync.Server', {
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
-                if (!fromRev || fromRev != head) {
-                    repo.checkout(head, function(snapshot) {
-                        this.socket.emit('snapshot', head, snapshot.data);
-                        this.socket.join(channel);
-                        this.socket.broadcast.to(channel).emit('joined', this.username);
-                        repo.release();
-                    }.bind(this));
-                }
+                repo.checkout(head, function(snapshot) {
+                    this.socket.emit('snapshot', head, snapshot.data);
+                    this.socket.join(channel);
+                    this.socket.broadcast.to(channel).emit('joined', this.username);
+                    repo.release();
+                }.bind(this));
             }.bind(this));
         }.bind(this));
     },
