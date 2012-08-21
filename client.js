@@ -218,7 +218,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'deleting', {
     removedObj: function(key, obj) {
-        obj.remove();
+        if (obj !== this.world.firstHand()) obj.remove();
     }
 });
 
