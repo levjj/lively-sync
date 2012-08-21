@@ -603,6 +603,24 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.rev++;
             console.log('commited patch for rev ' + this.rev);
             return [current.toJSON().length, patch.toJSON().length];
+        },
+        autocommit: function() {
+            var start = Date.now();
+            try {
+                this.commit();
+            } finally {
+                var commitTime = Date.now() - start;
+                this.commitTimeout = setTimeout(
+                    this.commit.bind(this),
+                    Math.max(200, commitTime * 5));
+            }
+        },
+        startSyncing: function() {
+            this.commitTimeout = setTimeout(this.commit.bind(this), 1000);
+        },
+        stopSyncing: function() {
+            clearTimeout(this.commitTimeout);
+            this.commitTimeout = null;
         }
     }
 );
