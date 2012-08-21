@@ -664,7 +664,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
     },
     startSyncing: function() {
-        if (!this.newHand) { this.newHand = true; this.world().firstHand().setNewId(); }
         this.changeHand(true);
         SyncNewMorphs.beGlobal();
         this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
