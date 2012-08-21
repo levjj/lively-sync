@@ -649,6 +649,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         if (activate) {
             jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
                 .appendTo(jQuery("body"));
+            if (!this.newHand) { hand.setNewId(); this.newHand = true; }
             var color = this.colorTable[hand.id.substring(0, 1)];
             hand.setFill(color);
             hand.setBorderColor(color.invert());
