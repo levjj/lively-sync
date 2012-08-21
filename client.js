@@ -496,6 +496,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.socket.emit('join', this.channel, $world.getUserName());
     },
     disconnect: function() {
+        if (this.isSyncing()) this.stopSyncing();
         if (this.socket) this.socket.disconnect();
         delete this.socket;
         this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
