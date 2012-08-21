@@ -615,12 +615,54 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                     Math.max(200, commitTime * 5));
             }
         },
+        colorTable: {
+            "0": Color.web.firebrick,
+            "1": Color.web.lightcoral,
+            "2": Color.web.royalblue,
+            "3": Color.web.turquoise,
+            "4": Color.web.forestgreen,
+            "5": Color.web.darkgoldenrod,
+            "6": Color.web.darkorange,
+            "7": Color.web.gold,
+            "8": Color.web.mediumorchid,
+            "9": Color.web.lightskyblue,
+            "A": Color.web.yellowgreen,
+            "B": Color.web.darkseagreen,
+            "C": Color.web.dimgray,
+            "D": Color.web.peru,
+            "E": Color.web.lightgrey,
+            "F": Color.web.rosybrown
+        },
+        changeHand: function(activate) {
+            var hand = this.world().firstHand();
+            if (activate) {
+                jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
+                    .appendTo(jQuery("body"));
+                var color = this.colorTable[hand.id.substring(0, 1)];
+                hand.setFill(color);
+                hand.setBorderColor(color.invert());
+                hand.setBounds(pt(0, 0).extent(pt(6, 6)));
+                hand.setBorderWidth(1);
+                this.addObject(hand);
+            } else {
+                jQuery("#nohand").remove();
+                hand.setFill(Color.red);
+                hand.setBounds(pt(0, 0).extent(pt(2, 2)));
+                hand.setBorderWidth(0);
+                this.removeObject(hand);
+            }
+        },
         startSyncing: function() {
+            if (!this.newHand) { this.newHand = true; this.world().firstHand().setNewId(); }
+            this.changeHand(true);
+            SyncNewMorphs.beGlobal();
             this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
         },
         stopSyncing: function() {
             clearTimeout(this.commitTimeout);
             this.commitTimeout = null;
+            SyncNewMorphs.beNotGlobal();
+            this.changeHand(false);
         }
     }
 );
