@@ -658,6 +658,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             hand.setBounds(pt(0, 0).extent(pt(6, 6)));
             hand.setBorderWidth(1);
             this.addObject(hand);
+            var name = lively.morphic.World.current().getUserName();
+            if (name) jQuery(hand.jQueryNode()).append("<small>"+name+"</small>");
         } else {
             jQuery("#nohand").remove();
             hand.setFill(Color.red);
