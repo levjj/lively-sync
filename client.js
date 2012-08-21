@@ -256,18 +256,6 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlu
     }
 });
 
-cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
-    addMorph: function(morph, optMorphBefore) {
-        SyncNewMorphs.wc.addObject(morph);
-        return cop.proceed(morph, optMorphBefore);
-    },
-    removeMorph: function(morph) {
-        if (!morph.isHand)
-            SyncNewMorphs.wc.removeObject(morph);
-        return cop.proceed(morph);
-    }
-});
-
 Object.subclass('users.cschuster.sync.WorkingCopy',
 'initializing', {
     initialize: function(keepHistory) {
@@ -475,8 +463,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var i = 0; i < moves.length; i++) {
             if (moves[i].to) { // moves without 'to' are added on-demand
                                // (this is needed for new objects which are not yet created)
-            this.deserializeQueue.pushIfNotIncluded(obj);
-        },
+                this.deserializeQueue.pushIfNotIncluded(obj);
+            }
+        }
     }
 },
 'error handling', {
@@ -588,7 +577,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.socket.emit('checkout', this.channel, this.rev);
         } else {
             this.loadSnapshot(this.snapshots[rev]);
-        },
+        }
     }
 },
 'syncing', {
@@ -678,6 +667,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     }
 });
 
+cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
+    addMorph: function(morph, optMorphBefore) {
+        SyncNewMorphs.wc.addObject(morph);
+        return cop.proceed(morph, optMorphBefore);
+    },
+    removeMorph: function(morph) {
+        if (!morph.isHand)
+            SyncNewMorphs.wc.removeObject(morph);
+        return cop.proceed(morph);
+    }
+});
 
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
     newId: function() {
