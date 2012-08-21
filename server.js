@@ -130,7 +130,7 @@ Object.subclass('users.cschuster.sync.Repository', {
         this.checkout(head, function(snapshot) {
             patch.apply(snapshot);
             console.log("creating snapshot for revision " + (head + 1));
-            this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4)",
+            this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                           [this.channel, head + 1, "snapshot", snapshot.toJSON(), this.username], cb);
         }.bind(this));
     },
@@ -141,7 +141,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                 this._createSnapshot(head, patch, cb);
             } else {
                 console.log("creating patch for revision " + (head + 1));
-                this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4)",
+                this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                               [this.channel, head + 1, "patch", patch.toJSON(), this.username], cb);
             }
         }.bind(this));
