@@ -216,8 +216,7 @@ Object.subclass('users.cschuster.sync.Server', {
                     this.socket.broadcast.to(channel).emit('joined', this.username);
                     repo.release();
                 }.bind(this);
-                console.log("head=" + (head) + " " + (typeof head));
-                if (isNaN(head)) {
+                if (!head) {
                     repo.initial(success);
                 } else {
                     repo.checkout(head, success);
