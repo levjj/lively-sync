@@ -256,416 +256,428 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlu
     }
 });
 
+cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
+    addMorph: function(morph, optMorphBefore) {
+        SyncNewMorphs.wc.addObject(morph);
+        return cop.proceed(morph, optMorphBefore);
+    },
+    removeMorph: function(morph) {
+        if (!morph.isHand)
+            SyncNewMorphs.wc.removeObject(morph);
+        return cop.proceed(morph);
+    }
+});
+
 Object.subclass('users.cschuster.sync.WorkingCopy',
-    'initializing', {
-        initialize: function(keepHistory) {
-            this.plugins = [];
-            this.syncTable = {};
-            this.rev = 0;
-            this.loadSocketIO();
-            if (keepHistory) {
-                this.snapshots = {};
-                this.patches = {};
-            } else {
-                this.last = users.cschuster.sync.Snapshot.empty();
-            }
-        },
-        loadSocketIO: function() {
-            if (!document.getElementById('loadSocketIO')) {
-                var head = document.getElementsByTagName('head')[0];
-                var socketscript = document.createElement('script');
-                socketscript.type = 'text/javascript';
-                socketscript.src =
-                    'http://lively-kernel.org/nodejs/SyncServer/socket.io/socket.io.js';
-                socketscript.id = 'loadSocketIO';
-                head.appendChild(socketscript);
-            }
-        },
-        addPlugin: function(plugin) {
-            this.plugins.push(plugin);
-            plugin.setControl(this);
+'initializing', {
+    initialize: function(keepHistory) {
+        this.plugins = [];
+        this.syncTable = {};
+        this.rev = 0;
+        this.loadSocketIO();
+        if (keepHistory) {
+            this.snapshots = {};
+            this.patches = {};
+        } else {
+            this.last = users.cschuster.sync.Snapshot.empty();
         }
     },
-    'serialization', {
-        objectAtPath: function(path) {
-            var parts = path.length == 0 ? "" : path.split('/');
-            var current = this.syncTable;
-            for (var i = 0; current && (i < parts.length); i++) {
-                current = current && current[parts[i]];
+    loadSocketIO: function() {
+        if (!document.getElementById('loadSocketIO')) {
+            var head = document.getElementsByTagName('head')[0];
+            var socketscript = document.createElement('script');
+            socketscript.type = 'text/javascript';
+            socketscript.src =
+                'http://lively-kernel.org/nodejs/SyncServer/socket.io/socket.io.js';
+            socketscript.id = 'loadSocketIO';
+            head.appendChild(socketscript);
+        }
+    },
+    addPlugin: function(plugin) {
+        this.plugins.push(plugin);
+        plugin.setControl(this);
+    }
+},
+'serialization', {
+    objectAtPath: function(path) {
+        var parts = path.length == 0 ? "" : path.split('/');
+        var current = this.syncTable;
+        for (var i = 0; current && (i < parts.length); i++) {
+            current = current && current[parts[i]];
+        }
+        return current;
+    },
+    set: function(obj, prop, val) {
+        if (val && Object.isObject(val) && val.__isSmartRef__) {
+            return this.patchRef(obj, prop, val);
+        }
+        if (obj.isMorph && obj.isRendered() ||
+            obj instanceof lively.morphic.Shapes.Shape && obj.hasOwnProperty('_renderContext')) {
+            var propName = prop.capitalize();
+            if (propName.startsWith('_')) propName = propName.substring(1);
+            var setter = obj['set' + propName];
+            if (Object.isFunction(setter)) {
+                return setter.call(obj, val);
             }
-            return current;
-        },
-        set: function(obj, prop, val) {
+        }
+        return obj[prop] = val;
+    },
+    patchRef: function(object, prop, smartRef, newObjs) {
+        if (!newObjs) {
+            this.refPatchQueue.push([object, prop, smartRef.id]);
+        } else {
+            if (newObjs.include(object)) {
+                object[prop] = this.objectAtPath(smartRef);
+            } else {
+                this.set(object, prop, this.objectAtPath(smartRef));
+            }
+        }
+    },
+    recreateObject: function(object) {
+        if (!object || !Object.isObject(object) || object.__isSmartRef__) {
+            return object;
+        }
+        var recreated = Array.isArray(object) ? [] :
+            this.serializer.somePlugin('deserializeObj', [object]) || {};
+        for (var key in object) {
+            if (!object.hasOwnProperty(key)) continue;
+            var val = object[key];
             if (val && Object.isObject(val) && val.__isSmartRef__) {
-                return this.patchRef(obj, prop, val);
-            }
-            if (obj.isMorph && obj.isRendered() ||
-                obj instanceof lively.morphic.Shapes.Shape && obj.hasOwnProperty('_renderContext')) {
-                var propName = prop.capitalize();
-                if (propName.startsWith('_')) propName = propName.substring(1);
-                var setter = obj['set' + propName];
-                if (Object.isFunction(setter)) {
-                    return setter.call(obj, val);
-                }
-            }
-            return obj[prop] = val;
-        },
-        patchRef: function(object, prop, smartRef, newObjs) {
-            if (!newObjs) {
-                this.refPatchQueue.push([object, prop, smartRef.id]);
+                this.patchRef(recreated, key, val);
             } else {
-                if (newObjs.include(object)) {
-                    object[prop] = this.objectAtPath(smartRef);
+                recreated[key] = this.recreateObject(val);
+            }
+        }
+        this.deserializeQueue.push(recreated);
+        return recreated;
+    },
+    tryPatchValueObject: function(obj, key, patch) {
+        var existing = obj[key];
+        function newVal(prop) {
+            return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
+        }
+        if (patch.hasOwnProperty("__LivelyClassName__")) {
+            return false; // do not recreate value object if class was changed
+        } else if (Array.isArray(patch.id) && existing && Object.isObject(existing) &&
+                   (!existing.hasOwnProperty("id") || existing.id != patch.id[0])) {
+            return {__isSmartRef__: true, id: newVal("id")};
+        } else if (existing instanceof lively.Point) {
+            return new lively.Point(newVal("x"), newVal("y"));
+        } else if (existing instanceof lively.Rectangle) {
+            return new lively.Rectangle(newVal("x"), newVal("y"),
+                                        newVal("height"), newVal("width"));
+        } else if (existing instanceof Color) {
+            return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
+        } else if (existing instanceof AttributeConnection) {
+            if (!Array.isArray(obj)) return false;
+            var newCon = existing.clone();
+            this.applyObjectPatch(newCon, patch);
+            return newCon;
+        } else if (existing instanceof lively.Closure) {
+            return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
+        } else if (key == '__serializedLivelyClosures__') {
+            var newClosures = {}
+            Functions.own(obj).forEach(function(funcName) {
+                var func = obj[funcName];
+                if (!func || !func.hasLivelyClosure) return;
+                var closure = func.livelyClosure;
+                newClosures[funcName] = closure;
+                if (!closure.hasFuncSource()) {
+                    closure.setFuncSource(closure.originalFunc.toString());
+                }
+            });
+            obj['__serializedLivelyClosures__'] = newClosures;
+            return false;
+        } else {
+            return false;
+        }
+    },
+    applyObjectPatch: function(obj, patch) {
+        if (!obj || !Object.isObject(obj)) {
+            return this.cannotApplyPatch(obj, patch);
+        }
+        for (var key in patch) {
+            var value = patch[key];
+            if (Array.isArray(value)) { // instruction
+                if (value.length == 3) { // move
+                    value.unshift(0);
+                    this.applyObjectPatch(obj[key], value[2]);
+                } else if (value.length == 2) { // delete
+                    value.unshift(obj[key]);
+                    this.set(obj, key, undefined);
+                    delete obj[key];
+                } else { // add or set
+                    if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
+                    this.set(obj, key, this.recreateObject(value.last()));
+                }
+            } else { // path
+                var patchedValueObject = this.tryPatchValueObject(obj, key, value);
+                if (patchedValueObject) {
+                    var newPatch = [patchedValueObject];
+                    if (obj.hasOwnProperty(key)) newPatch.unshift(obj[key]);
+                    patch[key] = newPatch;
+                    this.set(obj, key, patchedValueObject);
                 } else {
-                    this.set(object, prop, this.objectAtPath(smartRef));
-                }
-            }
-        },
-        recreateObject: function(object) {
-            if (!object || !Object.isObject(object) || object.__isSmartRef__) {
-                return object;
-            }
-            var recreated = Array.isArray(object) ? [] :
-                this.serializer.somePlugin('deserializeObj', [object]) || {};
-            for (var key in object) {
-                if (!object.hasOwnProperty(key)) continue;
-                var val = object[key];
-                if (val && Object.isObject(val) && val.__isSmartRef__) {
-                    this.patchRef(recreated, key, val);
-                } else {
-                    recreated[key] = this.recreateObject(val);
-                }
-            }
-            this.deserializeQueue.push(recreated);
-            return recreated;
-        },
-        tryPatchValueObject: function(obj, key, patch) {
-            var existing = obj[key];
-            function newVal(prop) {
-                return patch.hasOwnProperty(prop) ? patch[prop][0] : existing[prop];
-            }
-            if (patch.hasOwnProperty("__LivelyClassName__")) {
-                return false; // do not recreate value object if class was changed
-            } else if (Array.isArray(patch.id) && existing && Object.isObject(existing) &&
-                       (!existing.hasOwnProperty("id") || existing.id != patch.id[0])) {
-                return {__isSmartRef__: true, id: newVal("id")};
-            } else if (existing instanceof lively.Point) {
-                return new lively.Point(newVal("x"), newVal("y"));
-            } else if (existing instanceof lively.Rectangle) {
-                return new lively.Rectangle(newVal("x"), newVal("y"),
-                                            newVal("height"), newVal("width"));
-            } else if (existing instanceof Color) {
-                return Color.rgba(255*newVal("r"), 255*newVal("g"), 255*newVal("b"), newVal("a"));
-            } else if (existing instanceof AttributeConnection) {
-                if (!Array.isArray(obj)) return false;
-                var newCon = existing.clone();
-                this.applyObjectPatch(newCon, patch);
-                return newCon;
-            } else if (existing instanceof lively.Closure) {
-                return new lively.Closure(null, newVal("varMapping"), newVal("source"), null);
-            } else if (key == '__serializedLivelyClosures__') {
-                var newClosures = {}
-                Functions.own(obj).forEach(function(funcName) {
-                    var func = obj[funcName];
-                    if (!func || !func.hasLivelyClosure) return;
-                    var closure = func.livelyClosure;
-                    newClosures[funcName] = closure;
-                    if (!closure.hasFuncSource()) {
-                        closure.setFuncSource(closure.originalFunc.toString());
-                    }
-                });
-                obj['__serializedLivelyClosures__'] = newClosures;
-                return false;
-            } else {
-                return false;
-            }
-        },
-        applyObjectPatch: function(obj, patch) {
-            if (!obj || !Object.isObject(obj)) {
-                return this.cannotApplyPatch(obj, patch);
-            }
-            for (var key in patch) {
-                var value = patch[key];
-                if (Array.isArray(value)) { // instruction
-                    if (value.length == 3) { // move
-                        value.unshift(0);
-                        this.applyObjectPatch(obj[key], value[2]);
-                    } else if (value.length == 2) { // delete
-                        value.unshift(obj[key]);
-                        this.set(obj, key, undefined);
-                        delete obj[key];
-                    } else { // add or set
-                        if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
-                        this.set(obj, key, this.recreateObject(value.last()));
-                    }
-                } else { // path
-                    var patchedValueObject = this.tryPatchValueObject(obj, key, value);
-                    if (patchedValueObject) {
-                        var newPatch = [patchedValueObject];
-                        if (obj.hasOwnProperty(key)) newPatch.unshift(obj[key]);
-                        patch[key] = newPatch;
-                        this.set(obj, key, patchedValueObject);
-                    } else {
-                        this.applyObjectPatch(obj[key], value);
-                    }
-                }
-            }
-            this.deserializeQueue.pushIfNotIncluded(obj);
-        },
-        findMoveInstructionsInRawObject: function(obj, result) {
-            for (var key in obj) {
-                if (!obj.hasOwnProperty(key)) return;
-                var value = obj[key];
-                if (!value || !Object.isObject(value)) continue;
-                if (value.__isMoveInstruction__) {
-                    var movedObj = this.objectAtPath(value.from);
-                    result.push({from: {obj: movedObj, path: value.from}});
-                    value.from = movedObj;
-                    this.findMoveInstructions(movedObj, value.diff, result);
-                } else {
-                    this.findMoveInstructionsInRawObject(value, result);
-                }
-            }
-        },
-        findMoveInstructions: function(obj, patch, result) {
-            if (!obj || typeof obj != "object") return;
-            for (var key in patch) {
-                var value = patch[key];
-                if (Array.isArray(value)) {
-                    if (value.length == 3) {
-                        // defer actual moving object
-                        result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
-                                     to: {obj: obj, prop: key}});
-                    } else if (value.length == 1 && value[0] && Object.isObject(value[0])) {
-                        this.findMoveInstructionsInRawObject(value[0], result);
-                    }
-                } else {
-                    this.findMoveInstructions(obj[key], value, result);
-                }
-            }
-        },
-        applyMoveInstructions: function(patch) {
-            var moves = [];
-            this.findMoveInstructions(this.syncTable, patch, moves);
-            var arraysToRepair = [];
-            // apply all 'deletions' at once
-            for (var i = 0; i < moves.length; i++) {
-                var fromPath = moves[i].from.path;
-                var lastPart = fromPath.lastIndexOf('/');
-                var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
-                var prop = fromPath.substring(lastPart + 1);
-                if (fromParent) delete fromParent[prop];
-                if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
-            }
-            // repair all arrays
-            arraysToRepair.invoke('repair');
-            // apply all 'additions' at once
-            for (var i = 0; i < moves.length; i++) {
-                if (moves[i].to) { // moves without 'to' are added on-demand
-                                   // (this is needed for new objects which are not yet created)
-                    this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
+                    this.applyObjectPatch(obj[key], value);
                 }
             }
         }
+        this.deserializeQueue.pushIfNotIncluded(obj);
     },
-    'error handling', {
-        cannotApplyPatch: function(obj, patch) {
-            console.error("Cannot apply patch!");
+    findMoveInstructionsInRawObject: function(obj, result) {
+        for (var key in obj) {
+            if (!obj.hasOwnProperty(key)) return;
+            var value = obj[key];
+            if (!value || !Object.isObject(value)) continue;
+            if (value.__isMoveInstruction__) {
+                var movedObj = this.objectAtPath(value.from);
+                result.push({from: {obj: movedObj, path: value.from}});
+                value.from = movedObj;
+                this.findMoveInstructions(movedObj, value.diff, result);
+            } else {
+                this.findMoveInstructionsInRawObject(value, result);
+            }
         }
     },
-    'updating', {
-        connect: function() {
-            this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
-            this.socket.on("snapshot", this.receiveSnapshot.bind(this));
-            this.socket.on("patch", this.receivePatch.bind(this));
-        },
-        join: function(channel) {
-            if (this.channel == channel) {
-                if (this.snapshots) this.loadRev(Object.keys(this.snaphots).last());
-            } else {
-                this.channel = channel;
-            }
-            this.socket.emit('join', this.channel, $world.getUserName());
-        },
-        disconnect: function() {
-            if (this.socket) this.socket.disconnect();
-            delete this.socket;
-            this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
-            this.rev = 0;
-            console.log("disconnected");
-        },
-        receiveSnapshot: function(rev, snapshot) {
-            console.log('received snapshot for rev ' + rev);
-            if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-            if (this.snapshots) {
-                this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
-            } else {
-                this.last = new users.cschuster.sync.Snapshot(snapshot);
-            }
-            this.loadSnapshot(this.last || this.snapshots[rev]);
-            this.rev = rev;
-        },
-        receivePatch: function(rev, patch) {
-            console.log("received patch for rev " + rev);
-            if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-            patch = new users.cschuster.sync.Patch(patch);
-            var last;
-            if (this.snapshots) {
-                last = this.snapshots[this.rev];
-                delete this.snapshots[this.rev];
-                this.patches[this.rev] = patch;
-                this.snapshots[rev] = last;
-            } else {
-                last = this.last;
-            }
-            this.loadPatch(patch.clone());
-            patch.apply(last);
-            this.rev = rev;
-        },
-        loadSnapshot: function(snapshot) {
-            Properties.forEachOwn(this.syncTable, function(key, val) {
-                this.plugins.invoke('removedObj', val.id, val);
-                this.removeObject(val);
-            }, this);
-            var objects = snapshot.recreateObjects();
-            Properties.forEachOwn(objects, function(key, val) {
-                this.addObject(val);
-                this.plugins.invoke('addedObj', val.id, val);
-            }, this);
-        },
-        loadPatch: function(patch) {
-            var oldTable = Object.extend({}, this.syncTable);
-            var newObjs = Object.keys(patch.data).
-                select(function(v) { return Array.isArray(patch.data[v]) &&
-                                            patch.data[v].length < 3 });
-            var hierachicalPatch = patch.toHierachicalPatch().data;
-            this.serializer = users.cschuster.sync.Snapshot.getSerializer();
-            this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
-            this.serializer.wc = this;
-            this.deserializeQueue = [];
-            this.refPatchQueue = [];
-            this.applyMoveInstructions(hierachicalPatch);
-            this.applyObjectPatch(this.syncTable, hierachicalPatch);
-            newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
-            this.refPatchQueue.each(function(ea) {
-                this.patchRef(ea[0], ea[1], ea[2], newObjs);
-            }.bind(this));
-            this.deserializeQueue.each(function(obj) {
-                this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
-            }.bind(this));
-            this.serializer.letAllPlugins('deserializationDone', []);
-            for (var key in hierachicalPatch) {
-                var obj = this.objectAtPath(key);
-                var patch = hierachicalPatch[key];
-                if (Array.isArray(patch)) { // instruction
-                    if (patch.length == 3) { // delete
-                        this.plugins.invoke('removedObj', key, oldTable[key]);
-                    } else { // add
-                        this.plugins.invoke('addedObj', key, this.syncTable[key], patch);
-                    }
-                } else { // set
-                    this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
+    findMoveInstructions: function(obj, patch, result) {
+        if (!obj || typeof obj != "object") return;
+        for (var key in patch) {
+            var value = patch[key];
+            if (Array.isArray(value)) {
+                if (value.length == 3) {
+                    // defer actual moving object
+                    result.push({from: {obj: this.objectAtPath(value[0]), path: value[0]},
+                                 to: {obj: obj, prop: key}});
+                } else if (value.length == 1 && value[0] && Object.isObject(value[0])) {
+                    this.findMoveInstructionsInRawObject(value[0], result);
                 }
-            }
-        },
-        loadRev: function(rev) {
-            if (!this.socket) return;
-            if (!rev) return;
-            if (this.rev == rev) return;
-            this.rev = rev;
-            if (!this.snapshots || !this.snapshots[rev]) {
-                this.socket.emit('checkout', this.channel, this.rev);
             } else {
-                this.loadSnapshot(this.snapshots[rev]);
+                this.findMoveInstructions(obj[key], value, result);
             }
         }
     },
-    'syncing', {
-        addObject: function(obj) {
-            this.syncTable[obj.id] = obj;
-        },
-        removeObject: function(obj) {
-            delete this.syncTable[obj.id];
-        },
-        commit: function() {
-            var current = users.cschuster.sync.Snapshot.createFromObjects(this.syncTable);
-            var last = this.last || this.snapshots[this.rev];
-            var patch = last.diff(current).toPatch();
-            if (patch.isEmpty()) return null;
-            if (this.socket) this.socket.emit('commit', this.channel, this.rev, patch);
-            if (this.snapshots) {
-                this.snapshots[this.rev + 1] = current;
-                this.patches[this.rev + 1] = patch;
-            } else {
-                this.last = current;
-                this.lastPatch = patch;
+    applyMoveInstructions: function(patch) {
+        var moves = [];
+        this.findMoveInstructions(this.syncTable, patch, moves);
+        var arraysToRepair = [];
+        // apply all 'deletions' at once
+        for (var i = 0; i < moves.length; i++) {
+            var fromPath = moves[i].from.path;
+            var lastPart = fromPath.lastIndexOf('/');
+            var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
+            var prop = fromPath.substring(lastPart + 1);
+            if (fromParent) delete fromParent[prop];
+            if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
+        }
+        // repair all arrays
+        arraysToRepair.invoke('repair');
+        // apply all 'additions' at once
+        for (var i = 0; i < moves.length; i++) {
+            if (moves[i].to) { // moves without 'to' are added on-demand
+                               // (this is needed for new objects which are not yet created)
+                this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
-            this.rev++;
-            console.log('commited patch for rev ' + this.rev);
-            return [current.toJSON().length, patch.toJSON().length];
-        },
-        autocommit: function() {
-            var start = Date.now();
-            try {
-                this.commit();
-            } finally {
-                var commitTime = Date.now() - start;
-                this.commitTimeout = setTimeout(
-                    this.autocommit.bind(this),
-                    Math.max(200, commitTime * 5));
-            }
-        },
-        colorTable: {
-            "0": Color.web.firebrick,
-            "1": Color.web.lightcoral,
-            "2": Color.web.royalblue,
-            "3": Color.web.turquoise,
-            "4": Color.web.forestgreen,
-            "5": Color.web.darkgoldenrod,
-            "6": Color.web.darkorange,
-            "7": Color.web.gold,
-            "8": Color.web.mediumorchid,
-            "9": Color.web.lightskyblue,
-            "A": Color.web.yellowgreen,
-            "B": Color.web.darkseagreen,
-            "C": Color.web.dimgray,
-            "D": Color.web.peru,
-            "E": Color.web.lightgrey,
-            "F": Color.web.rosybrown
-        },
-        changeHand: function(activate) {
-            var hand = this.world().firstHand();
-            if (activate) {
-                jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
-                    .appendTo(jQuery("body"));
-                var color = this.colorTable[hand.id.substring(0, 1)];
-                hand.setFill(color);
-                hand.setBorderColor(color.invert());
-                hand.setBounds(pt(0, 0).extent(pt(6, 6)));
-                hand.setBorderWidth(1);
-                this.addObject(hand);
-            } else {
-                jQuery("#nohand").remove();
-                hand.setFill(Color.red);
-                hand.setBounds(pt(0, 0).extent(pt(2, 2)));
-                hand.setBorderWidth(0);
-                this.removeObject(hand);
-            }
-        },
-        startSyncing: function() {
-            if (!this.newHand) { this.newHand = true; this.world().firstHand().setNewId(); }
-            this.changeHand(true);
-            SyncNewMorphs.beGlobal();
-            this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
-        },
-        stopSyncing: function() {
-            clearTimeout(this.commitTimeout);
-            this.commitTimeout = null;
-            SyncNewMorphs.beNotGlobal();
-            this.changeHand(false);
         }
     }
-);
+},
+'error handling', {
+    cannotApplyPatch: function(obj, patch) {
+        console.error("Cannot apply patch!");
+    }
+},
+'updating', {
+    connect: function() {
+        this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
+        this.socket.on("snapshot", this.receiveSnapshot.bind(this));
+        this.socket.on("patch", this.receivePatch.bind(this));
+    },
+    join: function(channel) {
+        if (this.channel == channel) {
+            if (this.snapshots) this.loadRev(Object.keys(this.snaphots).last());
+        } else {
+            this.channel = channel;
+        }
+        this.socket.emit('join', this.channel, $world.getUserName());
+    },
+    disconnect: function() {
+        if (this.socket) this.socket.disconnect();
+        delete this.socket;
+        this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
+        this.rev = 0;
+        console.log("disconnected");
+    },
+    receiveSnapshot: function(rev, snapshot) {
+        console.log('received snapshot for rev ' + rev);
+        if (this.onConnect) { this.onConnect(); delete this.onConnect; }
+        if (this.snapshots) {
+            this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
+        } else {
+            this.last = new users.cschuster.sync.Snapshot(snapshot);
+        }
+        this.loadSnapshot(this.last || this.snapshots[rev]);
+        this.rev = rev;
+    },
+    receivePatch: function(rev, patch) {
+        console.log("received patch for rev " + rev);
+        if (this.onConnect) { this.onConnect(); delete this.onConnect; }
+        patch = new users.cschuster.sync.Patch(patch);
+        var last;
+        if (this.snapshots) {
+            last = this.snapshots[this.rev];
+            delete this.snapshots[this.rev];
+            this.patches[this.rev] = patch;
+            this.snapshots[rev] = last;
+        } else {
+            last = this.last;
+        }
+        this.loadPatch(patch.clone());
+        patch.apply(last);
+        this.rev = rev;
+    },
+    loadSnapshot: function(snapshot) {
+        Properties.forEachOwn(this.syncTable, function(key, val) {
+            this.plugins.invoke('removedObj', val.id, val);
+            this.removeObject(val);
+        }, this);
+        var objects = snapshot.recreateObjects();
+        Properties.forEachOwn(objects, function(key, val) {
+            this.addObject(val);
+            this.plugins.invoke('addedObj', val.id, val);
+        }, this);
+    },
+    loadPatch: function(patch) {
+        var oldTable = Object.extend({}, this.syncTable);
+        var newObjs = Object.keys(patch.data).
+            select(function(v) { return Array.isArray(patch.data[v]) &&
+                                        patch.data[v].length < 3 });
+        var hierachicalPatch = patch.toHierachicalPatch().data;
+        this.serializer = users.cschuster.sync.Snapshot.getSerializer();
+        this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
+        this.serializer.wc = this;
+        this.deserializeQueue = [];
+        this.refPatchQueue = [];
+        this.applyMoveInstructions(hierachicalPatch);
+        this.applyObjectPatch(this.syncTable, hierachicalPatch);
+        newObjs = newObjs.map(function(v) { return this.objectAtPath(v) }.bind(this));
+        this.refPatchQueue.each(function(ea) {
+            this.patchRef(ea[0], ea[1], ea[2], newObjs);
+        }.bind(this));
+        this.deserializeQueue.each(function(obj) {
+            this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
+        }.bind(this));
+        this.serializer.letAllPlugins('deserializationDone', []);
+        for (var key in hierachicalPatch) {
+            var obj = this.objectAtPath(key);
+            var patch = hierachicalPatch[key];
+            if (Array.isArray(patch)) { // instruction
+                if (patch.length == 3) { // delete
+                    this.plugins.invoke('removedObj', key, oldTable[key]);
+                } else { // add
+                    this.plugins.invoke('addedObj', key, this.syncTable[key], patch);
+                }
+            } else { // set
+                this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
+            }
+        }
+    },
+    loadRev: function(rev) {
+        if (!this.socket) return;
+        if (!rev) return;
+        if (this.rev == rev) return;
+        this.rev = rev;
+        if (!this.snapshots || !this.snapshots[rev]) {
+            this.socket.emit('checkout', this.channel, this.rev);
+        } else {
+            this.loadSnapshot(this.snapshots[rev]);
+        }
+    }
+},
+'syncing', {
+    addObject: function(obj) {
+        this.syncTable[obj.id] = obj;
+    },
+    removeObject: function(obj) {
+        delete this.syncTable[obj.id];
+    },
+    commit: function() {
+        var current = users.cschuster.sync.Snapshot.createFromObjects(this.syncTable);
+        var last = this.last || this.snapshots[this.rev];
+        var patch = last.diff(current).toPatch();
+        if (patch.isEmpty()) return null;
+        if (this.socket) this.socket.emit('commit', this.channel, this.rev, patch);
+        if (this.snapshots) {
+            this.snapshots[this.rev + 1] = current;
+            this.patches[this.rev + 1] = patch;
+        } else {
+            this.last = current;
+            this.lastPatch = patch;
+        }
+        this.rev++;
+        console.log('commited patch for rev ' + this.rev);
+        return [current.toJSON().length, patch.toJSON().length];
+    },
+    autocommit: function() {
+        var start = Date.now();
+        try {
+            this.commit();
+        } finally {
+            var commitTime = Date.now() - start;
+            this.commitTimeout = setTimeout(
+                this.autocommit.bind(this),
+                Math.max(200, commitTime * 5));
+        }
+    },
+    colorTable: {
+        "0": Color.web.firebrick,
+        "1": Color.web.lightcoral,
+        "2": Color.web.royalblue,
+        "3": Color.web.turquoise,
+        "4": Color.web.forestgreen,
+        "5": Color.web.darkgoldenrod,
+        "6": Color.web.darkorange,
+        "7": Color.web.gold,
+        "8": Color.web.mediumorchid,
+        "9": Color.web.lightskyblue,
+        "A": Color.web.yellowgreen,
+        "B": Color.web.darkseagreen,
+        "C": Color.web.dimgray,
+        "D": Color.web.peru,
+        "E": Color.web.lightgrey,
+        "F": Color.web.rosybrown
+    },
+    changeHand: function(activate) {
+        var hand = lively.morphic.World.current().firstHand();
+        if (activate) {
+            jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
+                .appendTo(jQuery("body"));
+            if (!this.newHand) { this.newHand = true; hand.setNewId(); }
+            var color = this.colorTable[hand.id.substring(0, 1)];
+            hand.setFill(color);
+            hand.setBorderColor(color.invert());
+            hand.setBounds(pt(0, 0).extent(pt(6, 6)));
+            hand.setBorderWidth(1);
+            this.addObject(hand);
+        } else {
+            jQuery("#nohand").remove();
+            hand.setFill(Color.red);
+            hand.setBounds(pt(0, 0).extent(pt(2, 2)));
+            hand.setBorderWidth(0);
+            this.removeObject(hand);
+        }
+    },
+    startSyncing: function() {
+        this.changeHand(true);
+        SyncNewMorphs.wc = this;
+        SyncNewMorphs.beGlobal();
+        this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
+    },
+    stopSyncing: function() {
+        clearTimeout(this.commitTimeout);
+        this.commitTimeout = null;
+        SyncNewMorphs.beNotGlobal();
+        this.changeHand(false);
+    }
+});
 
 
 cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearizer, {
