@@ -301,6 +301,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var i = 0; current && (i < parts.length); i++) {
             current = current && current[parts[i]];
         }
+        if (!current || !Object.isObject(current)) return this.cannotFindObject(path);
         return current;
     },
     set: function(obj, prop, val) {
