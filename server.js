@@ -188,14 +188,14 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     info: function(cb) {
-        var query = "SELECT MAX(rev) AS rev," +
-                           "MIN(date) AS created," +
-                           "MAX(date) AS latest," +
-                           "SUM(CHAR_LENGTH(data)) AS bytes" +
-                    "FROM history" +
-                    "WHERE obj = $1" +
-                    "GROUP BY obj" +
-                    "ORDER BY username";
+        var query = "SELECT MAX(rev) AS rev, " +
+                           "MIN(date) AS created, " +
+                           "MAX(date) AS latest, " +
+                           "SUM(CHAR_LENGTH(data)) AS bytes " +
+                    "FROM history " +
+                    "WHERE obj = $1 " +
+                    "GROUP BY obj " +
+                    "ORDER BY username ";
         this.db.query(query, [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("info: expected one result");
