@@ -8,11 +8,16 @@ module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').to
 Object.extend(users.cschuster.sync.Snapshot, {
     getSerializer: function() {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
-        var p = new GenericFilter();
-        p.addFilter(function(obj, prop, value) {
+        serializer.plugins.remove(serializer.plugins.find(function(p) {
+            return p instanceof lively.persistence.ClassPlugin;
+        }));
+        var classPlugin = new users.cschuster.sync.ClassPlugin();
+        var syncPlugin = new users.cschuster.sync.SyncPlugin();
+        var worldPlugin = new GenericFilter();
+        worldPlugin.addFilter(function(obj, prop, value) {
             return value && Object.isObject(value) && value.isWorld;
         });
-        serializer.addPlugins([p, new users.cschuster.sync.SyncPlugin()]);
+        serializer.addPlugins([classPlugin, syncPlugin, worldPlugin]);
         serializer.showLog = false;
         return serializer;
     },
@@ -253,6 +258,22 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlu
     },
     ignoreProp: function(obj, propName, value) {
         return obj.doNotSerializeForSync && obj.doNotSerializeForSync.include(propName);
+    }
+});
+
+lively.persistence.ClassPlugin.subclass('users.cschuster.sync.ClassPlugin',
+'plugin interface', {
+    deserializeObj: function($super, persistentCopy) {
+        var moduleNames = [];
+        if (persistentCopy['__SourceModuleName__'])
+            moduleNames.push(persistentCopy['__SourceModuleName__']);
+        if (persistentCopy['requiredModules'])
+            moduleNames.pushAll(persistentCopy['requiredModules']);
+        moduleNames
+            .reject(function(ea) { return ea.startsWith('Global.anonymous_') || ea.include('undefined') })
+            .uniq()
+            .each(function(ea) { var m = module(ea); if (m != Global && !m.isLoaded()) m.load(true) });
+        return $super(persistentCopy);
     }
 });
 
