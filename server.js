@@ -42,7 +42,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     initialize: function(channel, exclusive, cb) {
         this.channel = channel;
         pg.connect(CONNECTION_STRING, function(err, db) {
-            if (err) return console.error(err);
+            if (err) return this.handleError(err);
             this.db = db;
             if (exclusive) {
                 if (!this.mutex[channel]) this.mutex[channel] = new users.cschuster.sync.Mutex();
@@ -52,7 +52,15 @@ Object.subclass('users.cschuster.sync.Repository', {
         }.bind(this));
     },
     
+    handleError: function(err) {
+        console.error(err);
+        if (err instanceof Error) console.error(err.stack);
+        this.release();
+        return null;
+    },
+    
     release: function() {
+        if (!this.channel || !this.mutex[this.channel].locked) return;
         this.mutex[this.channel].release();
     },
     
@@ -67,17 +75,19 @@ Object.subclass('users.cschuster.sync.Repository', {
         this.latestSnapshotRevBefore(rev, function(from) {
             this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [this.channel, from, rev], function(err, result) {
                 try {
-                if (err) return console.error(err);
-                if (result.rows.length < 1) return console.error("checkout: no revision between " + from + " and " + rev);
-                if (result.rows[0].type != "snapshot") return console.error("checkout: expected rev " + from + " to be a snapshot");
-                var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
-                for (var i = 1; i < result.rows.length; i++) {
-                    if (result.rows[i].type != "patch") return console.error("checkout: expected rev " + from + " to be a diff");
-                    var patch = new users.cschuster.sync.Patch(result.rows[i].data);
-                    patch.apply(snapshot);
+                    if (err) return this.handleError(err);
+                    if (result.rows.length < 1) return this.handleError("checkout: no revision between " + from + " and " + rev);
+                    if (result.rows[0].type != "snapshot") return this.handleError("checkout: expected rev " + from + " to be a snapshot");
+                    var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
+                    for (var i = 1; i < result.rows.length; i++) {
+                        if (result.rows[i].type != "patch") return this.handleError("checkout: expected rev " + from + " to be a diff");
+                        var patch = new users.cschuster.sync.Patch(result.rows[i].data);
+                        patch.apply(snapshot);
+                    }
+                    cb(snapshot);
+                } catch (e) {
+                    return this.handleError(err);
                 }
-                cb(snapshot);
-                } catch (e) { console.error(e); console.error(e.stack); console.error("rev="+result.rows[i].rev+" patch="+result.rows[i].data); }
             });
         }.bind(this));
     },
@@ -91,8 +101,8 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     _storedPatch: function(fromRev, toRev, cb) {
         this.db.query("SELECT type, data FROM history WHERE obj = $1 AND rev = $2", [this.channel, rev], function(err, result) {
-            if (err) return console.error(err);
-            if (result.rows.length != 1) return console.error("stored patch: expected one result");
+            if (err) return this.handleError(err);
+            if (result.rows.length != 1) return this.handleError("stored patch: expected one result");
             var data = JSON.parse(results.row[0].data);
             if (result.rows[0].type == "snapshot") {
                 this._computedPatchToSnapshot(fromRev, data, cb);
@@ -118,16 +128,16 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     head: function(cb) {
         this.db.query("SELECT MAX(rev) AS head FROM history WHERE obj = $1", [this.channel], function(err, result) {
-            if (err) return console.error(err);
-            if (result.rows.length != 1) return console.error("head: expected one result");
+            if (err) return this.handleError(err);
+            if (result.rows.length != 1) return this.handleError("head: expected one result");
             cb(result.rows[0].head);
         });
     },
     
     latestSnapshotRevBefore: function(rev, cb) {
         this.db.query("SELECT MAX(rev) AS latest FROM history WHERE obj = $1 AND type = 'snapshot' AND rev <= $2", [this.channel, rev], function(err, result) {
-            if (err) return console.error(err);
-            if (result.rows.length != 1) return console.error("latest snapshot: expected one result");
+            if (err) return this.handleError(err);
+            if (result.rows.length != 1) return this.handleError("latest snapshot: expected one result");
             cb(result.rows[0].latest);
         });
     },
@@ -136,14 +146,14 @@ Object.subclass('users.cschuster.sync.Repository', {
         console.log("creating snapshot for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "snapshot", snapshot.toJSON(), this.username],
-                      cb);
+                      function (err, result) { if (err) return this.handleError(err); cb(result); }.bind(this));
     },
     
     _createPatch: function(rev, patch, cb) {
         console.log("creating patch for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "patch", patch.toJSON(), this.username],
-                      cb);
+                      function (err, result) { if (err) return this.handleError(err); cb(result); }.bind(this));
     },
     
     commit: function(head, patch, cb) {
@@ -160,7 +170,61 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     reset: function(cb) {
-        this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], cb);
+        this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], function(err, res) {
+            if (err) return this.handleError(err);
+            cb(result);
+        }.bind(this));
+    },
+    
+    list: function(cb) {
+        this.db.query("SELECT obj FROM history GROUP BY obj", [], function(err, result) {
+            if (err) return this.handleError(err);
+            var list = [];
+            for (var i = 0; i < result.rows.length; i++) {
+                list.push({name: result.rows[i].obj});
+            }
+            cb(list);
+        }.bind(this));
+    },
+    
+    info: function(cb) {
+        var query = "SELECT MAX(rev) AS rev," +
+                           "MIN(date) AS created," +
+                           "MAX(date) AS latest," +
+                           "SUM(CHAR_LENGTH(data)) AS bytes" +
+                    "FROM history" +
+                    "WHERE obj = $1" +
+                    "GROUP BY obj";
+        this.db.query(query, [this.channel], function(err, result) {
+            if (err) return this.handleError(err);
+            if (result.rows.length != 1) return this.handleError("info: expected one result");
+            var info = {};
+            info.name = this.channel;
+            info.rev = result.rows[0].rev;
+            info.created = result.rows[0].created;
+            info.latest = result.rows[0].latest;
+            info.bytes = result.rows[0].bytes;
+            this.db.query("SELECT username, COUNT(*) AS revisions FROM history WHERE obj = $1 GROUP BY username",
+                          [this.channel], function(err2, result2) {
+                if (err2) return this.handleError(err2);
+                info.contributors = [];
+                for (var i = 0; i < result2.rows.length; i++) {
+                    info.contributors.push({
+                        name: result2.rows[i].username,
+                        revision: result2.rows[i].revisions
+                    });
+                }
+                cb(info);
+            }.bind(this));
+            
+        }.bind(this);
+    },
+    
+    remove: function(cb) {
+        this.db.query("DELETE FROM history WHERE obj = $1", [this.channel], function(err, res) {
+            if (err) return this.handleError(err);
+            cb(result);
+        }.bind(this));
     }
 });
 
@@ -169,11 +233,18 @@ Object.subclass('users.cschuster.sync.Server', {
     initialize: function(socket) {
         this.socket = socket;
         this.username = 'anonymous';
+        // repository interface
         this.socket.on('checkout', this.checkout.bind(this));
         this.socket.on('update', this.update.bind(this));
-        this.socket.on('join', this.join.bind(this));
         this.socket.on('reset', this.reset.bind(this));
         this.socket.on('commit', this.commit.bind(this));
+        // session interface
+        this.socket.on('join', this.join.bind(this));
+        // management interface
+        this.socket.on('list', this.list.bind(this));
+        this.socket.on('info', this.info.bind(this));
+        this.socket.on('create', this.create.bind(this));
+        this.socket.on('remove', this.remove.bind(this));
     },
     
     withRepo: function(channel, exclusive, cb) {
@@ -269,6 +340,35 @@ Object.subclass('users.cschuster.sync.Server', {
                 }
             }.bind(this));
         }.bind(this));
+    },
+    
+    list: function() {
+        console.log("listing channels");
+        this.withRepo(null, false, function(repo) {
+            repo.list(this.socket.emit.bind(this.socket, 'list'));
+        }.bind(this));
+    },
+    
+    info: function(channel) {
+        console.log("requesting info about channel " + channel);
+        this.withRepo(channel, false, function(repo) {
+            repo.info(this.socket.emit.bind(this.socket, 'info'));
+        }.bind(this));
+    },
+    
+    create: function(channel, username) {
+        console.log(username + " creates channel " + channel);
+        this.username = username || 'anonymous';
+        this.withRepo(channel, true, function(repo) {
+            repo.head(function (head) {
+                if (!head) repo.initial();
+            }.bind(this));
+        }.bind(this));
+    },
+
+    remove: function(channel) {
+        console.log("removing channel " + channel);
+        this.withRepo(channel, true, repo.remove.bind(repo));
     }
 });
 
