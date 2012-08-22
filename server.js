@@ -60,8 +60,9 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     release: function() {
-        if (!this.channel || !this.mutex[this.channel].locked) return;
-        this.mutex[this.channel].release();
+        if (!this.channel) return;
+        var mutex = this.mutex[this.channel];
+        if (mutex && mutex.locked) mutex.release();
     },
     
     initial: function(cb) {
@@ -194,8 +195,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                            "SUM(CHAR_LENGTH(data)) AS bytes " +
                     "FROM history " +
                     "WHERE obj = $1 " +
-                    "GROUP BY obj " +
-                    "ORDER BY username ";
+                    "GROUP BY obj ";
         this.db.query(query, [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("info: expected one result");
@@ -205,7 +205,7 @@ Object.subclass('users.cschuster.sync.Repository', {
             info.created = result.rows[0].created;
             info.latest = result.rows[0].latest;
             info.bytes = result.rows[0].bytes;
-            this.db.query("SELECT username, COUNT(*) AS revisions FROM history WHERE obj = $1 GROUP BY username",
+            this.db.query("SELECT username, COUNT(*) AS revisions FROM history WHERE obj = $1 GROUP BY username ORDER BY username",
                           [this.channel], function(err2, result2) {
                 if (err2) return this.handleError(err2);
                 info.contributors = [];
