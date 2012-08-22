@@ -216,8 +216,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                 }
                 cb(info);
             }.bind(this));
-            
-        }.bind(this);
+        }.bind(this));
     },
     
     remove: function(cb) {
