@@ -177,7 +177,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     list: function(cb) {
-        this.db.query("SELECT obj FROM history GROUP BY obj", [], function(err, result) {
+        this.db.query("SELECT obj FROM history GROUP BY obj ORDER BY obj", [], function(err, result) {
             if (err) return this.handleError(err);
             var list = [];
             for (var i = 0; i < result.rows.length; i++) {
@@ -194,7 +194,8 @@ Object.subclass('users.cschuster.sync.Repository', {
                            "SUM(CHAR_LENGTH(data)) AS bytes" +
                     "FROM history" +
                     "WHERE obj = $1" +
-                    "GROUP BY obj";
+                    "GROUP BY obj" +
+                    "ORDER BY username";
         this.db.query(query, [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("info: expected one result");
