@@ -101,10 +101,10 @@ Object.extend(Array.prototype, {
         while (j++ < len) this.pop();
     },
     max: function(iterator, context) {
-        iterator = iterator ? iterator.bind(context) : Functions.K;
+        iterator = iterator ? iterator.bind(context) : function(i){return i};
         var result, resultValue;
         for (var i = 0; i < this.length; i++) {
-            value = iterator(this[i], index);
+            value = iterator(this[i], i);
             if (result == undefined || value >= resultValue) {
                 result = this[i];
                 resultValue = value;
