@@ -1235,7 +1235,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         x.c = y;
         this.assertSync(5);
         delete x.a;
-        debugger;
         this.assertSync(6);
         x.a = y;
         this.assertSync(7);
