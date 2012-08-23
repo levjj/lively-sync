@@ -68,7 +68,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     initial: function(cb) {
         this.db.query("SELECT data FROM history WHERE obj = $1 AND rev = $2", ["demo", 1], function(err, result) {
             var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
-            this._createSnapshot(1, snapshot, function() { if (cb) cb(snapshot); });
+            this._createSnapshot(1, snapshot, function() { cb(snapshot); });
         }.bind(this));
     },
     
@@ -361,14 +361,14 @@ Object.subclass('users.cschuster.sync.Server', {
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
-                if (!head) repo.initial();
+                if (!head) repo.initial(function() { repo.release(); });
             }.bind(this));
         }.bind(this));
     },
 
     remove: function(channel) {
         console.log("removing channel " + channel);
-        this.withRepo(channel, true, function(repo) { repo.remove(); });
+        this.withRepo(channel, true, function(repo) { repo.remove(); repo.release(); });
     }
 });
 
