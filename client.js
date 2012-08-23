@@ -581,7 +581,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         var oldTable = Object.extend({}, this.syncTable);
         var newObjs = Object.keys(patch.data).
             select(function(v) { return Array.isArray(patch.data[v]) &&
-                                        patch.data[v].length < 3 });
+                                        patch.data[v].length < 2 });
         var hierachicalPatch = patch.toHierachicalPatch().data;
         this.serializer = users.cschuster.sync.Snapshot.getSerializer();
         this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
