@@ -641,6 +641,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         var last = this.last || this.snapshots[this.rev];
         var patch = last.diff(current).toPatch();
         if (patch.isEmpty()) return null;
+        debugger;
         if (this.socket) this.socket.emit('commit', this.channel, this.rev, patch);
         if (this.snapshots) {
             this.snapshots[this.rev + 1] = current;
