@@ -205,7 +205,7 @@ Object.subclass('users.cschuster.sync.Repository', {
             info.created = result.rows[0].created;
             info.latest = result.rows[0].latest;
             info.bytes = result.rows[0].bytes;
-            this.db.query("SELECT username, COUNT(*) AS revisions FROM history WHERE obj = $1 GROUP BY username ORDER BY username",
+            this.db.query("SELECT username, COUNT(*) AS revisions FROM history WHERE obj = $1 GROUP BY username ORDER BY revisions DESC",
                           [this.channel], function(err2, result2) {
                 if (err2) return this.handleError(err2);
                 info.contributors = [];
