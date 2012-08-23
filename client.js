@@ -599,17 +599,18 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
         for (var key in hierachicalPatch) {
-            var obj = this.objectAtPath(key);
-            if (!obj) continue;
             var patch = hierachicalPatch[key];
+            var obj = this.syncTable[key];
             if (Array.isArray(patch)) { // instruction
                 if (patch.length == 3) { // delete
                     this.plugins.invoke('removedObj', key, oldTable[key]);
                 } else { // add
-                    this.plugins.invoke('addedObj', key, this.syncTable[key], patch);
+                    if (!obj) continue;
+                    this.plugins.invoke('addedObj', key, obj, patch);
                 }
             } else { // set
-                this.plugins.invoke('updatedObj', key, this.syncTable[key], patch);
+                if (!obj) continue;
+                this.plugins.invoke('updatedObj', key, obj, patch);
             }
         }
     },
