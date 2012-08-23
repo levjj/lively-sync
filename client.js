@@ -487,7 +487,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var fromPath = moves[i].from.path;
             var lastPart = fromPath.lastIndexOf('/');
             var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
-            if (fromParent) continue;
+            if (!fromParent) continue;
             var prop = fromPath.substring(lastPart + 1);
             if (fromParent) delete fromParent[prop];
             if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
