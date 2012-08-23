@@ -563,7 +563,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             last = this.last;
         }
         this.loadPatch(patch.clone());
-        patch.apply(last);
+        try {
+            patch.apply(last);
+        } catch (e) { console.error(e); }
         this.rev = rev;
     },
     loadSnapshot: function(snapshot) {
