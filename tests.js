@@ -1430,6 +1430,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(7);
     },
     testDragAndDropParentMorph: function() {
+        debugger;
         var box = this.addBox("X");
         box.addMorph(this.newBox(3, 3, "Z", Color.web.white));
         this.assertSync(3);
