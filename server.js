@@ -212,7 +212,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                 for (var i = 0; i < result2.rows.length; i++) {
                     info.contributors.push({
                         name: result2.rows[i].username,
-                        revision: result2.rows[i].revisions
+                        revisions: result2.rows[i].revisions
                     });
                 }
                 cb(info);
