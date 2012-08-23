@@ -171,7 +171,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     reset: function(cb) {
-        this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], function(err, res) {
+        this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             cb(result);
         }.bind(this));
