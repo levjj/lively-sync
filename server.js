@@ -68,7 +68,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     initial: function(cb) {
         this.db.query("SELECT data FROM history WHERE obj = $1 AND rev = $2", ["demo", 1], function(err, result) {
             var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
-            this._createSnapshot(1, snapshot, function() { cb(snapshot); });
+            this._createSnapshot(1, snapshot, function() { if (cb) cb(snapshot); });
         }.bind(this));
     },
     
