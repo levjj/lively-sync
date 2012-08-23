@@ -368,7 +368,9 @@ Object.subclass('users.cschuster.sync.Server', {
 
     remove: function(channel) {
         console.log("removing channel " + channel);
-        this.withRepo(channel, true, function(repo) { repo.remove(); repo.release(); });
+        this.withRepo(channel, true, function(repo) {
+        	repo.remove(function() { repo.release(); });
+        });
     }
 });
 
