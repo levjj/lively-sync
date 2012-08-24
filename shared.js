@@ -178,11 +178,11 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         }
         for (var key in this.data.registry) {
             var newKey = mapping.map(key) || key;
-            if (toDelete.hasOwnProperty(newKey)) {
+            if (toDelete.hasOwnProperty(key)) {
                 result[newKey] = Object.clone(this.data.registry[key]);
-                for (var i = 0; i < toDelete[newKey].length; i++) {
+                for (var i = 0; i < toDelete[key].length; i++) {
                     var target = result[newKey];
-                    var path = toDelete[newKey][i];
+                    var path = toDelete[key][i];
                     for (var j = 0; j < path.length - 1; j++) {
                         var newTarget = target[path[j]].clone();
                         target[path[j]] = newTarget;
