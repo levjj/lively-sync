@@ -481,6 +481,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         delete y.b;
         var snapshotB = this.serialize({X:x, Y:y, Z:z});
         var expected = {"Y": ["X/a", {}, 0], "Z": ["X/a/b", {}, 0]};
+        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testMultipleNestedMovesWithEditsAtOnce: function() {
