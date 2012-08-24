@@ -463,6 +463,40 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotF = this.serialize({X:x});
         this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotE, snapshotF);
     },
+    testUnwrapObject: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y"};
+        x.a = y;
+        var snapshotA = this.serialize({X:x});
+        delete x.a;
+        var snapshotB = this.serialize({Y:y});
+        var expected = {"X": [0,0], "Y": ["X/a", {}, 0]};
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testMultipleNestedMovesAtOnce: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y"}, z = {id:"Z", name:"z"};
+        x.a = y;
+        y.b = z;
+        var snapshotA = this.serialize({X:x});
+        delete x.a;
+        delete y.b;
+        var snapshotB = this.serialize({X:x, Y:y, Z:z});
+        var expected = {"Y": ["X/a", {}, 0], "Z": ["X/a/b", {}, 0]};
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
+    testMultipleNestedMovesWithEditsAtOnce: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y"}, z = {id:"Z", name:"z"};
+        x.a = y;
+        y.b = z;
+        var snapshotA = this.serialize({X:x});
+        x.n = 23;
+        y.n = 42;
+        z.n = 69;
+        delete x.a;
+        delete y.b;
+        var snapshotB = this.serialize({X:x, Y:y, Z:z});
+        var expected = {"X": {n: [23]}, "Y": ["X/a", {n: [42]}, 0], "Z": ["X/a/b", {n: [69]}, 0]};
+        this.assertPatch(expected, snapshotA, snapshotB);
+    },
     testIdenticalRectangle: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize(this.table);
