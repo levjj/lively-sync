@@ -163,7 +163,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     patchMoveInstructions: function(mapping) {
         var result = {};
-        /*var toDelete = {};
+        var toDelete = {};
         var rules = mapping.getRules();
         if (rules.length == 0) return this.data.registry;
         for (var i = 0; i < rules.length; i++) {
@@ -175,10 +175,10 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             } while (!this.data.registry.hasOwnProperty(target));
             if (!toDelete[target]) toDelete[target] = [];
             toDelete[target].push(prop);
-        }*/
+        }
         for (var key in this.data.registry) {
             var newKey = mapping.map(key) || key;
-            /*if (toDelete.hasOwnProperty(newKey)) {
+            if (toDelete.hasOwnProperty(newKey)) {
                 result[newKey] = Object.clone(this.data.registry[key]);
                 for (var i = 0; i < toDelete[newKey].length; i++) {
                     var target = result[newKey];
@@ -190,9 +190,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                     }
                     delete target[path.last()];
                 }
-            } else {*/
+            } else {
                 result[newKey] = this.data.registry[key];
-            //}
+            }
         }
         return result;
     },
