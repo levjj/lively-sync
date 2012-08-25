@@ -163,9 +163,15 @@ Object.subclass('users.cschuster.sync.Snapshot', {
     },
     patchMoveInstructions: function(mapping) {
         var result = {};
-        var toDelete = {};
+        // get move mapping
         var rules = mapping.getRules();
         if (rules.length == 0) return this.data.registry;
+        // implicit smartrefs pointing to the origin of a
+        // move  instruction need to get deleted
+        // so collect these smartrefs in a data structure like this:
+        //   {X: [["a"], ["b","1"]]}
+        //   (which means to delete X.a and X.b.1)
+        var toDelete = {};
         for (var i = 0; i < rules.length; i++) {
             var path = rules[i].from.split('/');
             var prop = [];
@@ -176,20 +182,33 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             if (!toDelete[target]) toDelete[target] = [];
             toDelete[target].push(prop);
         }
+        // now map all entries in the current registry to the new registry
         var arraysToRepair = [];
         for (var key in this.data.registry) {
             var newKey = mapping.map(key) || key;
+            // move instruction have priority over normal copying
+            // e.g. if you have the mapping X -> Y and this snapshot is [X.Y]
+            //      then the result would be [Y] with Y being the moved X
+            if (newKey == key && result.hasOwnProperty(key)) continue;
             if (toDelete.hasOwnProperty(key)) {
+                // if a smartref of the current registry entry needs to
+                // be deleted, clone the object as not to manipulate
+                // this snapshot
                 result[newKey] = Object.clone(this.data.registry[key]);
                 for (var i = 0; i < toDelete[key].length; i++) {
                     var target = result[newKey];
                     var path = toDelete[key][i];
+                    // walk the path of to the property
                     for (var j = 0; j < path.length - 1; j++) {
                         var newTarget = target[path[j]].clone();
                         target[path[j]] = newTarget;
                         target = newTarget;
                     }
                     delete target[path.last()];
+                    // array elements can be deleted using the normal
+                    // delete operation with the last part of the path being the index
+                    // but afterwards these manipulated arrays need to get repaired
+                    // so that there is no missmatch between length and array elements
                     if (Array.isArray(target)) arraysToRepair.pushIfNotIncluded(target);
                 }
             } else {
