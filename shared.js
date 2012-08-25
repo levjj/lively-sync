@@ -552,7 +552,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         return o;
     },
     apply: function(snapshot) {
-        this.processMoveInstructions(snapshot);
+        this.processMoveInstructions(snapshot.data);
         this.prepareToPatch(snapshot.data);
         this.applyPatch(snapshot.data, null, this.data);
     },
