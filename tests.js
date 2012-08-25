@@ -1313,7 +1313,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         x.a[0] = y;
         this.assertSync(7);
         x.a.removeAt(0);
-        debugger;
         this.assertSync(8);
     },
     testResize: function() {
