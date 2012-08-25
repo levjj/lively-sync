@@ -262,6 +262,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             var toKey = moveMapping.map(key);
             if (toKey) moves.push({from: key, obj: snapshot.registry[key], to: toKey});
         }
+        // sort moves so that children are removed before their parents
+        moves = moves.sortBy(function(ea) { return ea.from.length; }).reverse();
         // apply all 'deletions' at once
         for (var i = 0; i < moves.length; i++) {
             delete snapshot.registry[moves[i].from]; // delete entry in registry
