@@ -1280,6 +1280,25 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         y.addMorph(x);
         this.assertSync(3);
     },
+    testUnwrapObject: function() {
+        var x = this.addBox("X");
+        var y = this.newBox(20, 30, "Y");
+        x.addMorph(y);
+        this.assertSync(3);
+        this.openInWorldA(y);
+        this.assertSync(4);
+    },
+    testMultipleUnwrapsAtOnce: function() {
+        var x = this.addBox("X");
+        var y = this.newBox(20, 30, "Y");
+        var z = this.newBox(20, 30, "Y");
+        x.addMorph(y);
+        y.addMorph(z);
+        this.assertSync(3);
+        this.openInWorldA(y);
+        this.openInWorldA(z);
+        this.assertSync(4);
+    },
     testArray: function() {
         var x = this.addBox(), y = this.newBox(1, 2, "Y"), z = this.newBox(3, 4, "Z");
         x.a = [];
