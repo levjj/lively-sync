@@ -176,6 +176,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             if (!toDelete[target]) toDelete[target] = [];
             toDelete[target].push(prop);
         }
+        var arraysToRepair = [];
         for (var key in this.data.registry) {
             var newKey = mapping.map(key) || key;
             if (toDelete.hasOwnProperty(key)) {
@@ -189,10 +190,15 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                         target = newTarget;
                     }
                     delete target[path.last()];
+                    if (Array.isArray(target)) arraysToRepair.pushIfNotIncluded(target);
                 }
             } else {
                 result[newKey] = this.data.registry[key];
             }
+        }
+        // repair arrays
+        for (var i = 0; i < arraysToRepair.length; i++) {
+            arraysToRepair[i].repair();
         }
         return result;
     },
