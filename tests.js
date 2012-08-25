@@ -1372,7 +1372,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
         y.remove();
         box.addMorph(y);
-        debugger;
         this.assertSync(4);
         z.remove();
         box.addMorph(z);
