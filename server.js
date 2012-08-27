@@ -82,9 +82,9 @@ Object.subclass('users.cschuster.sync.Repository', {
     checkout: function(rev, cb) {
         console.error("DEBUG: checkout");
         this.latestSnapshotRevBefore(rev, function(from) {
-            if (this.counter++ > 100) return this.handleError("stack overflow");
+            console.error("DEBUG: checkout > 1");
             this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [this.channel, from, rev], function(err, result) {
-                if (this.counter++ > 100) return this.handleError("stack overflow");
+                console.error("DEBUG: checkout > 2");
                 try {
                     if (err) return this.handleError(err);
                     if (result.rows.length < 1) return this.handleError("checkout: no revision between " + from + " and " + rev);
