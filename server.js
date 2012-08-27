@@ -56,7 +56,10 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     handleError: function(err) {
+        console.error("DEBUG: now displaying error");
+        console.error(typeof err);
         console.error(err);
+        console.error("DEBUG: done displaying error");
         if (err instanceof Error) console.error(err.stack);
         this.release();
         return null;
