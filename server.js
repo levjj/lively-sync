@@ -22,9 +22,7 @@ Object.subclass('users.cschuster.sync.Mutex', {
     },
     lock: function (fn) {
         if (this.locked) {
-            this.queue.once('ready', function () {
-                this.lock(fn);
-            }.bind(this));
+            this.queue.once('ready', this.lock.bind(this, fn));
         } else {
             this.locked = true;
             fn();
@@ -107,7 +105,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                     console.error("DEBUG: checkout > 9");
                 } catch (e) {
                     console.error("DEBUG: checkout > E");
-                    return this.handleError(err);
+                    return this.handleError(e);
                 }
             });
         }.bind(this));
