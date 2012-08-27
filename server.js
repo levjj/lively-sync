@@ -41,15 +41,19 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     initialize: function(channel, exclusive, cb) {
         this.channel = channel;
-        pg.connect(CONNECTION_STRING, function(err, db) {
-            if (err) return this.handleError(err);
-            this.db = db;
-            if (exclusive) {
-                if (!this.mutex[channel]) this.mutex[channel] = new users.cschuster.sync.Mutex();
-                return this.mutex[channel].lock(cb.bind(this, this));
-            }
-            cb(this);
-        }.bind(this));
+        var doConnect = function() {
+            pg.connect(CONNECTION_STRING, function(err, db) {
+                if (err) return this.handleError(err);
+                this.db = db;
+                cb(this);
+            }.bind(this));
+        }.bind(this);
+        if (exclusive) {
+            if (!this.mutex[channel]) this.mutex[channel] = new users.cschuster.sync.Mutex();
+            return this.mutex[channel].lock(doConnect);
+        } else {
+            doConnect();
+        }
     },
     
     handleError: function(err) {
@@ -256,7 +260,7 @@ Object.subclass('users.cschuster.sync.Server', {
     
     checkout: function(channel, rev) {
         console.log("checking out rev " + rev);
-        this.withRepo(false, function(repo) {
+        this.withRepo(channel, false, function(repo) {
             repo.checkout(rev, function(snapshot) {
                 this.socket.emit('snapshot', rev, snapshot.data);
             }.bind(this));
@@ -320,7 +324,11 @@ Object.subclass('users.cschuster.sync.Server', {
                 } else {
                     //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
                     //TODO: diff3 not implemented yet in jsondiffpatch
-                    console.error("received outdated patch");
+                    if (oldRev > head) {
+                        console.error("received patch based on a non-server version");
+                    } else {
+                        console.error("received outdated patch");
+                    }
                     repo.release();
                     /*Seq([oldRev, head])
                     .parMap(function (rev) {
@@ -362,7 +370,11 @@ Object.subclass('users.cschuster.sync.Server', {
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
-                if (!head) repo.initial(function() { repo.release(); });
+                if (!head) {
+                    repo.initial(function() { repo.release(); });
+                } else {
+                    repo.release();
+                }
             }.bind(this));
         }.bind(this));
     },
