@@ -578,7 +578,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }, this);
     },
     loadPatch: function(patch) {
-        debugger;
         var oldTable = Object.extend({}, this.syncTable);
         var newObjs = Object.keys(patch.data).
             select(function(v) { return Array.isArray(patch.data[v]) &&
