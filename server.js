@@ -40,6 +40,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     mutex: {},
     
     initialize: function(channel, exclusive, cb) {
+        console.err("initialize");
         this.channel = channel;
         var doConnect = function() {
             pg.connect(CONNECTION_STRING, function(err, db) {
@@ -64,22 +65,22 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     release: function() {
+        console.err("release");
         if (!this.channel) return;
         var mutex = this.mutex[this.channel];
         if (mutex && mutex.locked) mutex.release();
     },
     
     initial: function(cb) {
+        console.err("initial");
         this.db.query("SELECT data FROM history WHERE obj = $1 AND rev = $2", ["demo", 1], function(err, result) {
             var snapshot = users.cschuster.sync.Snapshot.empty();
             this._createSnapshot(1, snapshot, function() { cb(snapshot); });
         }.bind(this));
     },
     
-    counter: 0,
-    
     checkout: function(rev, cb) {
-        if (this.counter++ > 100) return this.handleError("stack overflow");
+        console.err("checkout");
         this.latestSnapshotRevBefore(rev, function(from) {
             if (this.counter++ > 100) return this.handleError("stack overflow");
             this.db.query("SELECT rev, type, data FROM history WHERE obj = $1 AND rev >= $2 AND rev <= $3 ORDER BY rev", [this.channel, from, rev], function(err, result) {
@@ -103,6 +104,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _computedPatchToSnapshot: function(fromRev, toSnapshot, cb) {
+        console.err("_computedPatchToSnapshot");
         this.checkout(fromRev, function(fromSnapshot) {
             var diff = fromSnapshot.diff(toSnapshot);
             if (diff) cb(diff.toPatch());
@@ -110,6 +112,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _storedPatch: function(fromRev, toRev, cb) {
+        console.err("_storedPatch");
         this.db.query("SELECT type, data FROM history WHERE obj = $1 AND rev = $2", [this.channel, rev], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("stored patch: expected one result");
@@ -123,12 +126,14 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _computedPatch: function(fromRev, toRev, cb) {
+        console.err("_computedPatch");
         this.checkout(toRev, function(toSnapshot) {
             this._computedDiffToSnapshot(fromRev, toSnapshot, cb);
         }.bind(this));
     },
     
     patch: function(fromRev, toRev, cb) {
+        console.err("patch");
         if (toRev - fromRev == 1) {
             this._storedPatch(fromRev, toRev, cb);
         } else {
@@ -137,6 +142,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     head: function(cb) {
+        console.err("head");
         this.db.query("SELECT MAX(rev) AS head FROM history WHERE obj = $1", [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("head: expected one result");
@@ -145,6 +151,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     latestSnapshotRevBefore: function(rev, cb) {
+        console.err("latestSnapshotRevBefore");
         this.db.query("SELECT MAX(rev) AS latest FROM history WHERE obj = $1 AND type = 'snapshot' AND rev <= $2", [this.channel, rev], function(err, result) {
             if (err) return this.handleError(err);
             if (result.rows.length != 1) return this.handleError("latest snapshot: expected one result");
@@ -153,6 +160,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _createSnapshot: function(rev, snapshot, cb) {
+        console.err("_createSnapshot");
         console.log("creating snapshot for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "snapshot", snapshot.toJSON(), this.username],
@@ -160,6 +168,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _createPatch: function(rev, patch, cb) {
+        console.err("_createPatch");
         console.log("creating patch for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "patch", patch.toJSON(), this.username],
@@ -167,6 +176,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     commit: function(head, patch, cb) {
+        console.err("commit");
         this.latestSnapshotRevBefore(head, function(latest) {
             if (head - latest > DIFFS_PER_SNAPSHOT) {
                 this.checkout(head, function(snapshot) {
@@ -180,6 +190,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     reset: function(cb) {
+        console.err("reset");
         this.db.query("DELETE FROM history WHERE obj = $1 AND rev > 1", [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             cb(result);
@@ -187,6 +198,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     list: function(cb) {
+        console.err("list");
         this.db.query("SELECT obj FROM history GROUP BY obj ORDER BY obj", [], function(err, result) {
             if (err) return this.handleError(err);
             var list = [];
@@ -198,6 +210,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     info: function(cb) {
+        console.err("info");
         var query = "SELECT MAX(rev) AS rev, " +
                            "MIN(date) AS created, " +
                            "MAX(date) AS latest, " +
@@ -230,6 +243,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     remove: function(cb) {
+        console.err("remove");
         this.db.query("DELETE FROM history WHERE obj = $1", [this.channel], function(err, result) {
             if (err) return this.handleError(err);
             cb(result);
