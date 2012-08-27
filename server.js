@@ -87,16 +87,26 @@ Object.subclass('users.cschuster.sync.Repository', {
                 console.error("DEBUG: checkout > 2");
                 try {
                     if (err) return this.handleError(err);
+                    console.error("DEBUG: checkout > 3");
                     if (result.rows.length < 1) return this.handleError("checkout: no revision between " + from + " and " + rev);
+                    console.error("DEBUG: checkout > 4");
                     if (result.rows[0].type != "snapshot") return this.handleError("checkout: expected rev " + from + " to be a snapshot");
+                    console.error("DEBUG: checkout > 5");
                     var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
+                    console.error("DEBUG: checkout > 6");
                     for (var i = 1; i < result.rows.length; i++) {
+                        console.error("DEBUG: checkout > 7a");
                         if (result.rows[i].type != "patch") return this.handleError("checkout: expected rev " + from + " to be a diff");
+                        console.error("DEBUG: checkout > 7b");
                         var patch = new users.cschuster.sync.Patch(result.rows[i].data);
+                        console.error("DEBUG: checkout > 7c");
                         patch.apply(snapshot);
                     }
+                    console.error("DEBUG: checkout > 8");
                     cb(snapshot);
+                    console.error("DEBUG: checkout > 9");
                 } catch (e) {
+                    console.error("DEBUG: checkout > E");
                     return this.handleError(err);
                 }
             });
