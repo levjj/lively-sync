@@ -1232,7 +1232,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
     testEmptyDiff: function() {
         this.addBox();
         this.assertSync(2);
-        this.sync(); //sync
+        this.sync();
         this.assertSync(2);
     },
     testRemoveMorph: function() {
