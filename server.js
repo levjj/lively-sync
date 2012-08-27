@@ -110,7 +110,7 @@ Object.subclass('users.cschuster.sync.Repository', {
                     console.error("DEBUG: checkout > E");
                     return this.handleError(e);
                 }
-            });
+            }.bind(this));
         }.bind(this));
     },
     
