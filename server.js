@@ -282,7 +282,7 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
                 var success = function(snapshot) {
-                    this.socket.emit('snapshot', head, snapshot.data);
+                    this.socket.emit('snapshot', head || 1, snapshot.data);
                     this.socket.join(channel);
                     this.socket.broadcast.to(channel).emit('joined', this.username);
                     repo.release();
