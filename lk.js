@@ -122,7 +122,10 @@ Object.extend(Array.prototype, {
     },
     pushIfNotIncluded: function(item) {
         if (this.indexOf(item) < 0) this.push(item);
-    }
+    },
+    clone: function() {
+        return [].concat(this);
+    },
 });
 
 Object.extend(String.prototype, {
@@ -137,6 +140,9 @@ Object.extend(Object, {
             if (object.hasOwnProperty(key)) return false;
         return true;
     },
+    clone: function(object) {
+        return Array.isArray(object) ? object.clone() : Object.extend({}, object);
+    }
 });
 
 Object.subclass('Properties');
