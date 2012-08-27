@@ -1531,7 +1531,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
            with regard to fixedWidth and setMinWidth
            this.assertSync(3); */
         this.assertSync(3, false, true);
-        debugger;
     }
 });
 
