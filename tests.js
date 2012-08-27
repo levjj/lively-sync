@@ -1523,6 +1523,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
     },
     testWindow: function() {
         var box = this.addBox("X");
+        box.setExtent(pt(80,40));
         this.worldA.internalAddWindow(box, box.name, pt(40, 20));
         this.wcA.removeObject(box);
         this.wcA.addObject(box.owner);
