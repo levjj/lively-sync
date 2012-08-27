@@ -321,6 +321,7 @@ Object.subclass('users.cschuster.sync.Server', {
                     //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
                     //TODO: diff3 not implemented yet in jsondiffpatch
                     console.error("received outdated patch");
+                    repo.release();
                     /*Seq([oldRev, head])
                     .parMap(function (rev) {
                         repo.checkout(rev, this.bind(this, null));
