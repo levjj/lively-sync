@@ -88,7 +88,9 @@ users.cschuster.sync.Patch.addMethods({
 
 Object.subclass('users.cschuster.sync.Plugin', {
     setControl: function(control) { this.control = control; },
-    afterPatching: function(obj, patch) {}
+    add: function(objects) {},
+    afterPatching: function(objects, patch) {},
+    remove: function(objects) {}
 });
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
@@ -97,9 +99,15 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         this.world = world || lively.morphic.World.current();
     }
 },
-'adding', {
+'loading', {
+    add: function(objects) {
+        var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
+        Properties.forEachOwn(objects, function(name, morph) {
+            this.world.addMorph(morph, firstHand);
+        }, this);
+    },
 },
-'setting', {
+'patching', {
     fixSceneGraph: function(obj, patch, parentMorph) {
         for (var key in patch) {
             var value = patch[key];
@@ -207,12 +215,20 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (isTextChunks) delete obj.cachedTextString;
         }
     },
-    afterPatching: function(obj, patch) {
-        this.fixClosures(obj, patch);
-        this.fixSceneGraph(obj, patch, this.world);
-        this.deleteConnections(obj, patch);
-        this.addConnections(obj, patch);
-        this.fixTextChunks(obj, patch);
+    afterPatching: function(objects, patch) {
+        this.fixClosures(objects, patch);
+        this.fixSceneGraph(objects, patch, this.world);
+        this.deleteConnections(objects, patch);
+        this.addConnections(objects, patch);
+        this.fixTextChunks(objects, patch);
+    }
+},
+'removing', {
+    remove: function(objects) {
+        var firstHand = this.world.firstHand();
+        Properties.forEachOwn(objects, function(name, morph) {
+            if (obj != firstHand) morph.remove();
+        }, this);
     }
 });
 
@@ -556,15 +572,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.rev = rev;
     },
     loadSnapshot: function(snapshot) {
-        Properties.forEachOwn(this.syncTable, function(key, val) {
-            this.plugins.invoke('removedObj', val.id, val);
-            this.removeObject(val);
-        }, this);
-        var objects = snapshot.recreateObjects();
-        Properties.forEachOwn(objects, function(key, val) {
-            this.addObject(val);
-            this.plugins.invoke('addedObj', val.id, val);
-        }, this);
+        this.plugins.invoke('remove', this.syncTable);
+        this.syncTable = snapshot.recreateObjects();
+        this.plugins.invoke('add', this.syncTable);
     },
     loadPatch: function(patch) {
         var oldTable = Object.extend({}, this.syncTable);
