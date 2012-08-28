@@ -592,7 +592,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
-        this.plugins.invoke('afterPatching', hierachicalPatch);
+        this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
     },
     loadRev: function(rev) {
         if (!this.socket) return;
