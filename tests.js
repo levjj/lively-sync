@@ -1553,11 +1553,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlowTest',
-'asserting', {
-    assertSync: function($super, rev, dirty) {
-        $super(rev, dirty);
-    }
-},
 'testing', {
     testTextEditing: function() {
         var ws = this.worldA.openWorkspace();
