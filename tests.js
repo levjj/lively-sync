@@ -1556,7 +1556,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
 'asserting', {
     assertSync: function($super, rev, dirty) {
         $super(rev, dirty);
-        /* additional assertions */
     }
 },
 'testing', {
