@@ -1200,7 +1200,9 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
             this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
             this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
         }
-        this.assertHandsInFront();
+        this.assertHandsInFront(this.worldA);
+        this.assertHandsInFront(this.worldB);
+        this.assertHandsInFront(this.worldC);
     },
     assertIdenticalToSnapshot: function(leftSnapshot, rightTable) {
         var rightSnapshot = users.cschuster.sync.Snapshot.createFromObjects(rightTable);
@@ -1219,6 +1221,18 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
             var patch = copy.diff(this.wcA.last).toPatch();
             patch.apply(copy);
             this.assertEqualState(copy, this.wcA.last);
+        }
+    },
+    assertHandsInFront: function(world) {
+        // hands must be rendered in front of other morphs which
+        // means that they must come last in the submorphs array of the world
+        var seenAHand = false;
+        for (var i = 0; i < world.submorphs.length; i++) {
+            if (!seenAHand) {
+                if (world.submorphs[i].isHand) seenAHand = true;
+            } else {
+                this.assert(world.submorphs[i].isHand);
+            }
         }
     }
 },
