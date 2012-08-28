@@ -88,9 +88,7 @@ users.cschuster.sync.Patch.addMethods({
 
 Object.subclass('users.cschuster.sync.Plugin', {
     setControl: function(control) { this.control = control; },
-    addedObj: function(key, obj, optPatch) {},
-    updatedObj: function(key, obj, patch) {},
-    removedObj: function(key, obj) {}
+    afterPatching: function(obj, patch) {}
 });
 
 users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
