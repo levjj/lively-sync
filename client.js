@@ -129,12 +129,12 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                         if (parentMorph == this.world && value.length == 4 && Array.isArray(value[2].owner)) {
                             // need to reset owner to old value for proper removing in addMorph
                             obj[key].owner = value[2].owner.first();
-                            //var transform = obj[key].getTransform();
+                            var transform = obj[key].getTransform();
                         }
                         var length = parentMorph.submorphs.length;
                         parentMorph.addMorph(obj[key],
                                              key < length ? parentMorph.submorphs[key + 1] : null);
-                        //if (transform) obj[key].setTransform(transform);
+                        if (transform) obj[key].setTransform(transform);
                     }
                 } else if (key == "owner" && value.length == 2) {
                     var newOwner = obj.owner;
