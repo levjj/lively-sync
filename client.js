@@ -592,21 +592,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
-        for (var key in hierachicalPatch) {
-            var patch = hierachicalPatch[key];
-            var obj = this.syncTable[key];
-            if (Array.isArray(patch)) { // instruction
-                if (patch.length == 3) { // delete
-                    this.plugins.invoke('removedObj', key, oldTable[key]);
-                } else { // add
-                    if (!obj) continue;
-                    this.plugins.invoke('addedObj', key, obj, patch);
-                }
-            } else { // set
-                if (!obj) continue;
-                this.plugins.invoke('updatedObj', key, obj, patch);
-            }
-        }
+        this.plugins.invoke('afterPatching', hierachicalPatch);
     },
     loadRev: function(rev) {
         if (!this.socket) return;
