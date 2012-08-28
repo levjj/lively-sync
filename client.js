@@ -123,7 +123,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     obj.removeAllMorphs();
                 } else if (parentMorph) {
                     if (value.length == 3) { // delete
-                        value.shift().remove();
+                        var morph = value.shift()
+                        if (morph !== this.world.firstHand()) morph.remove();
                     } else { // add, set or move
                         var length = parentMorph.submorphs.length;
                         parentMorph.addMorph(obj[key],
@@ -211,17 +212,12 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (isTextChunks) delete obj.cachedTextString;
         }
     },
-    updatedObj: function(key, obj, patch) {
+    afterPatching: function(obj, patch) {
         this.fixClosures(obj, patch);
-        this.fixSceneGraph(obj, patch);
+        this.fixSceneGraph(obj, patch, this.world);
         this.deleteConnections(obj, patch);
         this.addConnections(obj, patch);
         this.fixTextChunks(obj, patch);
-    }
-},
-'deleting', {
-    removedObj: function(key, obj) {
-        if (obj !== this.world.firstHand()) obj.remove();
     }
 });
 
