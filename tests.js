@@ -1535,6 +1535,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
     testOpenPart: function() {
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
         this.wcA.addObject(rect);
+        debugger;
         this.assertSync(2);
     },
     testWindow: function() {
