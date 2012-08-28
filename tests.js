@@ -1564,8 +1564,12 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
     testInspecting: function() {
         var insp = this.worldA.openInspectorFor(this.addBox());
         this.wcA.addObject(insp);
-        this.sync(3);
-        this.assert(true, "for now just test that it doesn't crash");
+        this.assertSync(3);
+    },
+    testStyleEditor: function() {
+        var insp = this.worldA.openStyleEditorFor(this.addBox());
+        this.wcA.addObject(insp);
+        this.assertSync(3);
     }
 });
 
