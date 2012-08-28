@@ -226,7 +226,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         result[morph.id][0].__SourceModuleName__ = "Global.lively.morphic.AdditionalMorphs";
         var raw = {
             "/shape": {dontChangeShape:false, cachedVertices:null, _PathElements:[],
-                       _BorderWidth:1, _NodeClass:["Morph","Path"],
+                       _BorderWidth:1,
                        __LivelyClassName__:"lively.morphic.Shapes.Path",
                        __SourceModuleName__:"Global.lively.morphic.PathShapes"},
             "/shape/_Position": {"x":-1,"y":-1,__LivelyClassName__:"Point",
