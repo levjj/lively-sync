@@ -128,7 +128,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     } else { // add, set or move
                         if (value.length == 4 && Array.isArray(value[2].owner)) {
                             // need to reset owner to old value for proper removing in addMorph
-                            obj.owner = value[2].owner.first();
+                            obj[key].owner = value[2].owner.first();
                             //transform = obj.getTransform();
                         }
                         var length = parentMorph.submorphs.length;
