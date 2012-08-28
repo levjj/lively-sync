@@ -202,7 +202,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
             "/renderContextTable": rect.renderContextTable,
-            "/shape": {_NodeClass:["Morph","Box"],
+            "/shape": {
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes"},
             "/shape/_Extent": {"x":width,"y":height,__LivelyClassName__:"Point",
