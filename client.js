@@ -101,8 +101,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
 },
 'loading', {
     add: function(objects) {
-        var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
         Properties.forEachOwn(objects, function(name, morph) {
+            var firstHand = this.world.submorphs.find(function(m) { return m.isHand });
             this.world.addMorph(morph, firstHand);
         }, this);
     },
