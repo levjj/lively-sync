@@ -114,11 +114,13 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                     } else { // add, set or move
                         var length = parentMorph.submorphs.length;
                         var morphBefore = key < length ? parentMorph.submorphs[key + 1] : null;
-                        if (parentMorph == this.world && value.length == 4 && Array.isArray(value[2].owner)) {
-                            // need to reset owner to old value for proper removing in addMorph
-                            obj[key].owner = value[2].owner.first();
-                            var transform = obj[key].getTransform();
+                        if (parentMorph == this.world) {
                             morphBefore = this.world.submorphs.find(function(m) { return m.isHand });
+                            if (value.length == 4 && Array.isArray(value[2].owner)) {
+                                // need to reset owner to old value for proper removing in addMorph
+                                obj[key].owner = value[2].owner.first();
+                                var transform = obj[key].getTransform();
+                            }
                         }
                         parentMorph.addMorph(obj[key], morphBefore);
                         if (transform) obj[key].setTransform(transform);
