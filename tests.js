@@ -1548,7 +1548,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         /* The label of the window title bar is broken
            with regard to fixedWidth and setMinWidth
            this.assertSync(3); */
-        debugger;
         this.assertSync(3, false, true);
     }
 });
