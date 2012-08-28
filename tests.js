@@ -1537,9 +1537,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         debugger;
         this.assertSync(2);
     },
-    newMethod: function() {
-        // enter comment here
-    },
+
 
     testWindow: function() {
         var box = this.addBox("X");
