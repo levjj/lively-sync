@@ -227,7 +227,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     remove: function(objects) {
         var firstHand = this.world.firstHand();
         Properties.forEachOwn(objects, function(name, morph) {
-            if (obj != firstHand) morph.remove();
+            if (morph != firstHand) morph.remove();
         }, this);
     }
 });
