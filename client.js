@@ -132,7 +132,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                             // need to reset owner to old value for proper removing in addMorph
                             obj[key].owner = value[2].owner.first();
                             var transform = obj[key].getTransform();
-                            morphBefore = this.world.firstHand();
+                            morphBefore = this.world.submorphs.find(function(m) { return m.isHand });
                         }
                         parentMorph.addMorph(obj[key], morphBefore);
                         if (transform) obj[key].setTransform(transform);
