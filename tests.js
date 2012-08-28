@@ -1200,6 +1200,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
             this.assertIdenticalDOM(this.wcA.syncTable, this.wcB.syncTable);
             this.assertIdenticalDOM(this.wcA.syncTable, this.wcC.syncTable);
         }
+        this.assertHandsInFront();
     },
     assertIdenticalToSnapshot: function(leftSnapshot, rightTable) {
         var rightSnapshot = users.cschuster.sync.Snapshot.createFromObjects(rightTable);
