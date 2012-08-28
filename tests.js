@@ -1287,6 +1287,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         x.addMorph(y);
         this.assertSync(3);
         this.openInWorldA(y);
+        debug;
         this.assertSync(4);
     },
     testMultipleUnwrapsAtOnce: function() {
