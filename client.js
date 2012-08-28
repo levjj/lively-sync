@@ -342,7 +342,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (Object.isFunction(setter)) {
                 return setter.call(obj, val);
             }
-            if (prop == 'owner') { debugger; obj.remove(); }
+            //if (prop == 'owner') { debugger; obj.remove(); }
         }
         return obj[prop] = val;
     },
