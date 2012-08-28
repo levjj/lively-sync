@@ -1118,6 +1118,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
         this.worldA = this.world;
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
         this.worldC = lively.morphic.World.createOn(document.body, new Rectangle(600,0,300,300));
+        lively.morphic.World.currentWorld = this.worldA;
         this.wcA = new users.cschuster.sync.WorkingCopy();
         this.wcA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
         this.wcB = new users.cschuster.sync.WorkingCopy();
