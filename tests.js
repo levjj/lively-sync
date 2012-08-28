@@ -1241,6 +1241,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(1);
     },
     testAddMorph: function() {
+        debugger;
         this.addBox();
         this.assertSync(2);
     },
