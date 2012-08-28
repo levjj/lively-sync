@@ -1481,6 +1481,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         for (var i = 0; i < this.worldA.submorphs.length; i++) {
             this.wcA.addObject(this.worldA.submorphs[i]);
         }
+        debugger;
         this.assertSync(5);
     },
     testDragAndDropSubmorph: function() {
