@@ -875,7 +875,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
         return result;
     },
     hand: function() {
-        return this.div(this.div({attributes: {class: 'Morph HandMorph'}}));
+        return this.div(this.div());
     },
     diffToEmpty: function() {
         var table = this.control.syncTable;
