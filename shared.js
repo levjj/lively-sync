@@ -31,7 +31,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
                 // (rules are sorted by length of from so that the most specific rule comes last)
                 var ruleLength = rule.from.length;
                 if (ruleLength > fromLength || (ruleLength == fromLength && from < rule.from)) {
-                    this.rules.pushAt({from: from, to: to}, i);
+                    this.rules.splice(i, 0, {from: from, to: to});
                     added = true;
                 }
             } else {
