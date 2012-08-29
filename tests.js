@@ -1610,7 +1610,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         var editor = this.worldA.openStyleEditorFor(this.addBox());
         this.wcA.addObject(editor);
         this.assertSync(3);
-        debugger;
     }
 });
 
