@@ -1552,11 +1552,18 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         var container = new lively.morphic.TabContainer();
         this.openInWorldA(container);
         this.assertSync(2);
-        var tab = container.addTabLabeled('New Tab');
+        var tab1 = container.addTabLabeled('New Tab');
         this.assertSync(3);
-        var tab = container.addTabLabeled('New Tab');
-        this.assertSync(3);
-        tab.addMorph(this.newBox());
+        tab1.addMorph(this.newBox(40, 20, "Y", Color.web.red));
+        this.assertSync(4);
+        var tab2 = container.addTabLabeled('Another Tab');
+        this.assertSync(5);
+        tab2.addMorph(this.newBox(40, 40, "Z", Color.web.green));
+        this.assertSync(6);
+        container.activateTab(tab2);
+        this.assertSync(7);
+        container.activateTab(tab1);
+        this.assertSync(8);
     }
 });
 
