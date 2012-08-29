@@ -1568,11 +1568,11 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         /* The label of the window title bar is broken
            with regard to fixedWidth and setMinWidth
            this.assertSync(3); */
+        this.assertSync(2, false, true);
+        window.toggleCollapse();
         this.assertSync(3, false, true);
         window.toggleCollapse();
         this.assertSync(4, false, true);
-        window.toggleCollapse();
-        this.assertSync(5, false, true);
     },
     testTabs: function() {
         debugger;
