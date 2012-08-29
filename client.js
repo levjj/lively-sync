@@ -130,7 +130,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                                 var transform = obj[key].getTransform();
                             }
                         }
-                        if (obj[key] instanceof lively.morphic.TabPane) delete obj[key].owner;
+                        if (obj[key] instanceof lively.morphic.TabPane) continue;
                         parentMorph.addMorph(obj[key], morphBefore);
                         if (transform) obj[key].setTransform(transform);
                     }
