@@ -249,8 +249,9 @@ lively.morphic.Text.addMethods(
 'serialization', {
     doNotSerializeForSync: ['textString', 'cachedTextString']
 });
-Object.extend(SomeObject, {
-    m1: function() {},
+lively.morphic.Tab.addMethods('serialization', {
+    onstore: function() {},
+    onrestore: function() {}
 });
 
 lively.morphic.TextChunk.addMethods({
