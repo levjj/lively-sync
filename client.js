@@ -237,6 +237,9 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }, this);
     }
 });
+Object.extend(SomeObject, {
+    m1: function() {},
+});
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairArraysPlugin',
 'plugin interface', {
