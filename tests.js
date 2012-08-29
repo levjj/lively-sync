@@ -1572,6 +1572,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3, false, true);
     },
     testTabs: function() {
+        debugger;
         var container = new lively.morphic.TabContainer();
         this.openInWorldA(container);
         this.assertSync(2);
