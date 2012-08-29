@@ -618,8 +618,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.deserializeQueue.each(function(obj) {
             this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
         }.bind(this));
-        this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
         this.serializer.letAllPlugins('deserializationDone', []);
+        this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
     },
     loadRev: function(rev) {
         if (!this.socket) return;
