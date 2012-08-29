@@ -1561,7 +1561,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(2);
     },
     testWindow: function() {
-        debugger;
         var box = this.newBox(80, 40, "X", Color.web.red);
         this.worldA.internalAddWindow(box, box.name, pt(10, 10));
         var window = box.owner;
