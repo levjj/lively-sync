@@ -1561,18 +1561,17 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(2);
     },
     testWindow: function() {
-        var box = this.addBox("X");
-        box.setExtent(pt(80,40));
+        var box = this.newBox(80, 40, "X", Color.web.red);
         this.worldA.internalAddWindow(box, box.name, pt(10, 10));
-        this.wcA.removeObject(box);
-        this.wcA.addObject(box.owner);
+        var window = box.owner;
+        this.wcA.addObject(window);
         /* The label of the window title bar is broken
            with regard to fixedWidth and setMinWidth
            this.assertSync(3); */
         this.assertSync(3, false, true);
-        box.owner.toggleCollapse();
+        window.toggleCollapse();
         this.assertSync(4, false, true);
-        box.owner.toggleCollapse();
+        window.toggleCollapse();
         this.assertSync(5, false, true);
     },
     testTabs: function() {
