@@ -250,8 +250,12 @@ lively.morphic.Text.addMethods(
     doNotSerializeForSync: ['textString', 'cachedTextString']
 });
 lively.morphic.Tab.addMethods('serialization', {
-    onstore: function() {},
-    onrestore: function() {}
+    onstore: function() {
+        this.isInActivationCycle = true;
+    },
+    onrestore: function() {
+        delete this.isInActivationCycle;
+    }
 });
 
 lively.morphic.TextChunk.addMethods({
