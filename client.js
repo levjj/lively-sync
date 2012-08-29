@@ -237,8 +237,13 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         }, this);
     }
 });
-Object.extend(SomeObject, {
-    m1: function() {},
+lively.morphic.TabPane.addMethods({
+    remove: function($super) {
+        var tab = this.getTab();
+        if (tab) tab.isInActivationCycle = true;
+        $super();
+        if (tab) delete tab.isInActivationCycle;
+    }
 });
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairArraysPlugin',
