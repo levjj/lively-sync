@@ -138,15 +138,17 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(container);
         var tab1 = container.addTabLabeled('New Tab');
         this.assertSerialize(container);
-        tab1.addMorph(this.newBox(40, 20, "Y", Color.web.red));
+        container.submorphs[1].addMorph(this.newBox(40, 20, "Y", Color.web.red));
         this.assertSerialize(container);
         var tab2 = container.addTabLabeled('Another Tab');
         this.assertSerialize(container);
-        tab2.addMorph(this.newBox(40, 40, "Z", Color.web.green));
-        this.assertSerialize(container);
         container.activateTab(tab2);
         this.assertSerialize(container);
+        container.submorphs[1].addMorph(this.newBox(40, 40, "Z", Color.web.green));
+        this.assertSerialize(container);
         container.activateTab(tab1);
+        this.assertSerialize(container);
+        container.activateTab(tab2);
         this.assertSerialize(container);
     }
 
