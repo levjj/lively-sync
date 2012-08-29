@@ -1576,20 +1576,19 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.openInWorldA(container);
         this.assertSync(2);
         var tab1 = container.addTabLabeled('New Tab');
-        debugger;
-        this.assertSync(3);
+        this.assertSync(3, false, true);
         container.submorphs[1].addMorph(this.newBox(40, 20, "Y", Color.web.red));
-        this.assertSync(4);
+        this.assertSync(4, false, true);
         var tab2 = container.addTabLabeled('Another Tab');
-        this.assertSync(5);
+        this.assertSync(5, false, true);
         container.activateTab(tab2);
-        this.assertSync(6);
+        this.assertSync(6, false, true);
         container.submorphs[1].addMorph(this.newBox(40, 40, "Z", Color.web.green));
-        this.assertSync(7);
+        this.assertSync(7, false, true);
         container.activateTab(tab1);
-        this.assertSync(8);
+        this.assertSync(8, false, true);
         container.activateTab(tab2);
-        this.assertSync(9);
+        this.assertSync(9, false, true);
     }
 });
 
