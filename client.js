@@ -130,6 +130,8 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                                 var transform = obj[key].getTransform();
                             }
                         }
+                        //FIXME: addMorph also invoked "Tab.remove()" which is broken
+                        //       instead of skipping the addMorph for tabs we should rather fix it
                         if (obj[key] instanceof lively.morphic.TabPane) continue;
                         if (obj[key] instanceof lively.morphic.Tab) continue;
                         parentMorph.addMorph(obj[key], morphBefore);
