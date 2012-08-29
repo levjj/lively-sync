@@ -346,6 +346,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
         return obj[prop] = val;
     },
+},
+'patching', {
     patchRef: function(object, prop, smartRef, newObjs) {
         if (!newObjs) {
             this.refPatchQueue.push([object, prop, smartRef.id]);
@@ -448,6 +450,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }
         this.deserializeQueue.pushIfNotIncluded(obj);
     },
+},
+'moving', {
     findMoveInstructionsInRawObject: function(obj, result) {
         for (var key in obj) {
             if (!obj.hasOwnProperty(key)) return;
@@ -484,9 +488,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
         }
     },
-    applyMoveInstructions: function(patch) {
-        var moves = [];
-        this.findMoveInstructions(this.syncTable, patch, moves);
+    removeObjectsFromOldLocations: function(moves) {
         var arraysToRepair = [];
         // apply all 'deletions' at once
         for (var i = 0; i < moves.length; i++) {
@@ -495,11 +497,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var fromParent = this.objectAtPath(fromPath.substring(0, lastPart));
             if (!fromParent) continue;
             var prop = fromPath.substring(lastPart + 1);
-            if (fromParent) delete fromParent[prop];
+            delete fromParent[prop];
             if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
         }
         // repair all arrays
-        arraysToRepair.invoke('repair');
+        arraysToRepair.invoke('repair');        
+    },
+    addObjectsToNewLocations: function(moves) {
         // apply all 'additions' at once
         for (var i = 0; i < moves.length; i++) {
             if (moves[i].to) { // moves without 'to' are added on-demand
@@ -507,6 +511,12 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
                 this.set(moves[i].to.obj, moves[i].to.prop, moves[i].from.obj);
             }
         }
+    },
+    applyMoveInstructions: function(patch) {
+        var moves = [];
+        this.findMoveInstructions(this.syncTable, patch, moves);
+        this.removeObjectsFromOldLocations(moves);
+        this.addObjectsToNewLocations(moves);
     }
 },
 'error handling', {
