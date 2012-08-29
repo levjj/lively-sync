@@ -490,7 +490,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     },
     removeObjectsFromOldLocations: function(moves) {
         var arraysToRepair = [];
-        // apply all 'deletions' at once
+        // apply all 'deletions' at once, starting with deepest nested object (longest path)
+        moves.sort(function(left,right) { return left.from.path.length < right.from.path.length ? -1 : 1});
         for (var i = 0; i < moves.length; i++) {
             var fromPath = moves[i].from.path;
             var lastPart = fromPath.lastIndexOf('/');
@@ -501,7 +502,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             if (Array.isArray(fromParent)) arraysToRepair.pushIfNotIncluded(fromParent);
         }
         // repair all arrays
-        arraysToRepair.invoke('repair');        
+        arraysToRepair.invoke('repair');
     },
     addObjectsToNewLocations: function(moves) {
         // apply all 'additions' at once
