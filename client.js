@@ -3,7 +3,7 @@
  * (morphic integration, etc.)
  */
 
-module('users.cschuster.sync.client').requires('users.cschuster.sync.shared').toRun(function() {
+module('users.cschuster.sync.client', 'lively.morphic.AdditionalMorphs').requires('users.cschuster.sync.shared').toRun(function() {
 
 Object.extend(users.cschuster.sync.Snapshot, {
     getSerializer: function() {
