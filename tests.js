@@ -1553,7 +1553,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.openInWorldA(container);
         this.assertSync(2);
         var tab1 = container.addTabLabeled('New Tab');
-        debugger;
         this.assertSync(3);
         tab1.addMorph(this.newBox(40, 20, "Y", Color.web.red));
         this.assertSync(4);
