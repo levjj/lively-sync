@@ -731,13 +731,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 
 cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
     addMorph: function(morph, optMorphBefore) {
+        var result = cop.proceed(morph, optMorphBefore);
         SyncNewMorphs.wc.addObject(morph);
-        return cop.proceed(morph, optMorphBefore);
+        return result;
     },
     removeMorph: function(morph) {
+        var result = cop.proceed(morph);
         if (!morph.isHand)
             SyncNewMorphs.wc.removeObject(morph);
-        return cop.proceed(morph);
+        return result;
     }
 });
 
