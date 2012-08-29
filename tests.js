@@ -134,7 +134,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
     },
     testTabs: function() {
         var container = new lively.morphic.TabContainer();
-        this.openInWorld(container);
+        container.openInWorld();
         this.assertSerialize(container);
         var tab1 = container.addTabLabeled('New Tab');
         this.assertSerialize(container);
@@ -148,7 +148,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(container);
         container.activateTab(tab1);
         this.assertSerialize(container);
-
     }
 
 });
