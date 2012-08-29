@@ -1549,7 +1549,14 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3, false, true);
     },
     testTabBar: function() {
-        
+        var container = new lively.morphic.TabContainer();
+        this.openInWorldA(container);
+        this.assertSync(2);
+        var tab = container.addTabLabeled('New Tab');
+        this.assertSync(3);
+        var tab = container.addTabLabeled('New Tab');
+        this.assertSync(3);
+        tab.addMorph(this.newBox());
     }
 });
 
