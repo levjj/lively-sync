@@ -132,7 +132,11 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                         }
                         //FIXME: addMorph also invoked "Tab.remove()" which is broken
                         //       instead of skipping the addMorph for tabs we should rather fix it
+                        if (obj[key] instanceof lively.morphic.Tab)
+                            obj[key].isInActivationCycle = true;
                         parentMorph.addMorph(obj[key], morphBefore);
+                        if (obj[key] instanceof lively.morphic.Tab)
+                            delete obj[key].isInActivationCycle;
                         if (transform) obj[key].setTransform(transform);
                     }
                 } else if (key == "owner" && value.length == 2) {
