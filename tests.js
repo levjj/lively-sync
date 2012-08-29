@@ -1537,8 +1537,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.addObject(rect);
         this.assertSync(2);
     },
-
-
     testWindow: function() {
         var box = this.addBox("X");
         box.setExtent(pt(80,40));
@@ -1549,6 +1547,9 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
            with regard to fixedWidth and setMinWidth
            this.assertSync(3); */
         this.assertSync(3, false, true);
+    },
+    testTabBar: function() {
+        
     }
 });
 
