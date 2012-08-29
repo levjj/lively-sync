@@ -115,6 +115,9 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         this.assertSerialize(text);
         text.beLabel();
         this.assertSerialize(text);
+        var text = new lively.morphic.Text(bounds, "text");
+        text.setFontWeight('bold');
+        this.assertSerialize(text);
     },
     testPart: function() {
         this.assertSerialize(this.world.openPartItem("Rectangle", "PartsBin/Basic"));
