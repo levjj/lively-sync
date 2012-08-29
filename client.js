@@ -131,6 +131,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                             }
                         }
                         if (obj[key] instanceof lively.morphic.TabPane) continue;
+                        if (obj[key] instanceof lively.morphic.Tab) continue;
                         parentMorph.addMorph(obj[key], morphBefore);
                         if (transform) obj[key].setTransform(transform);
                     }
