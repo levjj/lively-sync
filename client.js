@@ -139,7 +139,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                             delete obj[key].isInActivationCycle;
                         if (transform) obj[key].setTransform(transform);
                     }
-                } else if (key == "owner" && value.length == 2) {
+                } else if (key == "owner" && value.length == 2 && value[0]) {
                     var newOwner = obj.owner;
                     value[0].removeMorph(obj); // previous owner
                     if (newOwner) obj.owner = newOwner;
