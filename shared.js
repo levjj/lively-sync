@@ -556,7 +556,6 @@ Object.subclass('users.cschuster.sync.Diff', {
             if (d._t == 'a') { // array diff
                 if (typeof target != 'object' || !Array.isArray(target)) {
                     //throw new Error('cannot apply patch: array expected');
-                    return;
                 }
                 for (var p in d) {
                     if (p !== '_t' && d.hasOwnProperty(p)) {
@@ -567,7 +566,6 @@ Object.subclass('users.cschuster.sync.Diff', {
             } else { // object diff
                 if (typeof target != 'object' || Array.isArray(target)) {
                     //throw new Error('cannot apply patch: object expected');
-                    return;
                 }
                 for (var p in d) {
                     if (d.hasOwnProperty(p)) {
