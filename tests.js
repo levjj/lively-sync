@@ -1602,7 +1602,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.worldA.currentMenu = box;
         this.openInWorldA(box);
         this.assertSync(2);
-        this.worldA.firstHand().removeOpenMenu();
+        
         this.assertSync(3);
     }
 
