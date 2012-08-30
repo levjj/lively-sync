@@ -603,6 +603,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.plugins.invoke('add', this.syncTable);
     },
     loadPatch: function(patch) {
+        SkipDialogs.beGlobal();
         var oldTable = Object.extend({}, this.syncTable);
         var newObjs = Object.keys(patch.data).
             select(function(v) { return Array.isArray(patch.data[v]) &&
@@ -624,6 +625,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
         this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
+        SkipDialogs.beNotGlobal();
     },
     loadRev: function(rev) {
         if (!this.socket) return;
