@@ -1596,7 +1596,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(8, false, true);
         container.activateTab(tab2);
         this.assertSync(9, false, true);
-    }
+    },
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlowTest',
