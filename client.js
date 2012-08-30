@@ -794,11 +794,14 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         }
     }
 }).beGlobal();
-cop.create('MyLayer').refineClass(MyClass, {
-    methodName: function(arg1) {
-        var result = cop.proceed(arg1);
-        return result
-undefined},
+cop.create("SkipDialogs").refineClass(lively.morphic.World, {
+    openDialog: function(dialog) {
+        if (dialog instanceof lively.morphic.ConfirmDialog) {
+            dialog.callback(true);
+        } else {
+            cop.proceed(dialog);
+        }
+    }
 });
 
 });
