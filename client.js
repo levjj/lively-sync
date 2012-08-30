@@ -737,6 +737,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
     addMorph: function(morph, optMorphBefore) {
         var result = cop.proceed(morph, optMorphBefore);
+        if (!isNaN(morph.id)) morph.setNewId();
+        morph.withAllSubmorphsDo(function(m) {
+            if (!isNaN(m.id)) m.setNewId();
+        });
         SyncNewMorphs.wc.addObject(morph);
         return result;
     },
