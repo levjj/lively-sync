@@ -1573,6 +1573,8 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3, false, true);
         window.toggleCollapse();
         this.assertSync(4, false, true);
+        window.remove();
+        this.assertSync(5, false, true);
     },
     testTabs: function() {
         debugger;
