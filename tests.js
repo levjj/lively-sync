@@ -1574,7 +1574,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         window.toggleCollapse();
         this.assertSync(4, false, true);
         window.remove();
-        debugger;
+        this.wcA.removeObject(window);
         this.assertSync(5);
     },
     testTabs: function() {
