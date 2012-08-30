@@ -1605,9 +1605,9 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(2);
         debugger;
         this.worldA.firstHand().removeOpenMenu(evt(10,10)); // inside: nothing should happen
-        this.assertSync(3);
+        this.assertSync(2);
         this.worldA.firstHand().removeOpenMenu(evt(10,30)); // outside: remove menu
-        this.assertSync(4);
+        this.assertSync(3);
     },
 });
 
