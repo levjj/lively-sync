@@ -1604,6 +1604,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(2);
         function evt(x,y) { return {getPosition: function() { return pt(x,y); }}};
         this.worldA.firstHand().removeOpenMenu(evt(10,10)); // inside: nothing should happen
+        debugger;
         this.assertSync(3);
         this.worldA.firstHand().removeOpenMenu(evt(10,30)); // outside: remove menu
         this.assertSync(4);
