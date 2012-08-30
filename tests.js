@@ -1598,11 +1598,11 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(9, false, true);
     },
     testMenu: function() {
+        function evt(x,y) { return {getPosition: function() { return pt(x,y); }}};
         var box = this.newBox(40, 20, "X", Color.web.blue);
         this.worldA.currentMenu = box;
         this.openInWorldA(box);
         this.assertSync(2);
-        function evt(x,y) { return {getPosition: function() { return pt(x,y); }}};
         debugger;
         this.worldA.firstHand().removeOpenMenu(evt(10,10)); // inside: nothing should happen
         this.assertSync(3);
