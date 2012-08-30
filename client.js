@@ -738,6 +738,7 @@ cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
     addMorph: function(morph, optMorphBefore) {
         var result = cop.proceed(morph, optMorphBefore);
         SyncNewMorphs.wc.addObject(morph);
+        if (!isNaN(morph.id)) morph.setNewId();
         return result;
     },
     removeMorph: function(morph) {
