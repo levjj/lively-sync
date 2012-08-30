@@ -1598,7 +1598,12 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(9, false, true);
     },
     testMenu: function() {
-        
+        var box = this.newBox(40, 20, "X", Color.web.blue);
+        this.worldA.currentMenu = box;
+        this.openInWorldA(box);
+        this.assertSync(2);
+        this.worldA.firstHand().removeOpenMenu();
+        this.assertSync(3);
     }
 
 });
