@@ -1608,7 +1608,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
         this.worldA.firstHand().removeOpenMenu(evt(10,30)); // outside: remove menu
         this.assertSync(4);
-    }
+    },
 
 });
 
