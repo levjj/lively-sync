@@ -1629,6 +1629,11 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         var editor = this.worldA.openStyleEditorFor(this.addBox());
         this.wcA.addObject(editor);
         this.assertSync(3);
+    },
+    testPartsBin: function() {
+        var partsBin = this.worldA.openPartsBin();
+        this.wcA.addObject(partsBin);
+        this.assertSync(3);
     }
 });
 
