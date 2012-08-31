@@ -259,8 +259,8 @@ lively.morphic.Text.addMethods(
 'serialization', {
     doNotSerializeForSync: ['textString', 'cachedTextString']
 });
-Object.extend(SomeObject, {
-    m1: function() {},
+lively.morphic.Morph.addMethods({
+    doNotSerialize: ["partsBinMetaInfo"]
 });
 lively.morphic.Button.addMethods(
 'serialization', {
