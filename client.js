@@ -264,7 +264,7 @@ lively.morphic.Morph.addMethods({
 });
 lively.morphic.Button.addMethods(
 'serialization', {
-    doNotSerializeForSync: ['fire']
+    doNotSerializeForSync: ['partsBinMetaInfo', 'fire']
 });
 lively.morphic.TextChunk.addMethods({
     doNotSerializeForSync: ['_id', 'debugMode']
