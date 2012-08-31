@@ -1635,8 +1635,10 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.wcA.addObject(partsBin);
         this.assertSync(2);
     },
-    newMethod: function() {
-        // enter comment here
+    testChineseCheckers: function() {
+        var game = this.worldA.openPartItem('ChineseCheckers', 'PartsBin/Games', false);
+        this.wcA.addObject(game);
+        this.assertSync(2);
     }
 
 });
