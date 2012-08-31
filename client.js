@@ -678,7 +678,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var commitTime = Date.now() - start;
             this.commitTimeout = setTimeout(
                 this.autocommit.bind(this),
-                Math.max(50, commitTime * 1));
+                Math.max(100, commitTime * 2));
         }
     },
     colorTable: {
