@@ -257,7 +257,7 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairA
 
 lively.morphic.Text.addMethods(
 'serialization', {
-    doNotSerializeForSync: ['partsBinMetaInfo', 'textString', 'cachedTextString', 'partTests']
+    doNotSerializeForSync: ['partsBinMetaInfo', 'partTests', 'textString', 'cachedTextString']
 });
 lively.morphic.Morph.addMethods({
     doNotSerializeForSync: ['partsBinMetaInfo', 'partTests']
