@@ -1631,7 +1631,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(3);
     },
     testPartsBin: function() {
-        var partsBin = this.worldA.openPartsBin();
+        var partsBin = this.worldA.openPartItem('PartsBinBrowser', 'PartsBin/Tools', false);
         this.wcA.addObject(partsBin);
         this.assertSync(3);
     }
