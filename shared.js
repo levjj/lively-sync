@@ -344,6 +344,10 @@ Object.subclass('users.cschuster.sync.Diff', {
         // always keep empty objects and arrays in raw mode
         return false;
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
     coalesceDiff: function(obj, id) {
         // discards smartrefs
         // returns true if that part of the diff is empty
