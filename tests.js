@@ -457,7 +457,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch({"X/a/0": [{name:"y"}], "X/a/1": [{name:"z"}]}, snapshotA, snapshotC);
         x.a[0] = z;
         var snapshotD = this.serialize({X:x});
-        var expected = {"X":{a:{_t:"a",1:{id:["X/a/0"]}}},"X/a/0":{name:["z"]},"X/a/1":[0,0]};
+        var expected = {"X":{a:{1:{id:["X/a/0"]}}},"X/a/0":{name:["z"]},"X/a/1":[0,0]};
         this.assertPatch(expected, snapshotC, snapshotD);
         x.a.removeAt(0);
         x.a[0] = y;
@@ -466,7 +466,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotD, snapshotE);
         x.a.removeAt(0);
         var snapshotE = this.serialize({X:x});
-        this.assertPatch({"X":{a:{_t: "a", 1:[0,0]}}, "X/a/0": [0, 0]}, snapshotD, snapshotE);
+        this.assertPatch({"X":{a:{1:[0,0]}}, "X/a/0": [0, 0]}, snapshotD, snapshotE);
     },
     testArrayWithReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
