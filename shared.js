@@ -68,7 +68,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         for (var i = 0; i < Math.max(n.length, o.length); i++) {
             var idiff = this.jsonDiff(o[i], n[i], mapping);
             if (typeof idiff != 'undefined') {
-                if (typeof adiff == 'undefined') adiff = {_t: "a"};
+                if (typeof adiff == 'undefined') adiff = {};
                 adiff[i] = idiff;
             }
         }
