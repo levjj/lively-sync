@@ -554,26 +554,15 @@ Object.subclass('users.cschuster.sync.Diff', {
             }
         } else { // path to changes value
             var target = pname === null ? o : o[pname];
-            if (d._t == 'a') { // array diff
-                if (typeof target != 'object' || !Array.isArray(target)) {
-                    throw new Error('cannot apply patch: array expected');
-                }
-                for (var p in d) {
-                    if (p !== '_t' && d.hasOwnProperty(p)) {
-                        this.applyPatch(target, p, d[p]);
-                    }
-                }
-                target.repair();
-            } else { // object diff
-                if (typeof target != 'object' || Array.isArray(target)) {
-                    throw new Error('cannot apply patch: object expected');
-                }
-                for (var p in d) {
-                    if (d.hasOwnProperty(p)) {
-                        this.applyPatch(target, p, d[p]);
-                    }
+            if (typeof target != 'object') {
+                throw new Error('cannot apply patch: object expected');
+            }
+            for (var p in d) {
+                if (d.hasOwnProperty(p)) {
+                    this.applyPatch(target, p, d[p]);
                 }
             }
+            if (Array.isArray(target)) target.repair();
         }
         return o;
     },
