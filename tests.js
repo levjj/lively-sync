@@ -498,8 +498,35 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotF = this.serialize({X:x});
         this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotE, snapshotF);
     },
-    newMethod: function() {
-        // enter comment here
+    testNestedArrayWithReferences: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var x = {id:"X", name: "x", a: []}, y = {id:"Y", name: "y"}, z = {id:"Z", name: "z"};
+        var snapshotA = this.serialize({X:x});
+        x.a.push(y);
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X/a/0": [{id: "Y", name:"y"}]}, snapshotA, snapshotB);
+        x.a.push(z);
+        var snapshotC = this.serialize({X:x});
+        this.assertPatch({"X/a/1": [{id: "Z", name:"z"}]}, snapshotB, snapshotC);
+        this.assertPatch({"X/a/0": [{id: "Y", name:"y"}], "X/a/1": [{id: "Z", name:"z"}]}, snapshotA, snapshotC);
+        x.a[0] = z;
+        var snapshotD = this.serialize({X:x});
+        var expected = {"X":{a:{1:ref("X/a/0")}},"X/a/0":["X/a/1", {}, 0]};
+        this.assertPatch(expected, snapshotC, snapshotD);
+        x.a.pop();
+        var snapshotD2 = this.serialize({X:x});
+        var expected = {"X/a/0":["X/a/1", {}, 0]};
+        this.assertPatch(expected, snapshotC, snapshotD2);
+        x.a.push(z);
+        x.a[0] = y;
+        var snapshotE = this.serialize({X:x});
+        var expected = {"X": {a: {0: {id: ["X/a/0"]}}},
+                        "X/a/0":[{id: "Y", name: "y"}],
+                        "X/a/1": ["X/a/0", {}, 0]};
+        this.assertPatch(expected, snapshotD, snapshotE);
+        x.a.removeAt(0);
+        var snapshotF = this.serialize({X:x});
+        this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotE, snapshotF);
     },
 
     testUnwrapObject: function() {
