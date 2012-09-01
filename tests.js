@@ -498,8 +498,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotF = this.serialize({X:x});
         this.assertPatch({"X/a/0": ["X/a/1", {}, 0]}, snapshotE, snapshotF);
     },
-    newMethod: function() {
-        // enter comment here
+    testNestedArray: function() {
+        var x = {id:"X", name: "x", a: [["w"]]};
+        var snapshotA = this.serialize({X:x});
+        x.a.push(["h"]);
+        var snapshotB = this.serialize({X:x});
+        this.assertPatch({"X": {a: {1: [["h"]]}}}, snapshotA, snapshotB);
     },
 
     testNestedArrayWithReferences: function() {
