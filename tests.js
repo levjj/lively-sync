@@ -288,6 +288,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var snapshotD = this.serialize({X: {name: "X"}});
         this.assertPatch({X: {a:[0,0]}}, snapshotC, snapshotD);
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
     testTopLevelReferences: function() {
         function ref(id) { return [{__isSmartRef__: true, id: id}]; }
         var x = {id:"X", name:"x"}, y = {id:"y", name:"Y"}, z = {id:"Z", name:"z"};
