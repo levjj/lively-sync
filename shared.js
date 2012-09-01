@@ -344,13 +344,6 @@ Object.subclass('users.cschuster.sync.Diff', {
         // always keep empty objects and arrays in raw mode
         return false;
     },
-    isEmptyDiff: function(obj) {
-        for (var key in obj) {
-            if (obj.hasOwnProperty(key) && key != "_t") return false;
-        }
-        return true;
-    },
-
     coalesceDiff: function(obj, id) {
         // discards smartrefs
         // returns true if that part of the diff is empty
@@ -382,12 +375,12 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
         // object or array
         Properties.forEachOwn(obj, function(key, value) {
-            if (key != "_t" && this.coalesceDiff(value, id + "/" + key)) {
+            if (this.coalesceDiff(value, id + "/" + key)) {
                 delete obj[key];
             }
         }, this);
         // remove this part of the diff if there are no children
-        return this.isEmptyDiff(obj);
+        return Object.isEmpty(obj);
     },
     toPatch: function() {
         var patch = new users.cschuster.sync.Patch();
