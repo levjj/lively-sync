@@ -344,8 +344,11 @@ Object.subclass('users.cschuster.sync.Diff', {
         // always keep empty objects and arrays in raw mode
         return false;
     },
-    newMethod: function() {
-        // enter comment here
+    isEmptyDiff: function(obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key) && key != "_t") return false;
+        }
+        return true;
     },
 
     coalesceDiff: function(obj, id) {
