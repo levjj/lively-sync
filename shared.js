@@ -435,26 +435,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
 
 
-    addMissingSmartRefArray: function(path, arrayName, index, op) {
-        var addObjOp = false;
-        var target = this.findInObjOrAdd(
-            this.data.registry,
-            path,
-            function() { addObjOp = true;});
-        if (addObjOp) {
-            if (!target.hasOwnProperty(arrayName)) {
-                target[arrayName] = [];
-            } else {
-                if (target[arrayName].hasOwnProperty(index)) return;
-            }
-            target[arrayName][index] = op.last();
-        } else {
-            var subtarget = this.findInObjOrAdd(
-                target, arrayName, function() { op = op.last(); });
-            if (subtarget.hasOwnProperty(index)) return;
-            subtarget[index] = op;
-        }
-    },
+
     addMissingSmartRef: function(key, op) {
         var path = key.split('/');
         if (!isNaN(path.last())) {
