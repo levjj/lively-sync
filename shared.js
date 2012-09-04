@@ -485,14 +485,14 @@ Object.subclass('users.cschuster.sync.Diff', {
             this.addMissingSmartRefObj(path.join('/'), prop, op);
         }
     },
-    addMissingSmartRefs: function() {
+    addMissingSmartRefs: function(snapshot) {
         for (var key in this.data.registry) {
             if (Array.isArray(this.data.registry[key])) {
                 var instruction = this.data.registry[key];
                 //if (instruction.length == 2) continue;   // set
                 var op = [this.createSmartRef(key)];       // add
                 if (instruction.length == 3) op.push(0,0); // delete
-                this.addMissingSmartRef(key, op);
+                this.addMissingSmartRef(key, op, snapshot.registry);
             }
         }
     },
