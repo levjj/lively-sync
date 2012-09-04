@@ -438,6 +438,9 @@ Object.subclass('users.cschuster.sync.Diff', {
 
     addMissingSmartRef: function(key, op, registry) {
         var path = key.split('/');
+        do {
+            
+        } while (!registry.hasOwnProperty(path.join('/')));
         
     },
     addMissingSmartRefs: function(snapshot) {
