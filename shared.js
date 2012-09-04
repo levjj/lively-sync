@@ -443,8 +443,8 @@ Object.subclass('users.cschuster.sync.Diff', {
             propChain.unshift(path.pop());
             targetKey = path.join('/');
         } while (!registry[targetKey] && !this.data.registry[targetKey]);
-        if (!this.data.registry[targetKey]) this.data.registry[targetKey] = {};
-        var target = this.data.registry[targetKey];
+        var target = this.data.registry;
+        propChain.unshift(targetKey);
         var rawMode = false;
         for (var j = 0; j < propChain.length - 1; j++) {
             var prop = propChain[j];
