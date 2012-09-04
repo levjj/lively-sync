@@ -443,9 +443,25 @@ Object.subclass('users.cschuster.sync.Diff', {
             propChain.unshift(path.pop());
         } while (!registry.hasOwnProperty(path.join('/')));
         var target = registry.hasOwnProperty(path.join('/'));
-        propChain.each(function(prop) {
+        var rawMode = false;
+        for (var j = 0; j < propChain.length - 1; j++) {
+            var prop = propChain[j];
+            if (!target[prop]) target[prop] = {};
             target = target[prop];
-        });
+            if (!rawMode && Array.isArray(target)) {
+                if (target.length == 1) { // add
+                    rawMode = true;
+                    target = target[0];
+                } else { // move
+                    target = target[1];
+                }
+            }
+        }
+        var prop = propChain.last();
+        if (!target.hasOwnProperty(prop) || target[prop].id == key ||
+            (Array.isArray(target[prop].id) && target[prop].id[0] == key)) {
+            target[prop] = rawMode && op.length == 1 ? op[0] : op;
+        }
     },
     addMissingSmartRefs: function(snapshot) {
         for (var key in this.data.registry) {
