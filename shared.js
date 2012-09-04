@@ -437,12 +437,12 @@ Object.subclass('users.cschuster.sync.Diff', {
 
 
     addMissingSmartRef: function(key, op, registry) {
-        var path = key.split('/');
+        var path = key.split('/'), targetKey;
         var propChain = [];
         do {
             propChain.unshift(path.pop());
-        } while (!registry.hasOwnProperty(path.join('/')));
-        var targetKey = path.join('/');
+            targetKey = path.join('/');
+        } while (!registry[targetKey] && !this.data.registry[targetKey]);
         if (!this.data.registry[targetKey]) this.data.registry[targetKey] = {};
         var target = this.data.registry[targetKey];
         var rawMode = false;
