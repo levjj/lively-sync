@@ -1689,6 +1689,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.wcA.addObject(game);
         this.assertSync(2);
         game.setup();
+        debugger;
         this.assertSync(3);
     }
 
