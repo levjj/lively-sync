@@ -236,7 +236,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         moveMapping.getRules().each(function(rule) {
             if (rule.from == rule.to) { // moves with no target (i.e. deletes)
                 if (rawDiff.hasOwnProperty(rule.to)) return; // do nothing
-                rawDiff[rule.to] = [0,0];
+                rawDiff[rule.to] = [this.data.registry[rule.from], 0,0];
             } else {  // normal moves
                 if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
                 // generate move instruction
