@@ -232,8 +232,15 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
-    newMethod: function() {
-        // enter comment here
+    fixPaths: function(obj, patch) {
+        for (var key in patch) {
+            var value = patch[key];
+            if (obj && obj instanceof lively.morphic.Shapes.Path && key == "_PathElements") {
+                obj.setPathElements(obj.getPathElements());
+            } else if (!Array.isArray(value)) { // recursion
+                this.fixPaths(obj[key], value);
+            }
+        }
     },
 
 
