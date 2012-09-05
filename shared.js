@@ -152,11 +152,14 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 movesAndDeletes[n[key].id].to = key;
             }
         }
-        // aggregate moves and discard all deletes (objects not in the new snapshot)
+        // aggregate moves (and deletes)
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in movesAndDeletes) {
-            if (movesAndDeletes[key].to) {
-                mapping.addRule(movesAndDeletes[key].from, movesAndDeletes[key].to);
+            var to = movesAndDeletes[key].to;
+            if (to) {
+                mapping.addRule(movesAndDeletes[key].from, to);
+            } else {
+                mapping.addRule(movesAndDeletes[key].from, movesAndDeletes[key].from);
             }
         }
         return mapping;
