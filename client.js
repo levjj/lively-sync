@@ -111,7 +111,6 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
     fixSceneGraph: function(obj, patch, parentMorph) {
         for (var key in patch) {
             var value = patch[key];
-            if (!obj.hasOwnProperty(key)) continue;
             var isSubmorphArray = obj && obj.isMorph && key == "submorphs";
             if (Array.isArray(value)) { // instruction
                 if (isSubmorphArray && value.length == 3) {
@@ -121,6 +120,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                         var morph = value.shift()
                         if (morph !== this.world.firstHand()) morph.remove();
                     } else { // add, set or move
+                        if (!obj.hasOwnProperty(key)) continue;
                         var length = parentMorph.submorphs.length;
                         var morphBefore = key < length ? parentMorph.submorphs[key + 1] : null;
                         if (parentMorph == this.world) {
