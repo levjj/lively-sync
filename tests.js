@@ -301,7 +301,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
     testNullAndUndefined: function() {
         var snapshotA = this.serialize({X: {}});
         var snapshotB = this.serialize({X: {a: "null"}});
-        this.assertPatch({X: {a:[null]}}, snapshotA, snapshotB);
+        this.assertPatch({X: {a:["null"]}}, snapshotA, snapshotB);
         var snapshotC = this.serialize({X: {a: undefined}});
         this.assertPatch({X: {a:[null]}}, snapshotB, snapshotC);
         var snapshotD = this.serialize({X: {}});
