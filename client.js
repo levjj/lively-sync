@@ -222,6 +222,10 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (isTextChunks) delete obj.cachedTextString;
         }
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
     afterPatching: function(objects, patch) {
         this.fixClosures(objects, patch);
         this.fixSceneGraph(objects, patch, this.world);
