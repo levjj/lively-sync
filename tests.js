@@ -1701,7 +1701,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(2);
         game.setup();
         this.assertSync(3);
-    }
+    },
 
 });
 
