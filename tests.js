@@ -1714,7 +1714,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(3);
     },
     testList: function() {
-        debugger;
         var bounds = new lively.Rectangle(0, 0, 80, 60);
         var list = new lively.morphic.List(bounds, []);
         this.openInWorldA(list);
