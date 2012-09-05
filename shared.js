@@ -298,7 +298,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         }
     },
     processMoveInstructions: function(snapshot) {
-        var moveMapping = this.findMoveInstructions();
+        var moveMapping = this.findMoveInstructions(snapshot);
         snapshot.data.registry = snapshot.patchMoveInstructions(moveMapping);
         this.updateSmartRefs(snapshot.data.registry, moveMapping);
     },
