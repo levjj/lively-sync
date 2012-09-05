@@ -222,8 +222,15 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             if (isTextChunks) delete obj.cachedTextString;
         }
     },
-    newMethod: function() {
-        // enter comment here
+    fixLists: function(obj, patch) {
+        for (var key in patch) {
+            var value = patch[key];
+            if (obj && obj instanceof lively.morphic.List && key == "itemList") {
+                obj.updateList(obj.itemList);
+            } else if (!Array.isArray(value)) { // recursion
+                this.fixLists(obj[key], value);
+            }
+        }
     },
 
     afterPatching: function(objects, patch) {
