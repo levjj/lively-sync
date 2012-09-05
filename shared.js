@@ -130,6 +130,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 if (typeof n != 'undefined') {
                     d.push(o, n); // old value changed to new value
                 } else {
+                    if (o == null) return; //FIXME: special case for null->undefined
                     d.push(o, 0, 0); // old value has been removed
                 }
             } else {
