@@ -268,12 +268,18 @@ Object.subclass('users.cschuster.sync.Diff', {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
-    findMoveInstructions: function() {
+    findMoveInstructions: function(snapshot) {
         var mapping = new users.cschuster.sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
-            if (Array.isArray(value) && value.length == 3) {
-                mapping.addRule(value[0], key);
+            if (Array.isArray(value)) {
+                if (value.length == 1 && value[0].id) { // replace an object instead of patching it
+                    var oldId = snapshot.data.registry[key] && snapshot.data.registry[key].id;
+                    if (!oldId || value[0].id == oldId) continue;
+                    mapping.addRule(key, key);
+                } else if (value.length == 3) { // move
+                    mapping.addRule(value[0], key);
+                }
             }
         }
         return mapping;
