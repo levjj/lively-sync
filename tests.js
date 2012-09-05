@@ -1670,14 +1670,15 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
     },
     testPolygon: function() {
+        debugger;
         var polygon = lively.morphic.Morph.makePolygon(
             [pt(40, 0), pt(40, 40), pt(0, 40)], 2);
         this.openInWorldA(polygon);
         this.assertSync(2);
         var cp = polygon.getControlPoints();
-        cp[0].moveBy(pt(20,0));
-        debugger;
         this.assertSync(3);
+        cp[0].moveBy(pt(20,0));
+        this.assertSync(4);
     }
 
 });
