@@ -659,7 +659,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
-        this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
+        try { //TODO: reconcile the sync plugin with the serialization plugin architecture
+            this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
+        } catch (e) { console.error(e); }
         SkipDialogs.beNotGlobal();
     },
     loadRev: function(rev) {
