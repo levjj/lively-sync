@@ -188,7 +188,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         // now map all entries in the current registry to the new registry
         var arraysToRepair = [];
         for (var key in this.data.registry) {
-            var newKey = mapping.map(key) || key;
+            var newKey = mapping.map(key);
+            if (newKey == key) continue; // do nothing for moves without targets (i.e. deletes)
+            if (!newKey) newKey = key;
             // move instruction have priority over normal copying
             // e.g. if you have the mapping X -> Y and this snapshot is [X.Y]
             //      then the result would be [Y] with Y being the moved X
