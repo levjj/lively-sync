@@ -1670,7 +1670,10 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
     },
     testArrow: function() {
-        
+        var arrow =  lively.morphic.Morph.makePolygon(
+            [pt(40, 0), pt(40, 40), pt(0, 40)], 2);
+        this.openInWorldA(arrow);
+        this.assertSync(2);
     }
 
 });
