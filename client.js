@@ -232,6 +232,10 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
             }
         }
     },
+    newMethod: function() {
+        // enter comment here
+    },
+
 
     afterPatching: function(objects, patch) {
         this.fixClosures(objects, patch);
