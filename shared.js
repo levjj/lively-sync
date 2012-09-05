@@ -234,10 +234,14 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var rawDiff = this.jsonDiff(semipatchedRegistry, otherSnapshot.data.registry, moveMapping) || {};
         // merge object diff and raw diff
         moveMapping.getRules().each(function(rule) {
-            if (rule.from == rule.to) return; // do nothing for moves with no target (i.e. deletes)
-            if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
-            // generate move instruction
-            rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
+            if (rule.from == rule.to) { // moves with no target (i.e. deletes)
+                if (rawDiff.hasOwnProperty(rule.to)) return; // do nothing
+                rawDiff[rule.to] = [0,0];
+            } else {  // normal moves
+                if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
+                // generate move instruction
+                rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
+            }
         });
         return new users.cschuster.sync.Diff({registry: rawDiff});
     },
