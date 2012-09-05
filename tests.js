@@ -1670,15 +1670,24 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
     },
     testList: function() {
-        var list = new a();
+        var bounds = new lively.Rectangle(0, 0, 80, 60);
+        var list = new lively.morphic.List(bounds, []);
         this.openInWorldA(list);
         this.assertSync(2);
-        list.a
+        list.addItem({string: 'foo', value: 23, isListItem: true});
         this.assertSync(3);
-        list.a
+        list.addItem({string: 'bar', value: 42, isListItem: true});
         this.assertSync(4);
-        list.a
+        list.selectAt(0);
         this.assertSync(5);
+        list.selectAt(1);
+        this.assertSync(6);
+        list.deselectAt(1);
+        this.assertSync(7);
+        list.removeItemOrValue(23);
+        this.assertSync(8);
+        list.updateList(["h", "e", "l", "l", "o"].asListItems());
+        this.assertSync(9);
     }
 
 });
