@@ -260,7 +260,32 @@ lively.morphic.Text.addMethods(
     doNotSerializeForSync: ['partsBinMetaInfo', 'partTests', 'textString', 'cachedTextString']
 });
 lively.morphic.Morph.addMethods({
-    doNotSerializeForSync: ['partsBinMetaInfo', 'partTests']
+    doNotSerializeForSync: ['partsBinMetaInfo', 'partTests'],
+    getGrabShadow: function(local) {
+        var shadow = new lively.morphic.Morph(
+            lively.persistence.Serializer.newMorphicCopy(this.shape));
+        shadow.isGrabShadow = true;
+        shadow.applyStyle({
+            fill: this.getFill() === null ? Color.gray : Color.gray.darker(), opacity: 0.5})
+        shadow.connections = [
+            lively.bindings.connect(this, 'rotation', shadow, 'setRotation'),
+            lively.bindings.connect(this, 'scale', shadow, 'setScale')];
+        shadow.addScript(function remove() {
+            $super();
+            this.connections.invoke('disconnect');
+            this.submorphsForReconnect = this.submorphs.clone();
+            this.submorphs.invoke('remove');
+            lively.bindings.callWhenNotNull(this, 'owner', this, 'reconnect');
+        });
+        shadow.addScript(function reconnect(newOwner) {
+            this.connections.invoke('connect');
+            this.submorphsForReconnect.forEach(function(ea) { this.addMorph(ea) }, this);
+            delete this.submorphsForReconnect;
+        });
+        shadow.setTransform(local ? this.getTransform() : this.getGlobalTransform());
+        shadow.disableDropping();
+        return shadow;
+    }
 });
 lively.morphic.Button.addMethods(
 'serialization', {
