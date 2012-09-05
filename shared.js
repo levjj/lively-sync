@@ -454,8 +454,10 @@ Object.subclass('users.cschuster.sync.Diff', {
                 if (target.length == 1) { // add
                     rawMode = true;
                     target = target[0];
-                } else { // move
-                    target = target[1];
+                } else if (target.length == 3) { // remove
+                    return;
+                } else if (target.length == 4) { // move
+                    target = target[2];
                 }
             }
         }
