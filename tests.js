@@ -1669,8 +1669,8 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.removeObject(box);
         this.assertSync(3);
     },
-    newMethod: function() {
-        // enter comment here
+    testList: function() {
+        
     }
 
 });
