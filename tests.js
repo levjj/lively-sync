@@ -1676,6 +1676,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(2);
         var cp = arrow.getControlPoints();
         cp[0].moveBy(pt(20,0));
+        debugger;
         this.assertSync(3);
     }
 
