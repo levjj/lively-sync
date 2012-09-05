@@ -1670,7 +1670,15 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertSync(3);
     },
     testList: function() {
-        
+        var list = new a();
+        this.openInWorldA(list);
+        this.assertSync(2);
+        list.a
+        this.assertSync(3);
+        list.a
+        this.assertSync(4);
+        list.a
+        this.assertSync(5);
     }
 
 });
