@@ -238,7 +238,9 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 if (rawDiff.hasOwnProperty(rule.to)) return; // do nothing
                 rawDiff[rule.to] = [this.data.registry[rule.from], 0,0];
             } else {  // normal moves
-                if (!rawDiff.hasOwnProperty(rule.to)) rawDiff[rule.to] = {};
+                if (!rawDiff.hasOwnProperty(rule.to) || Array.isArray(rawDiff[rule.to])) {
+                    rawDiff[rule.to] = {};
+                }
                 // generate move instruction
                 rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
             }
