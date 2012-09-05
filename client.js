@@ -240,6 +240,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
         this.addConnections(objects, patch);
         this.fixTextChunks(objects, patch);
         this.fixLists(objects, patch);
+        this.fixPaths(objects, patch);
     }
 },
 'removing', {
