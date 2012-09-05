@@ -1669,12 +1669,12 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.wcA.removeObject(box);
         this.assertSync(3);
     },
-    testArrow: function() {
-        var arrow =  lively.morphic.Morph.makePolygon(
+    testPolygon: function() {
+        var polygon = lively.morphic.Morph.makePolygon(
             [pt(40, 0), pt(40, 40), pt(0, 40)], 2);
-        this.openInWorldA(arrow);
+        this.openInWorldA(polygon);
         this.assertSync(2);
-        var cp = arrow.getControlPoints();
+        var cp = polygon.getControlPoints();
         cp[0].moveBy(pt(20,0));
         debugger;
         this.assertSync(3);
