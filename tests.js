@@ -444,8 +444,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         var expected = {"Y": [{id: "Y", name: "y"}], "Y/a": ["X", {}, 0]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
-    newMethod: function() {
-        // enter comment here
+    testNewObjectAtSamePath: function() {
+        var x = {id:"X", name: "x"}, y = {id:"Y", name: "y", n: 3}, z = {id:"Z", name: "z", n: 3};
+        x.a = y;
+        var snapshotA = this.serialize({X:x});
+        x.a = z;
+        var snapshotB = this.serialize({Y:y});
+        var expected = {"X/a": [{id: "Z", name: "z", n: 3}]};
+        this.assertPatch(expected, snapshotA, snapshotB);
     },
 
     testArrayWithPrimitiveReferences: function() {
