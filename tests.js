@@ -1678,7 +1678,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         var game = this.worldA.openPartItem('ChineseCheckers', 'PartsBin/Games', false);
         this.wcA.addObject(game);
         this.assertSync(2);
-        game.setUp();
+        game.setup();
         this.assertSync(3);
     }
 
