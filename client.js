@@ -246,6 +246,10 @@ lively.morphic.TabPane.addMethods({
     }
 });
 
+Array.addMethods({
+    repair: Array.prototype.compactMutable
+});
+
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairArraysPlugin',
 'plugin interface', {
     afterDeserializeObj: function(obj) {
