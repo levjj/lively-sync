@@ -1719,7 +1719,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(6);
         list.removeItemOrValue(23);
         this.assertSync(7);
-        list.updateList(["h", "e", "l", "l", "o"].asListItemsArray());
+        list.updateList(["h", "e", "l", "l", "o"].asListItemArray());
         this.assertSync(8);
     }
 
