@@ -242,7 +242,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 // generate move instruction
                 rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
             }
-        });
+        }.bind(this));
         return new users.cschuster.sync.Diff({registry: rawDiff});
     },
     toJSON: function() {
