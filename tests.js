@@ -995,7 +995,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
 'specs', {
 
     movePatch: {"X": {_Position: ["\\$@lively.pt(5.0,3.0)"]}},
-    resizePatch: {"X/shape/_Extent": {x: [13], y: [7]} },
+    resizePatch: {"X/shape": {_Extent: ["\\$@lively.pt(13.0,7.0)"]}},
     colorPatch: {"X/shape/_Fill": [{r: 0.5, g: 0.0, b: 1.0, a:1,
                                     __LivelyClassName__:"Color",
                                     __SourceModuleName__:"Global.lively.morphic.Graphics"}]},
