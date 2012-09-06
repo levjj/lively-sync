@@ -603,7 +603,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.moveBy(pt(10,20));
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id] = {_Position: "\\$@lively.pt("+(oldX + 10)+".0,"+(oldY + 20)+".0)"};
+        expected[this.rect.id] = {_Position: ["\\$@lively.pt("+(oldX + 10)+".0,"+(oldY + 20)+".0)"]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testColorRectangle: function () {
