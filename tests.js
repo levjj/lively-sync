@@ -593,7 +593,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.setExtent(pt(400,20));
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape"] = {_Extent: ["\\@lively.pt(400,20)"]};
+        expected[this.rect.id + "/shape"] = {_Extent: ["\\$@lively.pt(400.0,20.0)"]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testMovedRectangle: function () {
