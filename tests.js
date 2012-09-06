@@ -239,14 +239,15 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
     },
     addPolygonPatch: function(morph) {
         var result = this.addRectPatch(morph);
-        delete result[morph.id + "/_Position"];
+        delete result[morph.id]._Position;
         result[morph.id][0].__LivelyClassName__ = "lively.morphic.Path";
         result[morph.id][0].__SourceModuleName__ = "Global.lively.morphic.AdditionalMorphs";
         var raw = {
             "/shape": {dontChangeShape:false, cachedVertices:null, _PathElements:[],
                        _BorderWidth:1,
                        __LivelyClassName__:"lively.morphic.Shapes.Path",
-                       __SourceModuleName__:"Global.lively.morphic.PathShapes"},
+                       __SourceModuleName__:"Global.lively.morphic.PathShapes",
+                       _Position: "\\$@lively.pt(-1.0,-1.0)"},
             "/shape/_PathElements/0": {isAbsolute:true,"x":4,"y":0,
                                        __LivelyClassName__:"lively.morphic.Shapes.MoveTo",
                                        __SourceModuleName__:"Global.lively.morphic.PathShapes"},
