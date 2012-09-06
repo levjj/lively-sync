@@ -290,7 +290,7 @@ lively.morphic.Text.addMethods(
     doNotSerializeForSync: ['partsBinMetaInfo', 'partTests', 'textString', 'cachedTextString']
 });
 lively.morphic.Morph.addMethods({
-    doNotSerializeForSync: ['partsBinMetaInfo', 'partTests'],
+    doNotSerializeForSync: ['partsBinMetaInfo', 'partTests', 'priorExtent'],
     getGrabShadow: function(local) {
         var shadow = new lively.morphic.Morph(
             lively.persistence.Serializer.newMorphicCopy(this.shape));
