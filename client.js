@@ -324,7 +324,7 @@ lively.morphic.TextChunk.addMethods({
     doNotSerializeForSync: ['_id', 'debugMode']
 });
 lively.morphic.Shapes.Path.addMethods({
-    doNotSerializeForSync: ['cachedVertices']
+    doNotSerializeForSync: ['cachedVertices', 'controlPoints']
 });
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
