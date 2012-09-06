@@ -1036,10 +1036,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
                       "X/attributeConnections/0": [0,0]}
 },
 'testing', {
-    testMoveX: function() {
-        this.patch(this.moveXPatch);
-        this.assertMorphNode(this.div({style: {left: '5px'}}));
-    },
+
     testMoveXY: function() {
         this.patch(this.moveXYPatch);
         this.assertMorphNode(this.div({style: {left: '5px', top: '3px'}}));
