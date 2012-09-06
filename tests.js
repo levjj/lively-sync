@@ -611,8 +611,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.rect.setFill(Color.black);
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        var serializedBlack = this.serialize(Color.black).data.registry[""];
-        expected[this.rect.id + "/shape/_Fill"] = [serializedBlack];
+        expected[this.rect.id + "/shape/_Fill"] = [Color.black.asSerializedExpression()];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testTransparentRectangle: function () {
