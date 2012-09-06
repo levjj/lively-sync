@@ -323,6 +323,9 @@ lively.morphic.Button.addMethods(
 lively.morphic.TextChunk.addMethods({
     doNotSerializeForSync: ['_id', 'debugMode']
 });
+Object.extend(SomeObject, {
+    m1: function() {},
+});
 
 lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
 'plugin interface', {
