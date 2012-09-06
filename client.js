@@ -11,13 +11,14 @@ Object.extend(users.cschuster.sync.Snapshot, {
         serializer.plugins.remove(serializer.plugins.find(function(p) {
             return p instanceof lively.persistence.ClassPlugin;
         }));
+        var expressionPlugin = new users.cschuster.SerializeAsExpressionPlugin();
         var classPlugin = new users.cschuster.sync.ClassPlugin();
         var syncPlugin = new users.cschuster.sync.SyncPlugin();
         var worldPlugin = new GenericFilter();
         worldPlugin.addFilter(function(obj, prop, value) {
             return value && Object.isObject(value) && value.isWorld;
         });
-        serializer.addPlugins([classPlugin, syncPlugin, worldPlugin]);
+        serializer.addPlugins([expressionPlugin, classPlugin, syncPlugin, worldPlugin]);
         serializer.showLog = false;
         return serializer;
     },
