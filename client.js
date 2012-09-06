@@ -451,6 +451,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var key in object) {
             if (!object.hasOwnProperty(key)) continue;
             var val = object[key];
+            if (this.serializer.somePlugin('ignorePropDeserialization', [object, key, val]))
+                continue;
             if (val && Object.isObject(val) && val.__isSmartRef__) {
                 this.patchRef(recreated, key, val);
             } else {
