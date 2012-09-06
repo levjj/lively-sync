@@ -672,7 +672,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.plugins.invoke('add', this.syncTable);
     },
     loadPatch: function(patch) {
-        SkipDialogs.beGlobal();
+        //SkipDialogs.beGlobal();
         var oldTable = Object.extend({}, this.syncTable);
         var newObjs = Object.keys(patch.data).
             select(function(v) { return Array.isArray(patch.data[v]) &&
@@ -696,7 +696,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         try { //TODO: reconcile the sync plugin with the serialization plugin architecture
             this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
         } catch (e) { console.error(e); }
-        SkipDialogs.beNotGlobal();
+        //SkipDialogs.beNotGlobal();
     },
     loadRev: function(rev) {
         if (!this.socket) return;
