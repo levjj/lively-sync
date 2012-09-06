@@ -875,6 +875,6 @@ cop.create("SkipDialogs").refineClass(lively.morphic.World, {
             cop.proceed(dialog);
         }
     }
-});
+}).beGlobal();
 
 });
