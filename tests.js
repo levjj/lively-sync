@@ -1037,8 +1037,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
 },
 'testing', {
 
-    testMoveXY: function() {
-        this.patch(this.moveXYPatch);
+    testMove: function() {
+        this.patch(this.movePatch);
         this.assertMorphNode(this.div({style: {left: '5px', top: '3px'}}));
     },
     testResize: function() {
