@@ -362,11 +362,12 @@ lively.persistence.ClassPlugin.subclass('users.cschuster.sync.ClassPlugin',
 
 Object.subclass('users.cschuster.sync.WorkingCopy',
 'initializing', {
-    initialize: function(keepHistory) {
+    initialize: function(server, keepHistory) {
+        this.server = server;
         this.plugins = [];
         this.syncTable = {};
         this.rev = 0;
-        this.loadSocketIO();
+        if (server) this.loadSocketIO();
         if (keepHistory) {
             this.snapshots = {};
             this.patches = {};
@@ -379,8 +380,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             var head = document.getElementsByTagName('head')[0];
             var socketscript = document.createElement('script');
             socketscript.type = 'text/javascript';
-            socketscript.src =
-                'http://lively-kernel.org/nodejs/SyncServer/socket.io/socket.io.js';
+            socketscript.src = this.server + '/socket.io/socket.io.js';
             socketscript.id = 'loadSocketIO';
             head.appendChild(socketscript);
         }
