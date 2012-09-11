@@ -1725,7 +1725,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
     },
     testLayoutPlaceholder: function() {
         var boxX = this.addBox("X");
-        boxX.setLayouter();
+        boxX.setLayouter(new lively.morphic.Layout.HorizontalLayout(boxX));
         var boxY = this.addBox("Y");
         boxY.moveBy(pt(25, 0));
         boxX.setExtent(pt(20, 20));
