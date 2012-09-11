@@ -295,8 +295,10 @@ Object.subclass('users.cschuster.sync.Diff', {
     },
     processMoveInstructions: function(snapshot) {
         var moveMapping = this.findMoveInstructions(snapshot);
-        snapshot.data.registry = snapshot.patchMoveInstructions(moveMapping);
+        var patchResult = snapshot.patchMoveInstructions(moveMapping);
+        snapshot.data.registry = patchResult[0];
         this.updateSmartRefs(snapshot.data.registry, moveMapping);
+        return patchResult[1];
     },
     aggregateDeletions: function() {
         var toDelete = [];
