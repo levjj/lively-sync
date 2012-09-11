@@ -1722,9 +1722,10 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(7);
         list.updateList(["h", "e", "l", "l", "o"].asListItemArray());
         this.assertSync(8);
+    },
+    testLayoutPlaceholder: function() {
+        
     }
-
-
 });
 
 users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.InteractionTest',
