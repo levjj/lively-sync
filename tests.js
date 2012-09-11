@@ -715,7 +715,6 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         expected[otherMorph.id + "/submorphs/0"] = [this.rect.id + "/submorphs/0", {
             _Rotation: [0], _Scale: [1], owner: {id: [otherMorph.id]}
         }, 0];
-        debugger;
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testSwapSubmorphsWithEdits: function() {
