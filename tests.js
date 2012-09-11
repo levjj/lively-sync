@@ -1724,7 +1724,20 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(8);
     },
     testLayoutPlaceholder: function() {
-        
+        var boxX = this.addBox("X");
+        boxX.setLayouter();
+        var boxY = this.addBox("Y");
+        boxY.moveBy(pt(25, 0));
+        boxX.setExtent(pt(20, 20));
+        this.assertSync(3);
+        var h = this.worldA.firstHand();
+        h.setPosition(pt(30,5));
+        h.grabMorph(boxY);
+        this.assertSync(5);
+        h.setPosition(pt(5,5));
+        this.assertSync(6);
+        h.dropContentsOn(boxX, {stop: Functions.Null});
+        this.assertSync(7);
     }
 });
 
