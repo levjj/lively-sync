@@ -15,6 +15,18 @@ var DIFFS_PER_SNAPSHOT = 100;
 
 module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
 
+function log(/*arguments*/) {
+    var args = [].concat(arguments);
+    args[0] = "[" + (new Date()).toISOString() + "] " + args[0];
+    return console.log.apply(console, args);
+}
+
+function error(/*arguments*/) {
+    var args = [].concat(arguments);
+    args[0] = "[" + (new Date()).toISOString() + "] " + args[0];
+    return console.error.apply(console, args);
+}
+
 Object.subclass('users.cschuster.sync.Mutex', {
     initialize: function() {
         this.queue = new EventEmitter();
@@ -56,8 +68,8 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     handleError: function(err) {
-        console.error(err);
-        if (err instanceof Error) console.error(err.stack);
+        error(err);
+        if (err instanceof Error) error(err.stack);
         this.release();
         return null;
     },
@@ -147,14 +159,14 @@ Object.subclass('users.cschuster.sync.Repository', {
     },
     
     _createSnapshot: function(rev, snapshot, cb) {
-        console.log("creating snapshot for revision " + rev);
+        log("creating snapshot for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "snapshot", snapshot.toJSON(), this.username],
                       function (err, result) { if (err) return this.handleError(err); cb(result); }.bind(this));
     },
     
     _createPatch: function(rev, patch, cb) {
-        console.log("creating patch for revision " + rev);
+        log("creating patch for revision " + rev);
         this.db.query("INSERT INTO history(obj, rev, type, data, username) VALUES($1, $2, $3, $4, $5)",
                       [this.channel, rev, "patch", patch.toJSON(), this.username],
                       function (err, result) { if (err) return this.handleError(err); cb(result); }.bind(this));
@@ -258,7 +270,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     checkout: function(channel, rev) {
-        console.log("checking out rev " + rev);
+        log("checking out rev " + rev);
         this.withRepo(channel, false, function(repo) {
             repo.checkout(rev, function(snapshot) {
                 this.socket.emit('snapshot', rev, snapshot.data);
@@ -267,7 +279,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     update: function(channel, fromRev) {
-        console.log("requested update from rev " + fromRev);
+        log("requested update from rev " + fromRev);
         this.withRepo(channel, false, function(repo) {
             repo.head(function (head) {
                 if (!fromRev || fromRev != head) {
@@ -280,7 +292,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     join: function(channel, username) {
-        console.log(username + " joins channel " + channel);
+        log(username + " joins channel " + channel);
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
@@ -300,7 +312,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     reset: function(channel) {
-        console.log("resetting channel " + channel);
+        log("resetting channel " + channel);
         this.withRepo(channel, true, function(repo) {
             repo.reset(function() {
                 repo.checkout(1, function(snapshot) {
@@ -324,9 +336,9 @@ Object.subclass('users.cschuster.sync.Server', {
                     //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
                     //TODO: diff3 not implemented yet in jsondiffpatch
                     if (oldRev > head) {
-                        console.error("received patch based on a non-server version");
+                        error("received patch based on a non-server version");
                     } else {
-                        console.error("received outdated patch");
+                        error("received outdated patch");
                     }
                     repo.release();
                     /*Seq([oldRev, head])
@@ -351,21 +363,21 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     list: function() {
-        console.log("listing channels");
+        log("listing channels");
         this.withRepo(null, false, function(repo) {
             repo.list(this.socket.emit.bind(this.socket, 'list'));
         }.bind(this));
     },
     
     info: function(channel) {
-        console.log("requesting info about channel " + channel);
+        log("requesting info about channel " + channel);
         this.withRepo(channel, false, function(repo) {
             repo.info(this.socket.emit.bind(this.socket, 'info'));
         }.bind(this));
     },
     
     create: function(channel, username) {
-        console.log(username + " creates channel " + channel);
+        log(username + " creates channel " + channel);
         this.username = username || 'anonymous';
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
@@ -379,7 +391,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
 
     remove: function(channel) {
-        console.log("removing channel " + channel);
+        log("removing channel " + channel);
         this.withRepo(channel, true, function(repo) {
         	repo.remove(function() { repo.release(); });
         });
