@@ -558,9 +558,10 @@ Object.subclass('users.cschuster.sync.Diff', {
         return o;
     },
     apply: function(snapshot) {
-        this.processMoveInstructions(snapshot);
+        var arraysToRepair = this.processMoveInstructions(snapshot);
         this.prepareToPatch(snapshot.data);
         this.applyPatch(snapshot.data, null, this.data);
+        for (var i = 0; i < arraysToRepair.length; i++) arraysToRepair[i].repair();
     },
     toJSON: function() {
         return JSON.stringify(this.data);
