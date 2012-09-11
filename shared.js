@@ -169,7 +169,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
         var result = {};
         // get move mapping
         var rules = mapping.getRules();
-        if (rules.length == 0) return this.data.registry;
+        if (rules.length == 0) return [this.data.registry, []];
         // implicit smartrefs pointing to the origin of a
         // move  instruction need to get deleted
         // so collect these smartrefs in a data structure like this:
