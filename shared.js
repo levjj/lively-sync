@@ -221,11 +221,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 result[newKey] = this.data.registry[key];
             }
         }
-        // repair arrays
-        for (var i = 0; i < arraysToRepair.length; i++) {
-            arraysToRepair[i].repair();
-        }
-        return result;
+        return [result, arraysToRepair];
     },
     diff: function(otherSnapshot) {
         var moveMapping = this.moveMapping(this.data.registry, otherSnapshot.data.registry);
