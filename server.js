@@ -398,6 +398,7 @@ Object.subclass('users.cschuster.sync.Server', {
     }
 });
 
+io.set("origins", "*");
 io.set('log level', 1);
 io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function(socket) {
