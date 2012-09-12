@@ -618,7 +618,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 },
 'updating', {
     connect: function() {
-        this.socket = io.connect(null, {resource: 'nodejs/SyncServer/socket.io'});
+        var c = /SyncServer$/.test(this.server) ? {resource: 'nodejs/SyncServer/socket.io'} : {};
+        this.socket = io.connect(null, c);
         this.socket.on("snapshot", this.receiveSnapshot.bind(this));
         this.socket.on("patch", this.receivePatch.bind(this));
     },
