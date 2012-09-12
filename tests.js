@@ -1723,7 +1723,6 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
         this.assertSync(8);
     },
     testLayoutPlaceholder: function() {
-        debugger;
         var boxX = this.addBox("X");
         boxX.setLayouter(new lively.morphic.Layout.HorizontalLayout(boxX));
         var boxY = this.addBox("Y");
