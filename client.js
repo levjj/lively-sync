@@ -618,7 +618,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
 },
 'updating', {
     connect: function() {
-        var resource = new URL(this.server).pathname + 'socket.io';
+        var resource = new URL(this.server).pathname.substring(1) + 'socket.io';
         var port = new URL(this.server).port || 80;
         this.socket = io.connect(null, {resource: resource, port: port});
         this.socket.on("snapshot", this.receiveSnapshot.bind(this));
