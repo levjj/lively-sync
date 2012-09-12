@@ -3,7 +3,7 @@
  * (socket.io, postgresql)
  */
 
-var io = require('socket.io').listen(8114);
+var io = require('socket.io').listen(8114, {origins: '*:*'});
 var EventEmitter = require('events').EventEmitter;
 var Seq = require('seq');
 var pg = require('pg');
@@ -398,7 +398,7 @@ Object.subclass('users.cschuster.sync.Server', {
     }
 });
 
-io.set("origins", "*");
+io.set("origins", "*.*");
 io.set('log level', 1);
 io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function(socket) {
