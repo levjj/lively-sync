@@ -16,13 +16,15 @@ var DIFFS_PER_SNAPSHOT = 100;
 module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
 
 function log(/*arguments*/) {
-    var args = [].concat(arguments);
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) args.push(arguments[i]);
     args[0] = "[" + (new Date()).toISOString() + "] " + args[0];
     return console.log.apply(console, args);
 }
 
 function error(/*arguments*/) {
-    var args = [].concat(arguments);
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) args.push(arguments[i]);
     args[0] = "[" + (new Date()).toISOString() + "] " + args[0];
     return console.error.apply(console, args);
 }
@@ -398,7 +400,6 @@ Object.subclass('users.cschuster.sync.Server', {
     }
 });
 
-io.set("origins", "*");
 io.set('log level', 1);
 io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function(socket) {
