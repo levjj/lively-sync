@@ -1956,6 +1956,15 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.assertEquals(5, this.morphInC().getPosition().x);
         this.assertEquals(20, this.morph.getExtent().x);
         this.assertEquals(30, this.morphInC().getExtent().x);
+    },
+    testConflictMedium: function() {
+        this.morph.moveBy(pt(5,5));
+        this.morphInC().moveBy(pt(10,10));
+        this.wcA.commit();
+        this.wcC.commit();
+        this.wcC.receivePatch(3, this.wcA.patchQueue[3].clone().data);
+        this.wcA.receivePatched(3);
+        this.assertSync(3, true);
     }
 });
 
