@@ -675,10 +675,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         if (this.onConnect) { this.onConnect(); delete this.onConnect; }
         patch = new users.cschuster.sync.Patch(patch);
         this.loadPatch(patch.clone());
-        if (this.last !== this.serverSnapshot) {
-            patch.clone().apply(this.last);
-        }
         this.applyServerPatch(rev, patch);
+        if (this.last !== this.serverSnapshot) {
+            this.patchQueue = {};
+            this.last = this.serverSnapshot;
+        }
         this.rev = rev;
     },
     receivePatched: function(rev) {
