@@ -1896,7 +1896,17 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
 'testing', {
     testSimpleSync: function() {
         this.morph.moveBy(pt(5,5));
-        
+        var res = this.wcA.commit();
+        this.assertEquals(2, this.wcA.rev);
+        this.assertEquals(1, this.wcA.serverRev);
+        if (!res) return;
+        var snapshot = Object.deepCopy(this.wcA.last.data);
+        this.wcB.receiveSnapshot(this.wcA.rev, snapshot);
+        var lastPatch = this.wcA.patchQueue[this.wcA.rev];
+        var patch = Object.deepCopy(lastPatch.data);
+        this.wcC.receivePatch(this.wcA.rev, patch);
+        this.snapshots[this.wcA.rev] = this.wcA.last;
+        this.wcA.receivePatched(this.wcA.rev);
     },
 });
 
