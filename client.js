@@ -378,12 +378,12 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.plugins = [];
         this.syncTable = {};
         this.rev = 0;
-        if (server) this.loadSocketIO();
-        if (keepHistory) {
-            this.snapshots = {};
-            this.patches = {};
-        } else {
-            this.last = users.cschuster.sync.Snapshot.empty();
+        this.last = users.cschuster.sync.Snapshot.empty();
+        if (server) {
+            this.loadSocketIO();
+            this.serverRev = this.rev;
+            this.serverSnapshot = this.last;
+            this.patchQueue = {};
         }
     },
     loadSocketIO: function() {
@@ -634,6 +634,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.socket = io.connect(null, {resource: resource, port: port});
         this.socket.on("snapshot", this.receiveSnapshot.bind(this));
         this.socket.on("patch", this.receivePatch.bind(this));
+        this.socket.on("patched", this.receivePatched.bind(this));
     },
     join: function(channel) {
         if (this.channel == channel) {
@@ -654,30 +655,35 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     receiveSnapshot: function(rev, snapshot) {
         console.log('received snapshot for rev ' + rev);
         if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-        if (this.snapshots) {
-            this.snapshots[rev] = new users.cschuster.sync.Snapshot(snapshot);
-        } else {
-            this.last = new users.cschuster.sync.Snapshot(snapshot);
+        this.last = this.serverSnapshot = new users.cschuster.sync.Snapshot(snapshot);
+        this.loadSnapshot(this.last);
+        this.rev = this.serverRev = rev;
+    },
+    applyServerPatch: function(rev, patch) {
+        for (var key in this.patchQueue) {
+            if (+(key) <= rev) delete this.patchQueue[key];
         }
-        this.loadSnapshot(this.last || this.snapshots[rev]);
-        this.rev = rev;
+        patch.apply(this.serverSnapshot);
+        this.serverRev = rev;
     },
     receivePatch: function(rev, patch) {
         console.log("received patch for rev " + rev);
         if (this.onConnect) { this.onConnect(); delete this.onConnect; }
         patch = new users.cschuster.sync.Patch(patch);
-        var last;
-        if (this.snapshots) {
-            last = this.snapshots[this.rev];
-            delete this.snapshots[this.rev];
-            this.patches[this.rev] = patch;
-            this.snapshots[rev] = last;
-        } else {
-            last = this.last;
-        }
         this.loadPatch(patch.clone());
-        patch.apply(last);
+        if (this.last !== this.serverSnapshot) {
+            patch.clone().apply(this.last);
+        }
+        this.applyServerPatch(rev, patch);
         this.rev = rev;
+    },
+    receivePatched: function(rev) {
+        var nextRev = this.serverRev + 1;
+        if (rev != nextRev) {
+            return console.error('expected ACK for most recent patch rev ' + nextRev + ' but was ' + rev);
+        }
+        if (!this.patchQueue[rev]) return console.error('patch ' + rev + ' not in queue');
+        this.applyServerPatch(rev, this.patchQueue[rev]);
     },
     loadSnapshot: function(snapshot) {
         this.plugins.invoke('remove', this.syncTable);
@@ -685,7 +691,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.plugins.invoke('add', this.syncTable);
     },
     loadPatch: function(patch) {
-        //SkipDialogs.beGlobal();
         var oldTable = Object.extend({}, this.syncTable);
         var newObjs = Object.keys(patch.data).
             select(function(v) { return Array.isArray(patch.data[v]) &&
@@ -709,18 +714,13 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         try { //TODO: reconcile the sync plugin with the serialization plugin architecture
             this.plugins.invoke('afterPatching', this.syncTable, hierachicalPatch);
         } catch (e) { console.error(e); }
-        //SkipDialogs.beNotGlobal();
     },
     loadRev: function(rev) {
         if (!this.socket) return;
         if (!rev) return;
         if (this.rev == rev) return;
         this.rev = rev;
-        if (!this.snapshots || !this.snapshots[rev]) {
-            this.socket.emit('checkout', this.channel, this.rev);
-        } else {
-            this.loadSnapshot(this.snapshots[rev]);
-        }
+        this.socket.emit('checkout', this.channel, this.rev);
     }
 },
 'syncing', {
@@ -740,13 +740,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         var patch = last.diff(current).toPatch();
         if (patch.isEmpty()) return null;
         if (this.socket) this.socket.emit('commit', this.channel, this.rev, patch);
-        if (this.snapshots) {
-            this.snapshots[this.rev + 1] = current;
-            this.patches[this.rev + 1] = patch;
-        } else {
-            this.last = current;
-            this.lastPatch = patch;
-        }
+        this.last = current;
+        this.patchQueue[this.rev + 1] = patch;
         this.rev++;
         console.log('commited patch for rev ' + this.rev);
         return [current.toJSON().length, patch.toJSON().length];
