@@ -1886,7 +1886,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.morph = this.newBox(20, 20, "X", Color.web.yellow);
         this.openInWorldA(this.morph);
         this.rev = 2;
-        this.assertSync();
+        this.assertSync(2);
     }
 },
 'helping', {
