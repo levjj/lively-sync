@@ -1940,6 +1940,23 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.assertIdentity(this.wcA.last, this.wcA.serverSnapshot);
         this.assertIdentity(newSnapshot, this.wcA.last);
     },
+    testConflictEasy: function() {
+        this.morph.moveBy(pt(5,5));
+        this.morphInC().setExtent(pt(30,20));
+        this.wcA.commit();
+        this.wcC.commit();
+        this.wcC.receivePatch(3, this.wcA.patchQueue[3]);
+        this.wcA.receivePatched(3);
+        this.assertEqualState(this.wcA.rev, this.wcC.rev);
+        this.assertEqualState(this.wcA.serverRev, this.wcC.serverRev);
+        this.assertEqualState(this.wcA.patchQueue, this.wcC.patchQueue);
+        this.assertEqualState(this.wcA.last, this.wcC.last);
+        this.assertEqualState(this.wcA.serverSnapshot, this.wcC.serverSnapshot);
+        this.assertEquals(5, this.morph.getPosition().x);
+        this.assertEquals(5, this.morphInC().getPosition().x);
+        this.assertEquals(20, this.morph.getExtent().x);
+        this.assertEquals(30, this.morphInC().getExtent().x);
+    }
 });
 
 }) // end of module
