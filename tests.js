@@ -1877,6 +1877,25 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     }
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.MultimasterTest');
+users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.MultimasterTest',
+'running', {
+    setUp: function($super) {
+        $super();
+        this.morph = this.newBox(20, 20, "X", Color.web.yellow);
+        this.openInWorldA(this.morph);
+        this.rev = 2;
+        this.assertSync();
+    }
+},
+'helping', {
+    morphInB: function() { return this.worldB.get(this.morph.name); },
+    morphInC: function() { return this.worldC.get(this.morph.name); }
+},
+'testing', {
+    testSimpleSync: function() {
+        this.morph.moveBy(pt(5,5));
+        
+    },
+});
 
 }) // end of module
