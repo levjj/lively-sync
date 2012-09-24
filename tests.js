@@ -1903,7 +1903,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         var res = this.wcA.commit();
         this.assertEquals(3, this.wcA.rev);
         this.assertEquals(2, this.wcA.serverRev);
-        var patch = new users.cschuster.sync.Patch({X: {_Position: ["pt(20,20)"]}});
+        var patch = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
         this.assertEqualState({3: patch}, this.wcA.patchQueue);
         this.assertIdentity(oldSnapshot, this.wcA.serverSnapshot);
         this.assert(this.wcA.last != oldSnapshot);
