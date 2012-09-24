@@ -663,7 +663,11 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         for (var key in this.patchQueue) {
             if (+(key) <= rev) delete this.patchQueue[key];
         }
-        patch.apply(this.serverSnapshot);
+        if (rev == this.rev) {
+            this.serverSnapshot = this.last;
+        } else {
+            patch.apply(this.serverSnapshot);
+        }
         this.serverRev = rev;
     },
     receivePatch: function(rev, patch) {
