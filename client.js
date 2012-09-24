@@ -373,7 +373,7 @@ lively.persistence.ClassPlugin.subclass('users.cschuster.sync.ClassPlugin',
 
 Object.subclass('users.cschuster.sync.WorkingCopy',
 'initializing', {
-    initialize: function(server, keepHistory) {
+    initialize: function(server) {
         this.server = server;
         this.plugins = [];
         this.syncTable = {};
@@ -381,10 +381,10 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         this.last = users.cschuster.sync.Snapshot.empty();
         if (server) {
             this.loadSocketIO();
-            this.serverRev = this.rev;
-            this.serverSnapshot = this.last;
-            this.patchQueue = {};
         }
+        this.serverRev = this.rev;
+        this.serverSnapshot = this.last;
+        this.patchQueue = {};
     },
     loadSocketIO: function() {
         if (!document.getElementById('loadSocketIO')) {
