@@ -1945,7 +1945,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.morphInC().setExtent(pt(30,20));
         this.wcA.commit();
         this.wcC.commit();
-        this.wcC.receivePatch(3, this.wcA.patchQueue[3]);
+        this.wcC.receivePatch(3, this.wcA.patchQueue[3].clone().data);
         this.wcA.receivePatched(3);
         this.assertEqualState(this.wcA.rev, this.wcC.rev);
         this.assertEqualState(this.wcA.serverRev, this.wcC.serverRev);
