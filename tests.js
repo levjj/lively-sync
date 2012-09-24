@@ -1894,7 +1894,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
     morphInC: function() { return this.worldC.get(this.morph.name); }
 },
 'testing', {
-    testSimpleSync: function() {
+    testQueueCommit: function() {
         this.morph.moveBy(pt(5,5));
         this.assertEquals(2, this.wcA.rev);
         this.assertEquals(2, this.wcA.serverRev);
