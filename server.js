@@ -262,6 +262,8 @@ Object.subclass('users.cschuster.sync.Server', {
         this.socket.on('info', this.info.bind(this));
         this.socket.on('create', this.create.bind(this));
         this.socket.on('remove', this.remove.bind(this));
+        // chat interface
+        this.socket.on('chat', this.chat.bind(this));
     },
     
     withRepo: function(channel, exclusive, cb) {
@@ -330,35 +332,18 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(channel, true, function(repo) {
             repo.head(function (head) {
                 if (oldRev == head) {
+                    this.socket.emit('patched', head + 1);
                     this.socket.broadcast.to(channel).emit('patch', head + 1, patch);
                     repo.commit(head, new users.cschuster.sync.Patch(patch), function() {
                         repo.release();
                     });
                 } else {
-                    //FIXME: Implement conflcit resolution (3way diff, merging, etc.)
-                    //TODO: diff3 not implemented yet in jsondiffpatch
                     if (oldRev > head) {
                         error("received patch based on a non-server version");
                     } else {
                         error("received outdated patch");
                     }
                     repo.release();
-                    /*Seq([oldRev, head])
-                    .parMap(function (rev) {
-                        repo.checkout(rev, this.bind(this, null));
-                    })
-                    .seq(function (old, mine) {
-                        var yours = xdiff.patch(old, patch);
-                        var newPatch = xdiff.diff3(mine, yours, old);
-                        if (newPatch) {
-                            repo.commit(head, newPatch);
-                            this.socket.broadcast.emit('patch', head + 1, newPatch);
-                        }
-                        var myPatch = xdiff.diff(yours, mine);
-                        if (myPatch) {
-                            this.socket.emit('patch', head + 1, myPatch);
-                        }
-                    }.bind(this));*/
                 }
             }.bind(this));
         }.bind(this));
@@ -397,6 +382,10 @@ Object.subclass('users.cschuster.sync.Server', {
         this.withRepo(channel, true, function(repo) {
         	repo.remove(function() { repo.release(); });
         });
+    },
+    
+    chat: function(channel, msg) {
+        this.socket.broadcast.to(channel).emit('chat', msg);
     }
 });
 
