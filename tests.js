@@ -1896,17 +1896,24 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
 'testing', {
     testSimpleSync: function() {
         this.morph.moveBy(pt(5,5));
-        var res = this.wcA.commit();
         this.assertEquals(2, this.wcA.rev);
-        this.assertEquals(1, this.wcA.serverRev);
-        if (!res) return;
-        var snapshot = Object.deepCopy(this.wcA.last.data);
-        this.wcB.receiveSnapshot(this.wcA.rev, snapshot);
-        var lastPatch = this.wcA.patchQueue[this.wcA.rev];
-        var patch = Object.deepCopy(lastPatch.data);
-        this.wcC.receivePatch(this.wcA.rev, patch);
-        this.snapshots[this.wcA.rev] = this.wcA.last;
+        this.assertEquals(2, this.wcA.serverRev);
+        this.assertIdentidy(this.wcA.last, this.wcA.serverSnapshot);
+        var oldSnapshot = this.wcA.last;
+        var res = this.wcA.commit();
+        this.assertEquals(3, this.wcA.rev);
+        this.assertEquals(2, this.wcA.serverRev);
+        var patch = new users.cschuster.sync.Patch({X: {_Position: ["pt(20,20)"]}});
+        this.assertEqualState({3: patch}, this.wcA.patchQueue);
+        this.assertIdentidy(oldSnapshot, this.wcA.serverSnapshot);
+        this.assert(this.wcA.last != oldSnapshot);
+        var newSnapshot = this.wcA.last;
         this.wcA.receivePatched(this.wcA.rev);
+        this.assertEquals(3, this.wcA.rev);
+        this.assertEquals(3, this.wcA.serverRev);
+        this.assertEqualState({}, this.wcA.patchQueue);
+        this.assertIdentidy(this.wcA.last, this.wcA.serverSnapshot);
+        this.assertIdentidy(newSnapshot, this.wcA.last);
     },
 });
 
