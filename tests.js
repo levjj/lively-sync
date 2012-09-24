@@ -1915,6 +1915,31 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.assertIdentity(this.wcA.last, this.wcA.serverSnapshot);
         this.assertIdentity(newSnapshot, this.wcA.last);
     },
+    testQueueTwoCommits: function() {
+        this.morph.moveBy(pt(5,5));
+        var oldSnapshot = this.wcA.last;
+        this.wcA.commit();
+        this.morph.moveBy(pt(10,10));
+        this.wcA.commit();
+        this.assertEquals(4, this.wcA.rev);
+        this.assertEquals(2, this.wcA.serverRev);
+        var patch3 = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
+        var patch4 = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(15.0,15.0)"]}});
+        this.assertEqualState({3: patch3, 4: patch4}, this.wcA.patchQueue);
+        this.assertIdentity(oldSnapshot, this.wcA.serverSnapshot);
+        this.assert(this.wcA.last != oldSnapshot);
+        var newSnapshot = this.wcA.last;
+        this.wcA.receivePatched(3);
+        this.assertEquals(4, this.wcA.rev);
+        this.assertEquals(3, this.wcA.serverRev);
+        this.assertEqualState({4: patch4}, this.wcA.patchQueue);
+        this.wcA.receivePatched(4);
+        this.assertEquals(4, this.wcA.rev);
+        this.assertEquals(4, this.wcA.serverRev);
+        this.assertEqualState({}, this.wcA.patchQueue);
+        this.assertIdentity(this.wcA.last, this.wcA.serverSnapshot);
+        this.assertIdentity(newSnapshot, this.wcA.last);
+    },
 });
 
 }) // end of module
