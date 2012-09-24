@@ -1231,9 +1231,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
         if (!res) return;
         var snapshot = Object.deepCopy(this.wcA.last.data);
         this.wcB.receiveSnapshot(this.wcA.rev, snapshot);
-        var patch = Object.deepCopy(this.wcA.lastPatch.data);
+        var lastPatch = this.wcA.patchQueue[this.wcA.rev];
+        var patch = Object.deepCopy(lastPatch.data);
         this.wcC.receivePatch(this.wcA.rev, patch);
         this.snapshots[this.wcA.rev] = this.wcA.last;
+        this.wcA.receivePatched(this.wcA.rev);
     },
     addBox: function(optID) {
         var box = this.newBox(5, 5, optID || "X");
