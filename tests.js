@@ -1898,7 +1898,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.morph.moveBy(pt(5,5));
         this.assertEquals(2, this.wcA.rev);
         this.assertEquals(2, this.wcA.serverRev);
-        this.assertIdentidy(this.wcA.last, this.wcA.serverSnapshot);
+        this.assertIdentity(this.wcA.last, this.wcA.serverSnapshot);
         var oldSnapshot = this.wcA.last;
         var res = this.wcA.commit();
         this.assertEquals(3, this.wcA.rev);
