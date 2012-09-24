@@ -1964,7 +1964,8 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.wcC.commit();
         this.wcC.receivePatch(3, this.wcA.patchQueue[3].clone().data);
         this.wcA.receivePatched(3);
-        this.wcB.receiveSnapshot(3, this.wcA.last);
+        var snapshot = Object.deepCopy(this.wcA.last.data);
+        this.wcB.receiveSnapshot(3, snapshot);
         this.assertSync(3, true);
     }
 });
