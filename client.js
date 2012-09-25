@@ -801,7 +801,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             hand.username = lively.morphic.World.current().getUserName();
         } else {
             (function() {
-                $(hand.renderContext().morphNode).append($("<span>&nbsp;" + hand.username + "</span>"));
+                $(hand.renderContext().morphNode).append($("&nbsp;<span>" + hand.username + "</span>"));
             }).delay(0.2);
         }
     },
