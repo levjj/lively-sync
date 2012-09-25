@@ -791,6 +791,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     addHand: function(hand) {
+        debugger;
         if (hand === lively.morphic.World.current().firstHand()) {
             if (!this.newHand) { hand.setNewId(); this.newHand = true; }
             hand.username = lively.morphic.World.current().getUserName();
