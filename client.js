@@ -783,24 +783,18 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "E": Color.web.lightgrey,
         "F": Color.web.rosybrown
     },
-    changeHand: function(activate) {
-        var hand = lively.morphic.World.current().firstHand();
-        if (activate) {
-            if (!this.newHand) { hand.setNewId(); this.newHand = true; }
-            var color = this.colorTable[hand.id.substring(0, 1)];
-            hand.setFill(color);
-            hand.setBorderColor(Color.black);
-            hand.setBounds(pt(0, 0).extent(pt(8, 8)));
-            hand.setBorderWidth(1);
-            this.addObject(hand);
-            var name = lively.morphic.World.current().getUserName();
-            jQuery(hand.renderContext().morphNode).append(jQuery("<p>" + name + "</p>"));
-        } else {
-            hand.setFill(Color.red);
-            hand.setBounds(pt(0, 0).extent(pt(2, 2)));
-            hand.setBorderWidth(0);
-            this.removeObject(hand);
-        }
+    addHand: function(hand) {
+        if (!hand.newHand) { hand.setNewId(); hand.newHand = true; }
+        this.addObject(hand);
+        if (hand === lively.morphic.World.current().firstHand()) return;
+        var color = this.colorTable[hand.id.substring(0, 1)];
+        hand.setFill(color);
+        hand.setBorderColor(Color.black);
+        hand.setBounds(pt(0, 0).extent(pt(8, 8)));
+        hand.setBorderWidth(1);
+        this.addObject(hand);
+        var name = lively.morphic.World.current().getUserName();
+        jQuery(hand.renderContext().morphNode).append(jQuery("<span>" + name + "</span>"));
     },
     startSyncing: function() {
         this.changeHand(true);
