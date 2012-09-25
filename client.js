@@ -695,6 +695,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     },
     loadSnapshot: function(snapshot) {
         this.plugins.invoke('remove', this.syncTable);
+        for (var key in this.syncTable) {
+            this.removeObject(this.syncTable[key]);
+        }
         var newObjects = snapshot.recreateObjects();
         for (var key in newObjects) {
             this.addObject(newObjects[key]);
