@@ -433,6 +433,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             }
             if (prop == 'owner') obj.remove();
         }
+        if (obj === this.syncTable) return this.addObject(val);
         return obj[prop] = val;
     },
 },
