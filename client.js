@@ -797,7 +797,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         jQuery(hand.renderContext().morphNode).append(jQuery("<span>" + name + "</span>"));
     },
     startSyncing: function() {
-        this.changeHand(true);
+        this.addHand(lively.morphic.World.current().firstHand());
         SyncNewMorphs.beGlobal();
         SyncNewMorphs.wc = this;
         this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
