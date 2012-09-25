@@ -806,7 +806,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         clearTimeout(this.commitTimeout);
         this.commitTimeout = null;
         SyncNewMorphs.beNotGlobal();
-        this.changeHand(false);
+        this.removeObject(lively.morphic.World.current().firstHand());
     }
 });
 
