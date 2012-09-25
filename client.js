@@ -785,16 +785,17 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     addHand: function(hand) {
-        if (!hand.newHand) { hand.setNewId(); hand.newHand = true; }
-        if (hand === lively.morphic.World.current().firstHand()) return;
+        if (hand === lively.morphic.World.current().firstHand()) {
+            if (!this.newHand) { hand.setNewId(); this.newHand = true; }
+            hand.username = lively.morphic.World.current().getUserName();
+            return;
+        }
         var color = this.colorTable[hand.id.substring(0, 1)];
         hand.setFill(color);
         hand.setBorderColor(Color.black);
         hand.setBounds(pt(0, 0).extent(pt(8, 8)));
         hand.setBorderWidth(1);
-        this.addObject(hand);
-        var name = lively.morphic.World.current().getUserName();
-        jQuery(hand.renderContext().morphNode).append(jQuery("<span>" + name + "</span>"));
+        jQuery(hand.renderContext().morphNode).append(jQuery("<span>" + hand.username + "</span>"));
     },
     startSyncing: function() {
         this.addObject(lively.morphic.World.current().firstHand());
