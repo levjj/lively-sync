@@ -792,6 +792,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     addHand: function(hand) {
+        debugger;
         if (!hand.newHand) { hand.setNewId(); hand.newHand = true; }
         var color = this.colorTable[hand.id.substring(0, 1)];
         hand.setFill(color);
