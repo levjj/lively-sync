@@ -737,8 +737,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         if (this.socket) this.socket.emit('reset', this.channel);
     },
     addObject: function(obj) {
-        this.syncTable[obj.id] = obj;
         if (obj.isHand) this.addHand(obj);
+        this.syncTable[obj.id] = obj;
     },
     removeObject: function(obj) {
         delete this.syncTable[obj.id];
