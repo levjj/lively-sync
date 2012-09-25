@@ -738,6 +738,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     },
     addObject: function(obj) {
         this.syncTable[obj.id] = obj;
+        if (obj.isHand) this.addHand(obj);
     },
     removeObject: function(obj) {
         delete this.syncTable[obj.id];
