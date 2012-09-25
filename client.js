@@ -785,7 +785,6 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     },
     addHand: function(hand) {
         if (!hand.newHand) { hand.setNewId(); hand.newHand = true; }
-        this.addObject(hand);
         if (hand === lively.morphic.World.current().firstHand()) return;
         var color = this.colorTable[hand.id.substring(0, 1)];
         hand.setFill(color);
