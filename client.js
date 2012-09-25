@@ -786,18 +786,15 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     changeHand: function(activate) {
         var hand = lively.morphic.World.current().firstHand();
         if (activate) {
-            jQuery('<style id="nohand" type="text/css">* {cursor: none;}</style>')
-                .appendTo(jQuery("body"));
             if (!this.newHand) { hand.setNewId(); this.newHand = true; }
             var color = this.colorTable[hand.id.substring(0, 1)];
             hand.setFill(color);
-            hand.setBorderColor(color.invert());
-            hand.setBounds(pt(0, 0).extent(pt(6, 6)));
+            hand.setBorderColor(Color.black);
+            hand.setBounds(pt(0, 0).extent(pt(8, 8)));
             hand.setBorderWidth(1);
             this.addObject(hand);
             var name = lively.morphic.World.current().getUserName();
         } else {
-            jQuery("#nohand").remove();
             hand.setFill(Color.red);
             hand.setBounds(pt(0, 0).extent(pt(2, 2)));
             hand.setBorderWidth(0);
