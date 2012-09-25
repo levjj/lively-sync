@@ -802,7 +802,9 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         hand.setBorderColor(Color.black);
         hand.setBounds(pt(0, 0).extent(pt(8, 8)));
         hand.setBorderWidth(1);
-        jQuery(hand.renderContext().morphNode).append(jQuery("<span>" + hand.username + "</span>"));
+        (function() {
+            $(hand.renderContext().morphNode).append($("<span>" + hand.username + "</span>"));
+        }).delay(0.2);
     },
     startSyncing: function() {
         this.addObject(lively.morphic.World.current().firstHand());
