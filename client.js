@@ -874,7 +874,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
         var keys = Object.keys(source);
         keys.remove(this.idProperty);
         keys = keys.reject(function(ea) {
-            return this.somePlugin('ignoreProp', [source, ea, source[ea]]);
+            return this.somePlugin('ignoreProp', [source, ea, source[ea], copy]);
         }.bind(this));
         keys = keys.sort();
         this.addIdToAllProperties(source, keys);
