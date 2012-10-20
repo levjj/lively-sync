@@ -861,7 +861,7 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             this.path.push(key);
             if (Array.isArray(value)) {
                 var indices = Array.range(0, value.length - 1).reject(function(ea) {
-                    return this.somePlugin('ignoreProp', [value, ea, value[ea]]);
+                    return this.somePlugin('ignoreProp', [value, ea, value[ea], {}]);
                 }.bind(this));
                 this.addIdToAllProperties(value, indices);
             } else {
