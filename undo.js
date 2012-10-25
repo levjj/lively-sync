@@ -34,7 +34,7 @@ Object.subclass('sync.undo.Do',
 'debugging', {
     inspect: function() {
         var part = lively.morphic.World.current().openPartItem('DiffViewer', 'PartsBin/Sync');
-        part.show(this.getPatch());
+        part.show(this.patch.clone());
     }
 });
 
