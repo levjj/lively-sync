@@ -808,29 +808,32 @@ Object.subclass('sync.WorkingCopy',
         }
     },
     startSyncing: function() {
-        this.addObject(lively.morphic.World.current().firstHand());
+        var world = lively.morphic.World.current();
+        this.addObject(world.firstHand());
         SyncNewMorphs.beGlobal();
-        SyncNewMorphs.wc = this;
+        world.wc = this;
         this.commitTimeout = setTimeout(this.autocommit.bind(this), 1000);
     },
     stopSyncing: function() {
         clearTimeout(this.commitTimeout);
         this.commitTimeout = null;
+        var world = lively.morphic.World.current();
         SyncNewMorphs.beNotGlobal();
-        this.removeObject(lively.morphic.World.current().firstHand());
+        delete world.wc;
+        this.removeObject(world.firstHand());
     }
 });
 
-cop.create("SyncNewMorphs").refineObject(lively.morphic.World.current(), {
+cop.create("SyncNewMorphs").refineObject(lively.morphic.World, {
     addMorph: function(morph, optMorphBefore) {
         var result = cop.proceed(morph, optMorphBefore);
-        SyncNewMorphs.wc.addObject(morph);
+        if (this.wc) this.wc.addObject(morph);
         return result;
     },
     removeMorph: function(morph) {
         var result = cop.proceed(morph);
-        if (!morph.isHand)
-            SyncNewMorphs.wc.removeObject(morph);
+        if (this.wc && !morph.isHand)
+            this.wc.removeObject(morph);
         return result;
     }
 });
