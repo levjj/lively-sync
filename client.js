@@ -23,8 +23,10 @@ Object.extend(sync.Snapshot, {
     },
     createFromObjects: function(object) {
         var s = new this();
-        var serializer = this.getSerializer();
-        s.data = serializer.serializeToJso(object);
+        cop.withLayers([HierachicalIds], function() {
+            var serializer = this.getSerializer();
+            s.data = serializer.serializeToJso(object);
+        }.bind(this));
         return s;
     }
 });
@@ -888,7 +890,8 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
             copy[key] = this.registerWithPath(value, key);
         }
     }
-}).beGlobal();
+});
+
 cop.create("SkipDialogs").refineClass(lively.morphic.World, {
     openDialog: function(dialog) {
         if (dialog instanceof lively.morphic.ConfirmDialog) {
