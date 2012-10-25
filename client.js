@@ -3,7 +3,7 @@
  * (morphic integration, etc.)
  */
 
-module('users.cschuster.sync.client').requires('users.cschuster.sync.shared', 'lively.morphic.AdditionalMorphs', 'users.cschuster.Serialization').toRun(function() {
+module('users.cschuster.sync.client').requires('users.cschuster.sync.shared', 'lively.morphic.AdditionalMorphs').toRun(function() {
 
 Object.extend(users.cschuster.sync.Snapshot, {
     getSerializer: function() {
@@ -11,7 +11,6 @@ Object.extend(users.cschuster.sync.Snapshot, {
         serializer.plugins.remove(serializer.plugins.find(function(p) {
             return p instanceof lively.persistence.ClassPlugin;
         }));
-        var expressionPlugin = new users.cschuster.SerializeAsExpressionPlugin();
         var classPlugin = new users.cschuster.sync.ClassPlugin();
         var syncPlugin = new users.cschuster.sync.SyncPlugin();
         var worldPlugin = new GenericFilter();
