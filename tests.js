@@ -229,7 +229,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
                 __SourceModuleName__:"Global.lively.morphic.Shapes",
                  _Position: "\\$@lively.pt(0.0,0.0)",
                  _Extent: "\\$@lively.pt("+width+".0,"+height+".0)",
-                 _Padding: "\\$@lively.rect(lively.pt(0.0,0.0),lively.pt(0.0,0.0))"},
+                 _Padding: "\\$@lively.rect(0,0,0,0)"},
             "/shape/renderContextTable": rect.shape.renderContextTable
         };
         var result = {};
@@ -249,7 +249,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
                        __SourceModuleName__:"Global.lively.morphic.PathShapes",
                        _Position: "\\$@lively.pt(-1.0,-1.0)",
                        _Extent: "\\$@lively.pt(5.0,5.0)",
-                       _Padding: "\\$@lively.rect(lively.pt(0.0,0.0),lively.pt(0.0,0.0))"},
+                       _Padding: "\\$@lively.rect(0,0,0,0)"},
             "/shape/_PathElements/0": {isAbsolute:true,"x":4,"y":0,
                                        __LivelyClassName__:"lively.morphic.Shapes.MoveTo",
                                        __SourceModuleName__:"Global.lively.morphic.PathShapes"},

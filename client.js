@@ -119,7 +119,7 @@ users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
                 } else if (parentMorph) {
                     if (value.length == 3) { // delete
                         var morph = value.shift()
-                        if (morph !== this.world.firstHand()) morph.remove();
+                        if (morph && morph !== this.world.firstHand()) morph.remove();
                     } else { // add, set or move
                         if (!obj.hasOwnProperty(key)) continue;
                         var length = parentMorph.submorphs.length;
