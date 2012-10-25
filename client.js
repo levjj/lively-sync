@@ -892,14 +892,4 @@ cop.create("HierachicalIds").refineClass(lively.persistence.ObjectGraphLinearize
     }
 });
 
-cop.create("SkipDialogs").refineClass(lively.morphic.World, {
-    openDialog: function(dialog) {
-        if (dialog instanceof lively.morphic.ConfirmDialog) {
-            dialog.callback(true);
-        } else {
-            cop.proceed(dialog);
-        }
-    }
-}).beGlobal();
-
 });
