@@ -13,7 +13,7 @@ require('./shared');
 var CONNECTION_STRING = "tcp://syncproto:steam@localhost/syncproto";
 var DIFFS_PER_SNAPSHOT = 100;
 
-module('users.cschuster.sync.server').requires('users.cschuster.sync.shared').toRun(function() {
+module('sync.server').requires('sync.shared').toRun(function() {
 
 function log(/*arguments*/) {
     var args = [];
@@ -29,7 +29,7 @@ function error(/*arguments*/) {
     return console.error.apply(console, args);
 }
 
-Object.subclass('users.cschuster.sync.Mutex', {
+Object.subclass('sync.Mutex', {
     initialize: function() {
         this.queue = new EventEmitter();
         this.queue.setMaxListeners(100);
@@ -49,7 +49,7 @@ Object.subclass('users.cschuster.sync.Mutex', {
     }
 });
 
-Object.subclass('users.cschuster.sync.Repository', {
+Object.subclass('sync.Repository', {
     mutex: {},
     
     initialize: function(channel, exclusive, cb) {
@@ -62,7 +62,7 @@ Object.subclass('users.cschuster.sync.Repository', {
             }.bind(this));
         }.bind(this);
         if (exclusive) {
-            if (!this.mutex[channel]) this.mutex[channel] = new users.cschuster.sync.Mutex();
+            if (!this.mutex[channel]) this.mutex[channel] = new sync.Mutex();
             return this.mutex[channel].lock(doConnect);
         } else {
             doConnect();
@@ -84,7 +84,7 @@ Object.subclass('users.cschuster.sync.Repository', {
     
     initial: function(cb) {
         this.db.query("SELECT data FROM history WHERE obj = $1 AND rev = $2", ["demo", 1], function(err, result) {
-            var snapshot = users.cschuster.sync.Snapshot.empty();
+            var snapshot = sync.Snapshot.empty();
             this._createSnapshot(1, snapshot, function() { cb(snapshot); });
         }.bind(this));
     },
@@ -96,10 +96,10 @@ Object.subclass('users.cschuster.sync.Repository', {
                     if (err) return this.handleError(err);
                     if (result.rows.length < 1) return this.handleError("checkout: no revision between " + from + " and " + rev);
                     if (result.rows[0].type != "snapshot") return this.handleError("checkout: expected rev " + from + " to be a snapshot");
-                    var snapshot = new users.cschuster.sync.Snapshot(result.rows[0].data);
+                    var snapshot = new sync.Snapshot(result.rows[0].data);
                     for (var i = 1; i < result.rows.length; i++) {
                         if (result.rows[i].type != "patch") return this.handleError("checkout: expected rev " + from + " to be a diff");
-                        var patch = new users.cschuster.sync.Patch(result.rows[i].data);
+                        var patch = new sync.Patch(result.rows[i].data);
                         patch.apply(snapshot);
                     }
                     cb(snapshot);
@@ -125,7 +125,7 @@ Object.subclass('users.cschuster.sync.Repository', {
             if (result.rows[0].type == "snapshot") {
                 this._computedPatchToSnapshot(fromRev, data, cb);
             } else {
-                cb(new users.cschuster.sync.Patch(data));
+                cb(new sync.Patch(data));
             }
         }.bind(this));
     },
@@ -246,7 +246,7 @@ Object.subclass('users.cschuster.sync.Repository', {
 });
 
 
-Object.subclass('users.cschuster.sync.Server', {
+Object.subclass('sync.Server', {
     initialize: function(socket) {
         this.socket = socket;
         this.username = 'anonymous';
@@ -267,7 +267,7 @@ Object.subclass('users.cschuster.sync.Server', {
     },
     
     withRepo: function(channel, exclusive, cb) {
-        new users.cschuster.sync.Repository(channel, exclusive, function(repo) {
+        new sync.Repository(channel, exclusive, function(repo) {
             repo.username = this.username;
             cb(repo);
         }.bind(this));
@@ -334,7 +334,7 @@ Object.subclass('users.cschuster.sync.Server', {
                 if (oldRev == head) {
                     this.socket.emit('patched', head + 1);
                     this.socket.broadcast.to(channel).emit('patch', head + 1, patch);
-                    repo.commit(head, new users.cschuster.sync.Patch(patch), function() {
+                    repo.commit(head, new sync.Patch(patch), function() {
                         repo.release();
                     });
                 } else {
@@ -392,7 +392,7 @@ Object.subclass('users.cschuster.sync.Server', {
 io.set('log level', 1);
 io.set('transports', ['htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function(socket) {
-    new users.cschuster.sync.Server(socket);
+    new sync.Server(socket);
 });
 
 });

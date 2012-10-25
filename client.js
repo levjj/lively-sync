@@ -3,16 +3,16 @@
  * (morphic integration, etc.)
  */
 
-module('users.cschuster.sync.client').requires('users.cschuster.sync.shared', 'lively.morphic.AdditionalMorphs').toRun(function() {
+module('sync.client').requires('sync.shared', 'lively.morphic.AdditionalMorphs').toRun(function() {
 
-Object.extend(users.cschuster.sync.Snapshot, {
+Object.extend(sync.Snapshot, {
     getSerializer: function() {
         var serializer = ObjectGraphLinearizer.forNewLivelyCopy();
         serializer.plugins.remove(serializer.plugins.find(function(p) {
             return p instanceof lively.persistence.ClassPlugin;
         }));
-        var classPlugin = new users.cschuster.sync.ClassPlugin();
-        var syncPlugin = new users.cschuster.sync.SyncPlugin();
+        var classPlugin = new sync.ClassPlugin();
+        var syncPlugin = new sync.SyncPlugin();
         var worldPlugin = new GenericFilter();
         worldPlugin.addFilter(function(obj, prop, value) {
             return value && Object.isObject(value) && value.isWorld;
@@ -29,13 +29,13 @@ Object.extend(users.cschuster.sync.Snapshot, {
     }
 });
 
-users.cschuster.sync.Snapshot.addMethods({
+sync.Snapshot.addMethods({
     recreateObjects: function() {
         return this.constructor.getSerializer().deserializeJso(this.data);
     }
 });
 
-users.cschuster.sync.Patch.addMethods({
+sync.Patch.addMethods({
     toHierachicalPatch: function() {
         var newPatch = {};
         function removeAdds(obj) {
@@ -82,18 +82,18 @@ users.cschuster.sync.Patch.addMethods({
                 current[prop] = rawMode ? removeAdds(val) : val;
             }
         }
-        return new users.cschuster.sync.Patch(newPatch);
+        return new sync.Patch(newPatch);
     }
 });
 
-Object.subclass('users.cschuster.sync.Plugin', {
+Object.subclass('sync.Plugin', {
     setControl: function(control) { this.control = control; },
     add: function(objects) {},
     afterPatching: function(objects, patch) {},
     remove: function(objects) {}
 });
 
-users.cschuster.sync.Plugin.subclass('users.cschuster.sync.MorphPlugin',
+sync.Plugin.subclass('sync.MorphPlugin',
 'initializing', {
     initialize: function(world) {
         this.world = world || lively.morphic.World.current();
@@ -286,7 +286,7 @@ Array.addMethods({
     }
 });
 
-lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.RepairArraysPlugin',
+lively.persistence.ObjectLinearizerPlugin.subclass('sync.RepairArraysPlugin',
 'plugin interface', {
     afterDeserializeObj: function(obj) {
         if (Array.isArray(obj)) obj.repair();
@@ -338,7 +338,7 @@ lively.morphic.Shapes.Path.addMethods({
     doNotSerializeForSync: ['cachedVertices', 'controlPoints']
 });
 
-lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlugin',
+lively.persistence.ObjectLinearizerPlugin.subclass('sync.SyncPlugin',
 'plugin interface', {
     deserializeObj: function(persistentCopy) {
         if (!persistentCopy.__isMoveInstruction__) return;
@@ -354,7 +354,7 @@ lively.persistence.ObjectLinearizerPlugin.subclass('users.cschuster.sync.SyncPlu
     }
 });
 
-lively.persistence.ClassPlugin.subclass('users.cschuster.sync.ClassPlugin',
+lively.persistence.ClassPlugin.subclass('sync.ClassPlugin',
 'plugin interface', {
     deserializeObj: function($super, persistentCopy) {
         var moduleNames = [];
@@ -370,14 +370,14 @@ lively.persistence.ClassPlugin.subclass('users.cschuster.sync.ClassPlugin',
     }
 });
 
-Object.subclass('users.cschuster.sync.WorkingCopy',
+Object.subclass('sync.WorkingCopy',
 'initializing', {
     initialize: function(server) {
         this.server = server;
         this.plugins = [];
         this.syncTable = {};
         this.rev = 0;
-        this.last = users.cschuster.sync.Snapshot.empty();
+        this.last = sync.Snapshot.empty();
         if (server) {
             this.loadSocketIO();
         }
@@ -648,14 +648,14 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         if (this.isSyncing()) this.stopSyncing();
         if (this.socket) this.socket.disconnect();
         delete this.socket;
-        this.loadSnapshot(users.cschuster.sync.Snapshot.empty());
+        this.loadSnapshot(sync.Snapshot.empty());
         this.rev = 0;
         console.log("disconnected");
     },
     receiveSnapshot: function(rev, snapshot) {
         console.log('received snapshot for rev ' + rev);
         if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-        this.last = this.serverSnapshot = new users.cschuster.sync.Snapshot(snapshot);
+        this.last = this.serverSnapshot = new sync.Snapshot(snapshot);
         this.loadSnapshot(this.last);
         this.rev = this.serverRev = rev;
     },
@@ -673,7 +673,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
     receivePatch: function(rev, patch) {
         console.log("received patch for rev " + rev);
         if (this.onConnect) { this.onConnect(); delete this.onConnect; }
-        patch = new users.cschuster.sync.Patch(patch);
+        patch = new sync.Patch(patch);
         this.loadPatch(patch.clone());
         if (this.last !== this.serverSnapshot) {
             this.patchQueue = {};
@@ -710,8 +710,8 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
             select(function(v) { return Array.isArray(patch.data[v]) &&
                                         patch.data[v].length < 2 });
         var hierachicalPatch = patch.toHierachicalPatch().data;
-        this.serializer = users.cschuster.sync.Snapshot.getSerializer();
-        this.serializer.addPlugins([new users.cschuster.sync.RepairArraysPlugin()]);
+        this.serializer = sync.Snapshot.getSerializer();
+        this.serializer.addPlugins([new sync.RepairArraysPlugin()]);
         this.serializer.wc = this;
         this.deserializeQueue = [];
         this.refPatchQueue = [];
@@ -751,7 +751,7 @@ Object.subclass('users.cschuster.sync.WorkingCopy',
         delete this.syncTable[obj.id];
     },
     commit: function() {
-        var current = users.cschuster.sync.Snapshot.createFromObjects(this.syncTable);
+        var current = sync.Snapshot.createFromObjects(this.syncTable);
         var last = this.last || this.snapshots[this.rev];
         var patch = last.diff(current).toPatch();
         if (patch.isEmpty()) return null;

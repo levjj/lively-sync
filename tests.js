@@ -1,6 +1,6 @@
-module('users.cschuster.sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'users.cschuster.sync.client').toRun(function() {
+module('sync.tests').requires('lively.TestFramework', 'lively.morphic.tests.Helper', 'sync.client').toRun(function() {
 
-lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SerializationTest',
+lively.morphic.tests.MorphTests.subclass('sync.tests.SerializationTest',
 'helping', {
     newBox: function(id, width, height, color) {
         var bounds = pt(0,0).extent(pt(width || 12, height || 8));
@@ -19,12 +19,12 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
         for (var i = 0; i < args.length; i++) {
             table[args[i].id || "X"] = args[i];
         }
-        var snapshotA = users.cschuster.sync.Snapshot.createFromObjects(table);
+        var snapshotA = sync.Snapshot.createFromObjects(table);
         var recreated = snapshotA.recreateObjects();
         for (var key in recreated) {
             if (recreated[key].isMorph) this.world.addMorph(recreated[key]);
         }
-        var snapshotB = users.cschuster.sync.Snapshot.createFromObjects(recreated);
+        var snapshotB = sync.Snapshot.createFromObjects(recreated);
         this.assertEqualState(snapshotA, snapshotB);
     }
 },
@@ -154,10 +154,10 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.Serializati
 
 });
 
-TestCase.subclass('users.cschuster.sync.tests.MappingTest',
+TestCase.subclass('sync.tests.MappingTest',
 'running', {
     setUp: function() {
-        this.mapping = new users.cschuster.sync.Mapping();
+        this.mapping = new sync.Mapping();
         this.mapping.addRule('X', 'Y');
     }
 },
@@ -184,7 +184,7 @@ TestCase.subclass('users.cschuster.sync.tests.MappingTest',
     }
 });
 
-lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
+lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
 'helper', {
     setUp: function($super) {
         $super();
@@ -194,7 +194,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.table[this.rect.id] = this.rect;
     },
     serialize: function(object) {
-        return users.cschuster.sync.Snapshot.createFromObjects(object);
+        return sync.Snapshot.createFromObjects(object);
     },
     assertPatch: function(expected, snapshotA, snapshotB) {
         if (snapshotB == undefined) {
@@ -915,14 +915,14 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.DiffTest',
         this.assertPatch(expected, snapshotA, snapshotB);
     }
 });
-lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchTest',
+lively.morphic.tests.MorphTests.subclass('sync.tests.MorphPatchTest',
 'running', {
     setUp: function($super) {
         $super();
         this.morph = this.newBox("X", 4, 4);
         this.world.addMorph(this.morph);
-        this.control = new users.cschuster.sync.WorkingCopy();
-        this.control.addPlugin(new users.cschuster.sync.MorphPlugin(this.world));
+        this.control = new sync.WorkingCopy();
+        this.control.addPlugin(new sync.MorphPlugin(this.world));
         this.control.addObject(this.morph);
     }
 },
@@ -934,7 +934,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
         return morph;
     },
     patch: function(patchData) {
-        var patch = new users.cschuster.sync.Patch(Object.deepCopy(patchData));
+        var patch = new sync.Patch(Object.deepCopy(patchData));
         this.control.loadPatch(patch);
         this.assertNoSourceModuleNames();
         this.assertArraysHaveNoMethods();
@@ -957,8 +957,8 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     },
     diffToEmpty: function() {
         var table = this.control.syncTable;
-        var current = users.cschuster.sync.Snapshot.createFromObjects(table);
-        var empty = users.cschuster.sync.Snapshot.empty();
+        var current = sync.Snapshot.createFromObjects(table);
+        var empty = sync.Snapshot.empty();
         return empty.diff(current).toPatch();
     }
 },
@@ -997,7 +997,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     resizePatch: {"X/shape": {_Extent: ["\\$@lively.pt(13.0,7.0)"]}},
     colorPatch: {"X/shape": {_Fill: ["\\$@Color.rgb(127,0,255)"]}},
     transparentPatch: {"X/shape": {_Fill: [null]}},
-    addRectPatch: users.cschuster.sync.tests.DiffTest.prototype.addRectPatch,
+    addRectPatch: sync.tests.DiffTest.prototype.addRectPatch,
     removeMorphPatch: {"X": [0,0]},
     removeSubmorphPatch: {"X/submorphs/0": [0,0]},
     addScriptPatch: function(first) {
@@ -1019,7 +1019,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     updateScriptPatch: {"X/__serializedLivelyClosures__/tick": {
         source:["function tick() { return \"tock\"; }"]}},
     removeSecondScriptPatch: {"X/__serializedLivelyClosures__/tick": [0,0]},
-    addPolygonPatch: users.cschuster.sync.tests.DiffTest.prototype.addPolygonPatch,
+    addPolygonPatch: sync.tests.DiffTest.prototype.addPolygonPatch,
     connectPatch: {"X":{attributeConnections: [[]],
                         doNotCopyProperties: [["$$a"]], doNotSerialize: [["$$a"]]},
                    "X/attributeConnections/0": [{
@@ -1182,7 +1182,7 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.MorphPatchT
     }
 });
 
-lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
+lively.morphic.tests.MorphTests.subclass('sync.tests.SyncTest',
 'running', {
     setUp: function($super) {
         $super();
@@ -1192,16 +1192,16 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
         this.worldB = lively.morphic.World.createOn(document.body, new Rectangle(300,0,300,300));
         this.worldC = lively.morphic.World.createOn(document.body, new Rectangle(600,0,300,300));
         lively.morphic.World.currentWorld = this.worldA;
-        this.wcA = new users.cschuster.sync.WorkingCopy();
-        this.wcA.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldA));
-        this.wcB = new users.cschuster.sync.WorkingCopy();
-        this.wcB.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldB));
-        this.wcC = new users.cschuster.sync.WorkingCopy();
-        this.wcC.addPlugin(new users.cschuster.sync.MorphPlugin(this.worldC));
+        this.wcA = new sync.WorkingCopy();
+        this.wcA.addPlugin(new sync.MorphPlugin(this.worldA));
+        this.wcB = new sync.WorkingCopy();
+        this.wcB.addPlugin(new sync.MorphPlugin(this.worldB));
+        this.wcC = new sync.WorkingCopy();
+        this.wcC.addPlugin(new sync.MorphPlugin(this.worldC));
         this.wcB.autoupdate = true;
         this.wcC.autoupdate = true;
         this.wcA.addObject(this.worldA.firstHand());
-        this.snapshots = [users.cschuster.sync.Snapshot.empty()];
+        this.snapshots = [sync.Snapshot.empty()];
         this.sync();
     },
     tearDown: function($super) {
@@ -1264,11 +1264,11 @@ lively.morphic.tests.MorphTests.subclass('users.cschuster.sync.tests.SyncTest',
     }
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPrimitivesTest',
+sync.tests.SyncTest.subclass('sync.tests.SyncPrimitivesTest',
 'asserting', {
     assertSync: function($super, rev, dirty, ignoreDOM) {
         $super(rev, dirty);
-        var snapshot = users.cschuster.sync.Snapshot.createFromObjects(this.wcA.syncTable);
+        var snapshot = sync.Snapshot.createFromObjects(this.wcA.syncTable);
         if (!dirty) this.assertEqualState(snapshot, this.wcA.last);
         this.assertIdenticalToSnapshot(snapshot, this.wcB.syncTable);
         this.assertIdenticalToSnapshot(snapshot, this.wcC.syncTable);
@@ -1281,7 +1281,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
         this.assertHandsInFront(this.worldC);
     },
     assertIdenticalToSnapshot: function(leftSnapshot, rightTable) {
-        var rightSnapshot = users.cschuster.sync.Snapshot.createFromObjects(rightTable);
+        var rightSnapshot = sync.Snapshot.createFromObjects(rightTable);
         this.assertEqualState(leftSnapshot, rightSnapshot);
     },
     assertIdenticalDOM: function(leftTable, rightTable) {
@@ -1673,7 +1673,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.SyncPri
 
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlowTest',
+sync.tests.SyncTest.subclass('sync.tests.WorkFlowTest',
 'testing', {
     testTextEditing: function() {
         var ws = this.worldA.openWorkspace();
@@ -1743,7 +1743,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.WorkFlo
     }
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.InteractionTest',
+sync.tests.SyncTest.subclass('sync.tests.InteractionTest',
 'asserting', {
     assertSync: function($super) {
         $super(this.rev++, false);
@@ -1879,7 +1879,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Interac
     }
 });
 
-users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.MultimasterTest',
+sync.tests.SyncTest.subclass('sync.tests.MultimasterTest',
 'running', {
     setUp: function($super) {
         $super();
@@ -1903,7 +1903,7 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         var res = this.wcA.commit();
         this.assertEquals(3, this.wcA.rev);
         this.assertEquals(2, this.wcA.serverRev);
-        var patch = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
+        var patch = new sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
         this.assertEqualState({3: patch}, this.wcA.patchQueue);
         this.assertIdentity(oldSnapshot, this.wcA.serverSnapshot);
         this.assert(this.wcA.last != oldSnapshot);
@@ -1923,8 +1923,8 @@ users.cschuster.sync.tests.SyncTest.subclass('users.cschuster.sync.tests.Multima
         this.wcA.commit();
         this.assertEquals(4, this.wcA.rev);
         this.assertEquals(2, this.wcA.serverRev);
-        var patch3 = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
-        var patch4 = new users.cschuster.sync.Patch({X: {_Position: ["\\$@lively.pt(15.0,15.0)"]}});
+        var patch3 = new sync.Patch({X: {_Position: ["\\$@lively.pt(5.0,5.0)"]}});
+        var patch4 = new sync.Patch({X: {_Position: ["\\$@lively.pt(15.0,15.0)"]}});
         this.assertEqualState({3: patch3, 4: patch4}, this.wcA.patchQueue);
         this.assertIdentity(oldSnapshot, this.wcA.serverSnapshot);
         this.assert(this.wcA.last != oldSnapshot);

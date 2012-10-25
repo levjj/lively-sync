@@ -7,9 +7,9 @@ if (typeof exports !== 'undefined') {
   module = require('./lk').module;
 }
 
-module('users.cschuster.sync.shared').requires().toRun(function() {
+module('sync.shared').requires().toRun(function() {
 
-Object.subclass('users.cschuster.sync.Mapping', {
+Object.subclass('sync.Mapping', {
     initialize: function() {
         this.rules = []; // sorted by 'from' key for fast map lookup
         this.rulesLength = 0;
@@ -58,7 +58,7 @@ Object.subclass('users.cschuster.sync.Mapping', {
     }
 });
 
-Object.subclass('users.cschuster.sync.Snapshot', {
+Object.subclass('sync.Snapshot', {
     initialize: function(json) {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
@@ -154,7 +154,7 @@ Object.subclass('users.cschuster.sync.Snapshot', {
             }
         }
         // aggregate moves (and deletes)
-        var mapping = new users.cschuster.sync.Mapping();
+        var mapping = new sync.Mapping();
         for (var key in movesAndDeletes) {
             var to = movesAndDeletes[key].to;
             if (to) {
@@ -241,17 +241,17 @@ Object.subclass('users.cschuster.sync.Snapshot', {
                 rawDiff[rule.to] = [0, rule.from, rawDiff[rule.to], 0];
             }
         }.bind(this));
-        return new users.cschuster.sync.Diff({registry: rawDiff});
+        return new sync.Diff({registry: rawDiff});
     },
     toJSON: function() {
         return JSON.stringify(this.data);
     },
     clone: function() {
-        return new users.cschuster.sync.Snapshot(Object.deepCopy(this.data));
+        return new sync.Snapshot(Object.deepCopy(this.data));
     }
 });
 
-Object.extend(users.cschuster.sync.Snapshot, {
+Object.extend(sync.Snapshot, {
     empty: function() {
         return new this({id: "", registry: {
             "": {__LivelyClassName__: undefined},
@@ -259,13 +259,13 @@ Object.extend(users.cschuster.sync.Snapshot, {
     }
 });
 
-Object.subclass('users.cschuster.sync.Diff', {
+Object.subclass('sync.Diff', {
     initialize: function(json) {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
     },
     findMoveInstructions: function(snapshot) {
-        var mapping = new users.cschuster.sync.Mapping();
+        var mapping = new sync.Mapping();
         for (var key in this.data.registry) {
             var value = this.data.registry[key];
             if (Array.isArray(value)) {
@@ -400,7 +400,7 @@ Object.subclass('users.cschuster.sync.Diff', {
         return Object.isEmpty(obj);
     },
     toPatch: function() {
-        var patch = new users.cschuster.sync.Patch();
+        var patch = new sync.Patch();
         var toDelete = this.aggregateDeletions();
         for (var id in this.data.registry) {
             if (id && !toDelete.some(function(s) {return id.startsWith(s)})) {
@@ -568,7 +568,7 @@ Object.subclass('users.cschuster.sync.Diff', {
     }
 });
 
-Object.subclass('users.cschuster.sync.Patch', {
+Object.subclass('sync.Patch', {
     initialize: function(json) {
         if (typeof json == 'string') json = JSON.parse(json);
         this.data = json || {};
@@ -579,7 +579,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         for (var key in this.data) {
             raw.registry[key] = this.data[key];
         }
-        return new users.cschuster.sync.Diff(raw);
+        return new sync.Diff(raw);
     },
     apply: function(snapshot) {
         var diff = this.toDiff(snapshot);
@@ -592,7 +592,7 @@ Object.subclass('users.cschuster.sync.Patch', {
         return JSON.stringify(this.data);
     },
     clone: function() {
-        return new users.cschuster.sync.Patch(Object.deepCopy(this.data));
+        return new sync.Patch(Object.deepCopy(this.data));
     }
 });
 
