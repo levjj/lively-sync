@@ -17,7 +17,7 @@ Object.extend(sync.Snapshot, {
         worldPlugin.addFilter(function(obj, prop, value) {
             return value && Object.isObject(value) && value.isWorld;
         });
-        serializer.addPlugins([expressionPlugin, classPlugin, syncPlugin, worldPlugin]);
+        serializer.addPlugins([classPlugin, syncPlugin, worldPlugin]);
         serializer.showLog = false;
         return serializer;
     },

@@ -216,21 +216,21 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         var width = rect.getExtent().x, height = rect.getExtent().y;
         var raw = {
             "": {submorphs:[],scripts:[],derivationIds:[],_ClipMode: "visible",
+                __serializedExpressions__:["_Position"],
                  id:rect.id, droppingEnabled:true,halosEnabled:true,
                  __LivelyClassName__:"lively.morphic.Box",
                  __SourceModuleName__:"Global.lively.morphic.Core",
-                 _Position: "\\$@lively.pt(0.0,0.0)"},
+                 _Position: "lively.pt(0.0,0.0)"},
             "/eventHandler": {morph:{__isSmartRef__:true,id:path},
                 __LivelyClassName__:"lively.morphic.EventHandler",
                 __SourceModuleName__:"Global.lively.morphic.Events"},
-            "/renderContextTable": rect.renderContextTable,
             "/shape": {
                 __LivelyClassName__:"lively.morphic.Shapes.Rectangle",
                 __SourceModuleName__:"Global.lively.morphic.Shapes",
-                 _Position: "\\$@lively.pt(0.0,0.0)",
-                 _Extent: "\\$@lively.pt("+width+".0,"+height+".0)",
-                 _Padding: "\\$@lively.rect(0,0,0,0)"},
-            "/shape/renderContextTable": rect.shape.renderContextTable
+                __serializedExpressions__:["_Position", "_Extent", "_Padding"],
+                 _Position: "lively.pt(0.0,0.0)",
+                 _Extent: "lively.pt("+width+".0,"+height+".0)",
+                 _Padding: "lively.rect(0,0,0,0)"},
         };
         var result = {};
         Properties.forEachOwn(raw, function(k,v) { result[path + k] = [v]; });
@@ -239,17 +239,18 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
     },
     addPolygonPatch: function(morph) {
         var result = this.addRectPatch(morph);
+        delete result[morph.id][0].__serializedExpressions__;
         delete result[morph.id][0]._Position;
         result[morph.id][0].__LivelyClassName__ = "lively.morphic.Path";
         result[morph.id][0].__SourceModuleName__ = "Global.lively.morphic.AdditionalMorphs";
         var raw = {
-            "/shape": {dontChangeShape:false, _PathElements:[],
-                       _BorderWidth:1,
+            "/shape": {dontChangeShape:false, _PathElements:[],_BorderWidth:1,
+                       __serializedExpressions__:["_Position", "_Extent", "_Padding"],
                        __LivelyClassName__:"lively.morphic.Shapes.Path",
                        __SourceModuleName__:"Global.lively.morphic.PathShapes",
-                       _Position: "\\$@lively.pt(-1.0,-1.0)",
-                       _Extent: "\\$@lively.pt(5.0,5.0)",
-                       _Padding: "\\$@lively.rect(0,0,0,0)"},
+                       _Position: "lively.pt(-1.0,-1.0)",
+                       _Extent: "lively.pt(5.0,5.0)",
+                       _Padding: "lively.rect(0,0,0,0)"},
             "/shape/_PathElements/0": {isAbsolute:true,"x":4,"y":0,
                                        __LivelyClassName__:"lively.morphic.Shapes.MoveTo",
                                        __SourceModuleName__:"Global.lively.morphic.PathShapes"},
@@ -588,7 +589,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.rect.setExtent(pt(400,20));
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape"] = {_Extent: ["\\$@lively.pt(400.0,20.0)"]};
+        expected[this.rect.id + "/shape"] = {_Extent: ["lively.pt(400.0,20.0)"]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testMovedRectangle: function () {
@@ -598,7 +599,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.rect.moveBy(pt(10,20));
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id] = {_Position: ["\\$@lively.pt("+(oldX + 10)+".0,"+(oldY + 20)+".0)"]};
+        expected[this.rect.id] = {_Position: ["lively.pt("+(oldX + 10)+".0,"+(oldY + 20)+".0)"]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testColorRectangle: function () {
@@ -606,7 +607,10 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.rect.setFill(Color.black);
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape"] = {_Fill: ["\\$@Color.rgb(0,0,0)"]};
+        expected[this.rect.id + "/shape"] = {
+            __serializedExpressions__: {3: ["_Fill"]},
+            _Fill: ["Color.rgb(0,0,0)"]
+        };
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testTransparentRectangle: function () {
@@ -615,7 +619,10 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.rect.setFill(null);
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape"] = {_Fill: [null]};
+        expected[this.rect.id + "/shape"] = {
+            __serializedExpressions__: {3: [0,0]},
+            _Fill: [null]
+        };
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testUnColorRectangle: function () {
@@ -624,7 +631,10 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         delete this.rect.shape._Fill;
         var snapshotB = this.serialize(this.table);
         var expected = {};
-        expected[this.rect.id + "/shape"] = {_Fill: [0,0]};
+        expected[this.rect.id + "/shape"] = {
+            __serializedExpressions__: {3:[0,0]},
+            _Fill: [0,0],
+        };
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testBorderColor: function() {
@@ -898,7 +908,10 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
             sourceAttrName:"a",sourceObj:{__isSmartRef__:true,id:this.rect.id},
             targetMethodName:"b",targetObj:{__isSmartRef__:true,id:this.rect.id},
             __LivelyClassName__:"AttributeConnection",
-            __SourceModuleName__:"Global.lively.bindings"}];
+            __SourceModuleName__:"Global.lively.bindings.Core"}];
+        expected[this.rect.id + "/attributeConnections/0/varMapping"] = [{
+            source: {__isSmartRef__:true,id:this.rect.id},
+            target: {__isSmartRef__:true,id:this.rect.id}}];
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testSimpleDisconnect: function() {
