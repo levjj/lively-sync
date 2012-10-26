@@ -628,14 +628,14 @@ Object.subclass('sync.WorkingCopy',
 },
 'error handling', {
     cannotApplyPatch: function(obj, patch) {
-        debugger;
+        dbgOn(true);
         for (var key in patch) {
             if (patch.hasOwnProperty(key)) delete patch[key];
         }
         console.error("Cannot apply patch!");
     },
     cannotFindObject: function(path) {
-        debugger;
+        dbgOn(true);
         console.error("Cannot find object!");
     }
 },
@@ -804,7 +804,6 @@ Object.subclass('sync.WorkingCopy',
         "F": Color.web.rosybrown
     },
     addHand: function(hand) {
-        debugger;
         if (!hand.newHand) { hand.setNewId(); hand.newHand = true; }
         var color = this.colorTable[hand.id.substring(0, 1)];
         hand.setFill(color);
