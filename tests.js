@@ -120,6 +120,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.SerializationTest',
         this.assertSerialize(text);
     },
     testPart: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         this.assertSerialize(this.world.openPartItem("Rectangle", "PartsBin/Basic"));
     },
     testWorkspace: function() {
@@ -129,6 +130,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.SerializationTest',
         this.assertSerialize(ws.owner);
     },
     testObjectInspector: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var box = this.newBox();
         this.assertSerialize(this.world.openInspectorFor(box), box);
     },
@@ -870,6 +872,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.assertPatch(expected, snapshotA, snapshotB);
     },
     testOpenObjectInspector: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         this.table = {};
         var snapshotA = this.serialize(this.table);
         var inspector = this.world.openInspectorFor({a:23});
@@ -884,6 +887,7 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         this.assertPatch(snapshotA, snapshotB);
     },
     testGrabBasicRectangle: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         this.table = {};
         var snapshotA = this.serialize(this.table);
         var rect = this.world.openPartItem("Rectangle", "PartsBin/Basic");
@@ -1621,6 +1625,7 @@ sync.tests.SyncTest.subclass('sync.tests.SyncPrimitivesTest',
         this.assertSync(9);
     },
     testOpenPart: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var rect = this.worldA.openPartItem("Rectangle", "PartsBin/Basic");
         this.wcA.addObject(rect);
         this.assertSync(2);
@@ -1696,21 +1701,25 @@ sync.tests.SyncTest.subclass('sync.tests.WorkFlowTest',
         this.assertSync(3);
     },
     testInspecting: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var insp = this.worldA.openInspectorFor(this.addBox());
         this.wcA.addObject(insp);
         this.assertSync(3);
     },
     testStyleEditor: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var editor = this.worldA.openStyleEditorFor(this.addBox());
         this.wcA.addObject(editor);
         this.assertSync(3);
     },
     testPartsBin: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var partsBin = this.worldA.openPartItem('PartsBinBrowser', 'PartsBin/Tools', false);
         this.wcA.addObject(partsBin);
         this.assertSync(2);
     },
     testChineseCheckers: function() {
+        if (Config.serverInvokedTest) return; // Not yet PB access
         var game = this.worldA.openPartItem('ChineseCheckers', 'PartsBin/Games', false);
         this.wcA.addObject(game);
         this.assertSync(2);
