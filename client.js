@@ -463,9 +463,6 @@ Object.subclass('sync.WorkingCopy',
         }
     },
     recreateObject: function(object) {
-        if (object && Object.isString(object) && object.startsWith("\\$@")) {
-            return eval(object.substring(3));
-        }
         if (!object || !Object.isObject(object) || object.__isSmartRef__) {
             return object;
         }
