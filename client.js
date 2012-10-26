@@ -434,7 +434,9 @@ Object.subclass('sync.WorkingCopy',
             }
             if (prop == 'owner') obj.remove();
         }
-        if (obj === this.syncTable) return this.addObject(val);
+        if (obj === this.syncTable && val && val.id === prop) {
+            return this.addObject(val);
+        }
         return obj[prop] = val;
     },
     deserialized: function(obj, data) {
