@@ -569,7 +569,7 @@ Object.subclass('sync.WorkingCopy',
                 }
             }
         }
-        this.deserialized(obj, {__serializedExpressions__: expressions});
+        this.deserialized(obj);
     },
 },
 'moving', {
