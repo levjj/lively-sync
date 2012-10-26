@@ -437,6 +437,14 @@ Object.subclass('sync.WorkingCopy',
         if (obj === this.syncTable) return this.addObject(val);
         return obj[prop] = val;
     },
+    deserialized: function(obj, data) {
+        var entry = this.deserializeQueue.find(function(d) { return d[0] === obj });
+        if (entry && !entry.data && data) {
+            this.deserializeQueue.remove(entry);
+            entry = false;
+        }
+        if (!entry) this.deserializeQueue.push([obj, data]);
+    }
 },
 'patching', {
     patchRef: function(object, prop, smartRef, newObjs) {
@@ -472,7 +480,7 @@ Object.subclass('sync.WorkingCopy',
                 recreated[key] = this.recreateObject(val);
             }
         }
-        this.deserializeQueue.push(recreated);
+        this.deserialized(recreated, object);
         return recreated;
     },
     tryPatchValueObject: function(obj, key, patch) {
@@ -544,7 +552,7 @@ Object.subclass('sync.WorkingCopy',
                 }
             }
         }
-        this.deserializeQueue.pushIfNotIncluded(obj);
+        this.deserialized(obj);
     },
 },
 'moving', {
@@ -723,8 +731,8 @@ Object.subclass('sync.WorkingCopy',
         this.refPatchQueue.each(function(ea) {
             this.patchRef(ea[0], ea[1], ea[2], newObjs);
         }.bind(this));
-        this.deserializeQueue.each(function(obj) {
-            this.serializer.letAllPlugins('afterDeserializeObj', [obj]);
+        this.deserializeQueue.each(function(entry) {
+            this.serializer.letAllPlugins('afterDeserializeObj', [entry[0], entry[1] || {}]);
         }.bind(this));
         this.serializer.letAllPlugins('deserializationDone', []);
         try { //TODO: reconcile the sync plugin with the serialization plugin architecture
