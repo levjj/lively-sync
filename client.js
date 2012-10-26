@@ -244,7 +244,14 @@ sync.Plugin.subclass('sync.MorphPlugin',
             }
         }
     },
-
+    fixHands: function(obj, patch) {
+        for (var key in patch) {
+            var value = patch[key];
+            if (Array.isArray(value) && value.length == 1 && obj[key] && obj[key].isHand) {
+                this.control.addHand(obj[key]);
+            }
+        }
+    },
 
     afterPatching: function(objects, patch) {
         this.fixClosures(objects, patch);
@@ -254,6 +261,7 @@ sync.Plugin.subclass('sync.MorphPlugin',
         this.fixTextChunks(objects, patch);
         this.fixLists(objects, patch);
         this.fixPaths(objects, patch);
+        this.fixHands(objects, patch);
     }
 },
 'removing', {
@@ -433,9 +441,6 @@ Object.subclass('sync.WorkingCopy',
                 return setter.call(obj, val);
             }
             if (prop == 'owner') obj.remove();
-        }
-        if (obj === this.syncTable && val && val.id === prop) {
-            return this.addObject(val);
         }
         return obj[prop] = val;
     },
