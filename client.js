@@ -439,6 +439,17 @@ Object.subclass('sync.WorkingCopy',
         }
         return obj[prop] = val;
     },
+    namesOfPropertiesSerializedAsExpression: function(obj) {
+        var result = [];
+        for (var key in obj) {
+            if (!obj.hasOwnProperty(key)) continue;
+            var val = obj[key];
+            if (val && Object.isObject(val) && Object.isFunction(val.serializeExpr)) {
+                result.push(key);
+            }
+        }
+        return result;
+    },
     deserialized: function(obj, data) {
         var entry = this.deserializeQueue.find(function(d) { return d[0] === obj });
         if (entry && !entry.data && data) {
@@ -525,6 +536,11 @@ Object.subclass('sync.WorkingCopy',
     },
     applyObjectPatch: function(obj, patch) {
         if (!obj || !Object.isObject(obj)) return this.cannotApplyPatch(obj, patch);
+        var expressions = this.namesOfPropertiesSerializedAsExpression(obj);
+        if (patch.__serializedExpressions__) {
+            this.applyObjectPatch(expressions, patch.__serializedExpressions__);
+        }
+        delete patch.__serializedExpressions__;
         for (var key in patch) {
             var value = patch[key];
             if (Array.isArray(value)) { // instruction
@@ -537,7 +553,9 @@ Object.subclass('sync.WorkingCopy',
                     delete obj[key];
                 } else { // add or set
                     if (obj.hasOwnProperty(key)) value.unshift(obj[key]);
-                    this.set(obj, key, this.recreateObject(value.last()));
+                    this.set(obj, key, expressions.indexOf(key) >= 0
+                                       ? eval(value.last())
+                                       : this.recreateObject(value.last()));
                 }
             } else { // path
                 var patchedValueObject = this.tryPatchValueObject(obj, key, value);
@@ -551,7 +569,7 @@ Object.subclass('sync.WorkingCopy',
                 }
             }
         }
-        this.deserialized(obj);
+        this.deserialized(obj, {__serializedExpressions__: expressions});
     },
 },
 'moving', {

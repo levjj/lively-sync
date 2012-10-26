@@ -580,6 +580,20 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.DiffTest',
         var expected = {"X": {n: [23]}, "Y": ["X/a", {n: [42]}, 0], "Z": ["X/a/b", {n: [69]}, 0]};
         this.assertPatch(expected, snapshotA, snapshotB);
     },
+    testPointPatch: function() {
+        function ref(id) { return [{__isSmartRef__: true, id: id}]; }
+        var snapshotA = this.serialize({X:{id:"X", pos: "foo"}});
+        var snapshotB = this.serialize({X:{id:"X", pos: pt(0,0)}});
+        this.assertPatch({X: {__serializedExpressions__: [["pos"]],
+                              pos: ["lively.pt(0.0,0.0)"]}},
+                         snapshotA, snapshotB);
+        var snapshotC = this.serialize({X:{id:"X", pos: pt(1,2)}});
+        this.assertPatch({X: {pos: ["lively.pt(1.0,2.0)"]}}, snapshotB, snapshotC);
+        var snapshotD = this.serialize({X:{id:"X", pos: "bar"}});
+        this.assertPatch({X: {__serializedExpressions__: [0,0],
+                              pos: ["bar"]}},
+                         snapshotC, snapshotD);
+    },
     testIdenticalRectangle: function() {
         var snapshotA = this.serialize(this.table);
         var snapshotB = this.serialize(this.table);
@@ -1010,9 +1024,10 @@ lively.morphic.tests.MorphTests.subclass('sync.tests.MorphPatchTest',
 },
 'specs', {
 
-    movePatch: {"X": {_Position: ["\\$@lively.pt(5.0,3.0)"]}},
-    resizePatch: {"X/shape": {_Extent: ["\\$@lively.pt(13.0,7.0)"]}},
-    colorPatch: {"X/shape": {_Fill: ["\\$@Color.rgb(127,0,255)"]}},
+    movePatch: {"X": {_Position: ["lively.pt(5.0,3.0)"]}},
+    resizePatch: {"X/shape": {_Extent: ["lively.pt(13.0,7.0)"]}},
+    colorPatch: {"X/shape": {__serializedExpressions__: {3: ["_Fill"]},
+                             _Fill: ["Color.rgb(127,0,255)"]}},
     transparentPatch: {"X/shape": {_Fill: [null]}},
     addRectPatch: sync.tests.DiffTest.prototype.addRectPatch,
     removeMorphPatch: {"X": [0,0]},
