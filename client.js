@@ -855,7 +855,7 @@ Object.subclass('sync.WorkingCopy',
     }
 });
 
-cop.create("SyncNewMorphs").refineObject(lively.morphic.World, {
+cop.create("SyncNewMorphs").refineClass(lively.morphic.World, {
     addMorph: function(morph, optMorphBefore) {
         var result = cop.proceed(morph, optMorphBefore);
         if (this.wc) this.wc.addObject(morph);
