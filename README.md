@@ -15,6 +15,16 @@ running with [Node.js][3] and storing changes in [PostgreSQL][4].
 
 The documentation of this approach is shown on [http://lively-kernel.org/][5].
 
+Installation is done by cloning the repository into the lively root folder
+(next to ``/core/``) and adding the following two lines to ``/core/lively/localconfig.js``:
+
+    lively.Config.add("modulePaths", "sync");
+    lively.Config.addOptions("sync", [
+        ["syncServer", "http://localhost:8114", "The URL of the sync server endpoint"]
+    ]);
+    lively.Config.set("syncServer", "http://myserver:8114");
+
+
 [1]: http://github.com/LivelyKernel/LivelyKernel
 [2]: http://socket.io/
 [3]: http://nodejs.org/
