@@ -11,7 +11,7 @@
 (function() {
     require('sync.client').toRun(function() {
         var wc = new sync.WorkingCopy(Config.get('syncServer'));
-        wc.addPlugin(sync.MorphPlugin());
+        wc.addPlugin(new sync.MorphPlugin($world));
         wc.onConnect = function() {
             alertOK('connected');
             $morph("ConnectingText").remove();
